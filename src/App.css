@@ -30,7 +30,7 @@
   width: 200px;
   height: 200px;
   margin-bottom: 30px;
-  filter: drop-shadow(0 0 30px var(--gold-glow));
+  filter: drop-shadow(0 0 50px var(--gold-glow)) drop-shadow(0 0 80px var(--gold-glow));
   animation: float 6s ease-in-out infinite;
 }
 
