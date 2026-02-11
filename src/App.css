@@ -1,0 +1,101 @@
+:root {
+  --primary-purple: #1e2a3a;
+  --purple-lighter: #2d3f54;
+  --gold: #D8C362;
+  --gold-glow: rgba(216, 195, 98, 0.4);
+  --bg-dark: #0d1117;
+  --bg-secondary: #161b22;
+  --text-light: #e8e4f0;
+  --text-muted: #9d95b0;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, var(--bg-secondary) 0%, var(--bg-dark) 70%);
+  color: var(--text-light);
+}
+
+.container {
+  text-align: center;
+  padding: 40px;
+  max-width: 600px;
+}
+
+.logo {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 30px var(--gold-glow));
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--gold);
+  text-shadow: 0 0 30px var(--gold-glow);
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.status {
+  background: var(--primary-purple);
+  border: 1px solid var(--purple-lighter);
+  border-radius: 12px;
+  padding: 24px 32px;
+  box-shadow: 0 0 40px var(--gold-glow);
+}
+
+.status h2 {
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status p {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.chat-link {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--purple-lighter) 100%);
+  color: var(--gold);
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid var(--gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px var(--gold-glow);
+}
+
+.chat-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px var(--gold-glow), 0 0 40px var(--gold-glow);
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
