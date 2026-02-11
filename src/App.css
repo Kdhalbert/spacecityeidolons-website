@@ -1,10 +1,10 @@
 :root {
-  --primary-purple: #321d3c;
-  --purple-lighter: #4a2d5c;
+  --primary-purple: #3d1f4a;
+  --purple-lighter: #5c2d6e;
   --gold: #D8C362;
   --gold-glow: rgba(216, 195, 98, 0.4);
-  --bg-dark: #1a1a1a;
-  --bg-secondary: #252525;
+  --bg-dark: #2d2d2d;
+  --bg-secondary: #3a3a3a;
   --text-light: #e8e4f0;
   --text-muted: #9d95b0;
 }
