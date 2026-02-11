@@ -1,6 +1,6 @@
 :root {
-  --primary-purple: #3d1f4a;
-  --purple-lighter: #5c2d6e;
+  --primary-purple: #4a1f5c;
+  --purple-lighter: #6b2d8a;
   --gold: #D8C362;
   --gold-glow: rgba(216, 195, 98, 0.4);
   --bg-dark: #2d2d2d;
@@ -17,6 +17,7 @@
   justify-content: center;
   background: radial-gradient(ellipse at center, var(--bg-secondary) 0%, var(--bg-dark) 70%);
   color: var(--text-light);
+  font-family: 'Cinzel', serif;
 }
 
 .container {
