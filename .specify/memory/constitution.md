@@ -112,7 +112,6 @@ All code must be reviewed by at least one other person before merging.
   - No unnecessary complexity
   - Security concerns are addressed
   - Performance is acceptable
-- Never commit directly to master; all changes must go through a PR from a feature branch
 - Reviewers must provide constructive, specific feedback
 - Authors must respond to all feedback before merging
 - Approval required before merge
@@ -301,6 +300,17 @@ Documentation is essential and must be maintained with the same rigor as code.
    - Merge to main branch
    - Deploy to appropriate environment
    - Monitor for issues
+
+### Version Control Practices
+
+**Requirements:**
+- All commits must include a descriptive commit message explaining what changed and why
+- All merges must include a merge message documenting what is being merged and the reason
+- All reverts must include the reason for reverting in the commit message
+- Never commit directly to master; all changes must go through a PR from a feature branch
+- Commit messages should be clear enough that someone reading the git history can understand the change without viewing the diff
+
+**Rationale:** Clear commit messages create a useful project history, facilitate debugging, and document the evolution of the codebase.
 
 ### Quality Gates
 
