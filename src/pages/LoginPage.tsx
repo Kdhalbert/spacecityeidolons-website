@@ -1,12 +1,18 @@
 import React from 'react';
+import { PageHero, DarkCard } from '../components/ui';
 
-const LoginPage: React.FC = () => {
-  return (
-    <div className="max-w-md mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Sign In</h1>
-      {/* TODO: Add login form */}
+const LoginPage: React.FC = () => (
+  <>
+    <PageHero title="Sign In" subtitle="Welcome back" />
+    <div className="content-section" style={{ maxWidth: '480px' }}>
+      <DarkCard>
+        {/* TODO: Add login form */}
+        <p style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', textAlign: 'center', padding: '24px 0' }}>
+          Login form coming soon.
+        </p>
+      </DarkCard>
     </div>
-  );
-};
+  </>
+);
 
 export default LoginPage;

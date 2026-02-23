@@ -1,19 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NotFoundPage: React.FC = () => {
-  return (
-    <div className="max-w-md mx-auto px-4 py-12 text-center">
-      <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
-      <p className="text-xl text-gray-600 mb-8">Page not found</p>
-      <Link
-        to="/"
-        className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-      >
-        Go Home
-      </Link>
-    </div>
-  );
-};
+const NotFoundPage: React.FC = () => (
+  <section className="hero-section">
+    <h1 style={{ fontSize: '5rem', letterSpacing: '4px' }}>404</h1>
+    <p className="tagline">Page Not Found</p>
+    <p className="hero-desc">
+      The page you're looking for doesn't exist or may have moved.
+    </p>
+    <Link to="/" className="chat-link">
+      Go Home
+    </Link>
+  </section>
+);
 
 export default NotFoundPage;

@@ -1,12 +1,18 @@
 import React from 'react';
+import { PageHero, DarkCard } from '../components/ui';
 
-const RegisterPage: React.FC = () => {
-  return (
-    <div className="max-w-md mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Create Account</h1>
-      {/* TODO: Add registration form */}
+const RegisterPage: React.FC = () => (
+  <>
+    <PageHero title="Create Account" subtitle="Join the community" />
+    <div className="content-section" style={{ maxWidth: '480px' }}>
+      <DarkCard>
+        {/* TODO: Add registration form */}
+        <p style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', textAlign: 'center', padding: '24px 0' }}>
+          Registration form coming soon.
+        </p>
+      </DarkCard>
     </div>
-  );
-};
+  </>
+);
 
 export default RegisterPage;

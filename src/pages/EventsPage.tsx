@@ -1,15 +1,22 @@
 import React from 'react';
+import { PageHero, PageSection, SectionTitle, DarkCard } from '../components/ui';
 
-const EventsPage: React.FC = () => {
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Events</h1>
-      <p className="text-lg text-gray-600 mb-8">
-        Upcoming events and gaming sessions you can join.
-      </p>
+const EventsPage: React.FC = () => (
+  <>
+    <PageHero
+      title="Events"
+      subtitle="Gaming Sessions & Gatherings"
+      description="Upcoming events and gaming sessions you can join."
+    />
+    <PageSection>
+      <SectionTitle subtitle="Sign up for upcoming events.">Upcoming Events</SectionTitle>
       {/* TODO: Add events list and calendar */}
-    </div>
-  );
-};
+      <DarkCard>
+        <h2>No Upcoming Events</h2>
+        <p>Check back soon — we'll post gaming sessions, tournaments, and social events here.</p>
+      </DarkCard>
+    </PageSection>
+  </>
+);
 
 export default EventsPage;

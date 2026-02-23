@@ -222,6 +222,11 @@
   50% { transform: translateY(-10px); }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 h1 {
   font-size: 2.5rem;
   color: var(--gold);
@@ -277,80 +282,142 @@ h1 {
   box-shadow: 0 6px 25px var(--gold-glow), 0 0 40px var(--gold-glow);
 }
 
-/* Override form text colors inside dark invite cards */
-.invite-card-wrapper h3 {
-  color: var(--gold);
-  letter-spacing: 1px;
-}
+/* =====================================================
+   BUTTON SYSTEM
+   ===================================================== */
 
-.invite-card-wrapper p,
-.invite-card-wrapper label {
-  color: var(--text-light) !important;
-}
-
-.invite-card-wrapper input,
-.invite-card-wrapper textarea {
-  background: rgba(13, 27, 42, 0.8) !important;
-  border-color: var(--purple-lighter) !important;
-  color: var(--text-light) !important;
-}
-
-.invite-card-wrapper input::placeholder,
-.invite-card-wrapper textarea::placeholder {
-  color: var(--text-muted) !important;
-}
-
-.invite-card-wrapper input:focus,
-.invite-card-wrapper textarea:focus {
-  outline: none;
-  border-color: var(--gold) !important;
-  box-shadow: 0 0 0 2px var(--gold-glow) !important;
-}
-
-/* Submit button styled with gold theme */
-.invite-card-wrapper button[type="submit"] {
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--purple-lighter) 100%) !important;
-  color: var(--gold) !important;
-  border: 1px solid var(--gold) !important;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-family: 'Cinzel', serif;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--purple-lighter) 100%);
+  color: var(--gold);
+  border: 1px solid var(--gold);
   box-shadow: 0 2px 10px var(--gold-glow);
 }
 
-.invite-card-wrapper button[type="submit"]:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px var(--gold-glow) !important;
+  box-shadow: 0 4px 20px var(--gold-glow);
 }
 
-/* Success state in dark theme */
-.invite-card-wrapper .bg-green-50 {
-  background: rgba(50, 29, 60, 0.8) !important;
-  border-color: var(--gold) !important;
+.btn-secondary {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--purple-lighter);
 }
 
-.invite-card-wrapper .bg-green-50 h3 {
-  color: var(--gold) !important;
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--gold);
+  box-shadow: 0 2px 10px var(--gold-glow);
 }
 
-.invite-card-wrapper .bg-green-50 p {
-  color: var(--text-light) !important;
+.btn-danger {
+  background: #5c1a1a;
+  color: #ff9999;
+  border: 1px solid #cc4444;
 }
 
-/* Error message styling */
-.invite-card-wrapper .bg-red-50 {
-  background: rgba(80, 0, 0, 0.4) !important;
-  border-color: #ff6b6b !important;
+.btn-danger:hover:not(:disabled) {
+  background: #7a2020;
+  transform: translateY(-1px);
 }
 
-.invite-card-wrapper .bg-red-50 p {
-  color: #ff6b6b !important;
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
 }
 
-/* Secondary button in dark theme */
-.invite-card-wrapper button:not([type="submit"]) {
-  background: transparent !important;
-  color: var(--gold) !important;
-  border: 1px solid var(--purple-lighter) !important;
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-light);
+}
+
+.btn-sm  { padding: 6px 14px;  font-size: 0.8rem; }
+.btn-md  { padding: 10px 20px; font-size: 0.9rem; }
+.btn-lg  { padding: 14px 32px; font-size: 1rem; }
+
+.btn-full { width: 100%; }
+
+/* =====================================================
+   INPUT SYSTEM
+   ===================================================== */
+
+.input-field-wrapper {
+  width: 100%;
+}
+
+.input-dark-label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.input-dark {
+  width: 100%;
+  padding: 9px 12px;
+  background: rgba(13, 27, 42, 0.8);
+  border: 1px solid var(--purple-lighter);
+  border-radius: 6px;
+  color: var(--text-light);
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.input-dark::placeholder {
+  color: var(--text-muted);
+}
+
+.input-dark:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+
+.input-dark:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-dark-error {
+  border-color: #cc4444;
+}
+
+.input-error-text {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: #ff9999;
+  font-family: sans-serif;
+}
+
+.input-help-text {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-family: sans-serif;
 }
 

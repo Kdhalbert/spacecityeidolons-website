@@ -50,12 +50,12 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
 
   if (isSubmitted) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-green-900 mb-2">
+      <div style={{ background: 'rgba(50, 29, 60, 0.8)', border: '1px solid var(--gold)', borderRadius: '12px', padding: '24px' }}>
+        <h3 style={{ color: 'var(--gold)', fontFamily: "'Cinzel', serif", marginBottom: '8px', letterSpacing: '1px' }}>
           Success! Request Received
         </h3>
-        <p className="text-green-800 mb-4">
-          We appreciate your interest in joining our {platformName} community. 
+        <p style={{ color: 'var(--text-light)', fontFamily: 'sans-serif', lineHeight: '1.6', marginBottom: '16px' }}>
+          We appreciate your interest in joining our {platformName} community.
           We'll review your submission and send an invite to your email soon.
         </p>
         <Button
@@ -69,21 +69,21 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} noValidate>
       <div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        <h3 style={{ color: 'var(--gold)', fontFamily: "'Cinzel', serif", fontSize: '1.1rem', marginBottom: '6px', letterSpacing: '0.5px' }}>
           Request {platformName} Invite
         </h3>
-        <p className="text-gray-600 mb-4">
-          {platform === 'DISCORD' 
+        <p style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', fontSize: '0.9rem', lineHeight: '1.5' }}>
+          {platform === 'DISCORD'
             ? 'Chat with community members, find gaming groups, and stay updated on events.'
             : 'A privacy-focused alternative with end-to-end encryption.'}
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm text-red-800">{error}</p>
+        <div style={{ background: 'rgba(80, 0, 0, 0.4)', border: '1px solid #cc4444', borderRadius: '8px', padding: '12px' }}>
+          <p style={{ color: '#ff9999', fontFamily: 'sans-serif', fontSize: '0.88rem' }}>{error}</p>
         </div>
       )}
 
@@ -105,8 +105,8 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
         required
       />
 
-      <div className="w-full">
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="input-field-wrapper">
+        <label htmlFor="message" className="input-dark-label">
           Message (Optional)
         </label>
         <textarea
@@ -114,17 +114,11 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
           id="message"
           rows={3}
           placeholder="Tell us a bit about yourself and why you want to join..."
-          className={`
-            w-full px-3 py-2 border rounded-lg
-            bg-white text-gray-900 placeholder-gray-400
-            transition-colors duration-200
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-            ${errors.message ? 'border-red-500' : 'border-gray-300'}
-            disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50
-          `}
+          className={`input-dark${errors.message ? ' input-dark-error' : ''}`}
+          style={{ resize: 'vertical' }}
         />
         {errors.message && (
-          <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+          <p className="input-error-text">{errors.message.message}</p>
         )}
       </div>
 
@@ -132,7 +126,7 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
         type="submit"
         variant="primary"
         disabled={isSubmitting}
-        className="w-full"
+        fullWidth
       >
         {isSubmitting ? 'Submitting...' : 'Request Invite'}
       </Button>
