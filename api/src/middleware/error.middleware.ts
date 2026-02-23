@@ -9,13 +9,24 @@ export async function errorHandler(
   // Log the error
   request.log.error(error);
 
-  // Handle Zod validation errors
-  if (error instanceof ZodError) {
+  // Handle Zod validation errors (check instance, cause, name, and issues property)
+  const isZodError = error instanceof ZodError || 
+                     (error as any).cause instanceof ZodError ||
+                     error.name === 'ZodError' ||
+                     (error as any).issues !== undefined;
+  
+  if (isZodError) {
+    const zodError = error instanceof ZodError ? error : 
+                     (error as any).cause instanceof ZodError ? (error as any).cause : 
+                     error;
     return reply.status(400).send({
       statusCode: 400,
       error: 'Validation Error',
       message: 'Invalid request data',
-      details: error.errors.map(e => ({
+      details: (zodError as any).issues?.map((e: any) => ({
+        path: e.path.join('.'),
+        message: e.message,
+      })) || (zodError as any).errors?.map((e: any) => ({
         path: e.path.join('.'),
         message: e.message,
       })),
