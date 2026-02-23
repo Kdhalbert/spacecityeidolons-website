@@ -38,9 +38,9 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
   ({ name, label, error, helpText, className = '', ...props }, ref) => (
-    <div className="mb-4 w-full">
+    <div className="input-field-wrapper">
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor={name} className="input-dark-label">
           {label}
         </label>
       )}
@@ -48,19 +48,11 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
         ref={ref}
         id={name}
         name={name}
-        className={`
-          w-full px-3 py-2 border rounded-lg
-          bg-white text-gray-900 placeholder-gray-400
-          transition-colors duration-200
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-          ${error ? 'border-red-500' : 'border-gray-300'}
-          disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50
-          ${className}
-        `}
+        className={`input-dark${error ? ' input-dark-error' : ''} ${className}`.trim()}
         {...props}
       />
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {helpText && !error && <p className="mt-1 text-sm text-gray-500">{helpText}</p>}
+      {error && <p className="input-error-text">{error}</p>}
+      {helpText && !error && <p className="input-help-text">{helpText}</p>}
     </div>
   )
 );
