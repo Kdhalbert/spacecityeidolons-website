@@ -1,28 +1,20 @@
-import './App.css'
+import { Outlet } from 'react-router-dom';
+import { Header, Footer } from './components/layout/Layout';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import './App.css';
 
 function App() {
   return (
-    <div className="app">
-      <div className="container">
-        <img src="/logo.svg" alt="Space City Eidolons" className="logo" />
-        <h1>Space City Eidolons</h1>
-        <p className="tagline">A Gaming Community</p>
-        
-        <div className="status">
-          <h2>Coming Soon</h2>
-          <p>Our website is under construction. In the meantime, join us on our community chat!</p>
-        </div>
-        
-        <a href="https://chat.spacecityeidolons.com" className="chat-link">
-          Join Our Chat
-        </a>
+    <ErrorBoundary>
+      <div className="flex flex-col min-h-screen bg-white">
+        <Header />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <Footer />
       </div>
-      
-      <footer>
-        &copy; 2026 Space City Eidolons
-      </footer>
-    </div>
-  )
+    </ErrorBoundary>
+  );
 }
 
-export default App
+export default App;
