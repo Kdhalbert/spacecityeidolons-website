@@ -14,9 +14,9 @@ const HomePage: React.FC = () => {
           style={{ width: '160px', height: '160px', marginBottom: '24px' }}
         />
         <h1>Space City Eidolons</h1>
-        <p className="tagline">Houston's Premier Gaming Community</p>
+        <p className="tagline">An Online Gaming Community</p>
         <p className="hero-desc">
-          Welcome to Space City Eidolons — a vibrant gaming community based in Houston, Texas.
+          Welcome to Space City Eidolons — a vibrant online gaming community.
           We bring together gamers of all types to share experiences, organize events, and build lasting friendships.
         </p>
       </section>
@@ -32,8 +32,8 @@ const HomePage: React.FC = () => {
               tabletop RPGs, or anything in between, you'll find like-minded players here.
             </p>
             <p style={{ marginTop: '12px' }}>
-              We host regular gaming sessions, tournaments, and social events both online and in-person
-              around the Houston area. Our community values inclusivity, respect, and having fun together.
+              We host regular gaming sessions, tournaments, and online events that bring
+              the community together. Our community values inclusivity, respect, and having fun together.
             </p>
           </div>
           <div className="dark-card">
@@ -94,7 +94,8 @@ const HomePage: React.FC = () => {
           <div className="dark-card">
             <h3>Community Events</h3>
             <p>
-              LAN parties, movie nights, and social gatherings where we connect beyond the screen.
+              Watch parties, online tournaments, and community game nights where
+              we come together and have fun.
             </p>
           </div>
           <div className="dark-card">

@@ -69,7 +69,7 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }} noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }} noValidate>
       <div>
         <h3 style={{ color: 'var(--gold)', fontFamily: "'Cinzel', serif", fontSize: '1.1rem', marginBottom: '6px', letterSpacing: '0.5px' }}>
           Request {platformName} Invite
@@ -127,6 +127,7 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
         variant="primary"
         disabled={isSubmitting}
         fullWidth
+        style={{ marginTop: 'auto' }}
       >
         {isSubmitting ? 'Submitting...' : 'Request Invite'}
       </Button>
