@@ -310,7 +310,13 @@ Documentation is essential and must be maintained with the same rigor as code.
 - Never commit directly to master; all changes must go through a PR from a feature branch
 - Commit messages should be clear enough that someone reading the git history can understand the change without viewing the diff
 
-**Rationale:** Clear commit messages create a useful project history, facilitate debugging, and document the evolution of the codebase.
+**Pull Request Creation:**
+- Use standard Git CLI commands (`git checkout -b`, `git commit`, `git push`)
+- Create PRs using GitHub CLI (`gh pr create`) or GitHub web UI
+- **PROHIBITED**: GitKraken MCP tools (e.g., `mcp_gitkraken_*` functions) - these require additional authentication setup and are not configured for this project
+- When automation fails, provide manual instructions to users rather than attempting unavailable tools
+
+**Rationale:** Clear commit messages create a useful project history, facilitate debugging, and document the evolution of the codebase. Standardized tooling ensures reliable workflows.
 
 ### Quality Gates
 

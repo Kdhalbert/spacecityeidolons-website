@@ -165,29 +165,28 @@
 
 ### Frontend Implementation for User Story 1
 
-- [ ] T081 [US1] Refactor existing `src/App.tsx` content into `src/pages/HomePage.tsx`
-- [ ] T082 [US1] Update HomePage with Space City Eidolons description, values, and community info
-- [ ] T083 [P] [US1] Create InviteRequestForm component in `src/components/invites/InviteRequestForm.tsx` with React Hook Form + Zod
-- [ ] T084 [P] [US1] Create Discord invite form variant in InviteRequestForm component
-- [ ] T085 [P] [US1] Create Matrix/Element invite form variant in InviteRequestForm component
-- [ ] T086 [P] [US1] Add form validation for email and name fields
-- [ ] T087 [US1] Create invite service functions in `src/services/invite.service.ts` for API calls
-- [ ] T087 [US1] Integrate invite forms into HomePage with modals or sections
-- [ ] T088 [P] [US1] Add loading states during form submission
-- [ ] T089 [P] [US1] Add success confirmation messages after submission
-- [ ] T090 [P] [US1] Add error handling and display for failed submissions
-- [ ] T091 [US1] Update navigation in Header component with invite request CTAs
-- [ ] T092 [US1] Update App.tsx to use HomePage as default route
+- [x] T081 [US1] Refactor existing `src/App.tsx` content into `src/pages/HomePage.tsx` — HomePage refactored with full community content
+- [x] T082 [US1] Update HomePage with Space City Eidolons description, values, and community info — Added hero section, about section, values, join section with invite forms
+- [x] T083 [P] [US1] Create InviteRequestForm component in `src/components/InviteRequestForm.tsx` with React Hook Form + Zod — Component created with all features
+- [x] T084 [P] [US1] Create Discord invite form variant in InviteRequestForm component — Implemented via platform prop
+- [x] T085 [P] [US1] Create Matrix/Element invite form variant in InviteRequestForm component — Implemented via platform prop
+- [x] T086 [P] [US1] Add form validation for email and name fields — Zod validation added with proper error messages
+- [x] T087 [US1] Create invite service functions in `src/services/invite.service.ts` for API calls — createInviteRequest() implemented
+- [x] T088 [P] [US1] Add loading states during form submission — isSubmitting state with "Submitting..." text
+- [x] T089 [P] [US1] Add success confirmation messages after submission — Success message with reset option
+- [x] T090 [P] [US1] Add error handling and display for failed submissions — Error display with retry capability
+- [x] T091 [US1] Update navigation in Header component with invite request CTAs — Added "Request Invite" button with scroll to join section
+- [x] T092 [US1] Update App.tsx to use HomePage as default route — Verified router.tsx already has HomePage as default route
 
 ### Validation & Testing
 
-- [ ] T093 [US1] Run all US1 tests - verify they now PASS (were failing before implementation)
+- [x] T093 [US1] Run all US1 tests - verify they now PASS (were failing before implementation) — All 26 tests passing (20 InviteRequestForm + 6 Button)
 - [ ] T094 [US1] Manual test: Submit Discord invite request, verify stored in database
 - [ ] T095 [US1] Manual test: Submit Matrix invite request, verify stored in database
 - [ ] T096 [US1] Manual test: Verify duplicate email handling
 - [ ] T097 [US1] Verify all 8 acceptance scenarios from spec.md pass
 
-**Checkpoint**: User Story 1 complete and independently testable - MVP ready for demo/deployment
+**Checkpoint**: User Story 1 frontend complete, all tests passing, ready for PR and manual testing with backend
 
 ---
 

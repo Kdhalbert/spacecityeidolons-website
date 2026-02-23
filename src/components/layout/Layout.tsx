@@ -2,13 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
+  const scrollToInvite = () => {
+    const inviteSection = document.querySelector('#join-section');
+    if (inviteSection) {
+      inviteSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/" className="text-2xl font-bold text-blue-600">
           Space City Eidolons
         </Link>
-        <nav className="flex gap-4">
+        <nav className="flex gap-4 items-center">
           <Link
             to="/"
             className="text-gray-600 hover:text-gray-900 transition-colors"
@@ -33,6 +40,12 @@ export const Header: React.FC = () => {
           >
             Profile
           </Link>
+          <button
+            onClick={scrollToInvite}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+          >
+            Request Invite
+          </button>
         </nav>
       </div>
     </header>
