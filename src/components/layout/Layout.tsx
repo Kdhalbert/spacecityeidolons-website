@@ -10,40 +10,17 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-blue-600">
+    <header className="site-header">
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
+        <Link to="/" className="site-title" style={{ fontSize: '1.3rem' }}>
           Space City Eidolons
         </Link>
-        <nav className="flex gap-4 items-center">
-          <Link
-            to="/"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            to="/games"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Games
-          </Link>
-          <Link
-            to="/events"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Events
-          </Link>
-          <Link
-            to="/profile"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Profile
-          </Link>
-          <button
-            onClick={scrollToInvite}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-          >
+        <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+          <Link to="/">Home</Link>
+          <Link to="/games">Games</Link>
+          <Link to="/events">Events</Link>
+          <Link to="/profile">Profile</Link>
+          <button onClick={scrollToInvite} className="invite-btn">
             Request Invite
           </button>
         </nav>
@@ -56,61 +33,35 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-100 border-t border-gray-200 mt-12">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-3 gap-8 mb-8">
+    <footer className="site-footer">
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px', marginBottom: '32px' }}>
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">About</h3>
-            <p className="text-sm text-gray-600">
+            <h3>About</h3>
+            <p style={{ fontFamily: 'sans-serif', lineHeight: '1.6' }}>
               Space City Eidolons is a gaming community dedicated to bringing
               people together for shared experiences.
             </p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Community</h3>
-            <ul className="text-sm text-gray-600 space-y-2">
-              <li>
-                <a href="#" className="hover:text-gray-900 transition-colors">
-                  Discord
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-gray-900 transition-colors">
-                  Forums
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-gray-900 transition-colors">
-                  Events
-                </a>
-              </li>
+            <h3>Community</h3>
+            <ul style={{ listStyle: 'none', padding: 0, fontFamily: 'sans-serif' }}>
+              <li style={{ marginBottom: '8px' }}><a href="#">Discord</a></li>
+              <li style={{ marginBottom: '8px' }}><a href="#">Forums</a></li>
+              <li style={{ marginBottom: '8px' }}><a href="#">Events</a></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
-            <ul className="text-sm text-gray-600 space-y-2">
-              <li>
-                <a href="#" className="hover:text-gray-900 transition-colors">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-gray-900 transition-colors">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-gray-900 transition-colors">
-                  Contact
-                </a>
-              </li>
+            <h3>Legal</h3>
+            <ul style={{ listStyle: 'none', padding: 0, fontFamily: 'sans-serif' }}>
+              <li style={{ marginBottom: '8px' }}><a href="#">Privacy Policy</a></li>
+              <li style={{ marginBottom: '8px' }}><a href="#">Terms of Service</a></li>
+              <li style={{ marginBottom: '8px' }}><a href="#">Contact</a></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-          <p>
-            &copy; {currentYear} Space City Eidolons. All rights reserved.
-          </p>
+        <div style={{ borderTop: '1px solid var(--purple-lighter)', paddingTop: '24px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+          <p>&copy; {currentYear} Space City Eidolons. All rights reserved.</p>
         </div>
       </div>
     </footer>

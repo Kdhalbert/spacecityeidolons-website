@@ -6,9 +6,9 @@ import './App.css';
 function App() {
   return (
     <ErrorBoundary>
-      <div className="flex flex-col min-h-screen bg-white">
+      <div className="app">
         <Header />
-        <main className="flex-1">
+        <main style={{ flex: 1 }}>
           <Outlet />
         </main>
         <Footer />
