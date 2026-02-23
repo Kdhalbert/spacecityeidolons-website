@@ -19,6 +19,12 @@ const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
   
+  // Discord OAuth
+  DISCORD_CLIENT_ID: z.string().min(1),
+  DISCORD_CLIENT_SECRET: z.string().min(1),
+  DISCORD_REDIRECT_URI: z.string().url(),
+  DISCORD_OAUTH_SCOPES: z.string().default('identify email'),
+  
   // CORS
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   

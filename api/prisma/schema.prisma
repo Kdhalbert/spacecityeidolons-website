@@ -12,22 +12,24 @@ datasource db {
 
 // User entity - authentication and authorization
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   // bcrypt hashed
-  role      Role     @default(MEMBER)
-  status    UserStatus @default(PENDING)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(uuid())
+  email           String?  @unique // From Discord OAuth, may be null if user doesn't share
+  discordId       String   @unique // Discord user ID
+  discordUsername String   // Discord username
+  discordAvatar   String?  // Discord avatar URL
+  role            Role     @default(MEMBER)
+  status          UserStatus @default(ACTIVE)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   // Relations
   profile          Profile?
   refreshTokens    RefreshToken[]
-  passwordResets   PasswordResetToken[]
   createdEvents    Event[]           @relation("EventCreator")
   gamePageRequests GamePageRequest[] @relation("GamePageRequester")
 
   @@index([email])
+  @@index([discordId])
   @@index([status])
   @@map("users")
 }
@@ -186,22 +188,4 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
   @@map("refresh_tokens")
-}
-
-// PasswordResetToken entity - password reset flow
-model PasswordResetToken {
-  id        String   @id @default(uuid())
-  userId    String
-  token     String   @unique
-  expiresAt DateTime
-  used      Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([token])
-  @@index([expiresAt])
-  @@map("password_reset_tokens")
 }
