@@ -53,20 +53,27 @@ Visitors can discover Space City Eidolons and request invites to community serve
 
 ### User Story 2 - User Authentication & Registration (Priority: P2)
 
-Community members can create accounts, log in, and access member-only features.
+Community members can create accounts, log in, and access member-only features using Discord OAuth.
 
-**Why this priority**: Authentication is the gateway to all member features. Once people are approved via invite requests (P1), they need a way to register and access the platform. This is the foundation for all subsequent member features.
+**Why this priority**: Authentication is the gateway to all member features. Once people are approved via invite requests (P1), they need a way to register and access the platform. This is the foundation for all subsequent member features. Using Discord OAuth simplifies onboarding since community members already have Discord accounts.
 
-**Independent Test**: Can be fully tested by completing the registration flow, logging in, logging out, and password reset. Delivers value by creating secure member access separate from guest access.
+**Independent Test**: Can be fully tested by completing the Discord OAuth flow, logging in, logging out. Delivers value by creating secure member access separate from guest access.
+
+**Authentication Method**: Discord OAuth 2.0 (v10 API)
+- Users authenticate via "Login with Discord" button
+- System retrieves Discord user ID, username, email, and avatar from Discord API
+- First login automatically creates user account and basic profile
+- Session maintained with JWT access + refresh tokens
+- Future enhancement: Email/password authentication as alternative method
 
 **Acceptance Scenarios**:
 
-1. **Given** a new member has been approved, **When** they visit the registration page, **Then** they can create an account with email and password
-2. **Given** a user has an account, **When** they enter valid credentials, **Then** they are logged in and see member features
-3. **Given** a logged-in user, **When** they click logout, **Then** they are logged out and returned to guest view
-4. **Given** a user forgot their password, **When** they use the password reset feature, **Then** they receive instructions to reset their password
+1. **Given** a user visits the login page, **When** they click "Login with Discord", **Then** they are redirected to Discord OAuth authorization page
+2. **Given** a user authorizes the application on Discord, **When** they are redirected back, **Then** they are logged in and see member features
+3. **Given** a user logs in for the first time via Discord, **When** authentication completes, **Then** a user account and basic profile are automatically created
+4. **Given** a logged-in user, **When** they click logout, **Then** they are logged out and returned to guest view
 5. **Given** an unauthenticated user, **When** they try to access member-only features, **Then** they are redirected to login
-6. **Given** a user creates an account, **When** registration completes, **Then** a basic profile is automatically created for them
+6. **Given** a user's session expires, **When** they attempt an action, **Then** they are prompted to log in again
 
 ---
 
@@ -243,81 +250,84 @@ Admins can create game-specific pages, approve game page requests, and create pu
 
 **Authentication & Authorization:**
 - **FR-001**: System MUST allow visitors to view public content without authentication
-- **FR-002**: System MUST provide registration for new members with email and password
-- **FR-003**: System MUST authenticate users via email and password credentials
-- **FR-004**: System MUST distinguish between three user roles: Guest (unauthenticated), Member (authenticated non-admin), and Admin
-- **FR-005**: System MUST enforce role-based access control for all protected features
-- **FR-006**: System MUST allow users to reset forgotten passwords
+- **FR-002**: System MUST provide Discord OAuth 2.0 authentication for user login
+- **FR-003**: System MUST automatically create user accounts on first Discord OAuth login
+- **FR-004**: System MUST store Discord user ID, username, email, and avatar from OAuth response
+- **FR-005**: System MUST distinguish between three user roles: Guest (unauthenticated), Member (authenticated non-admin), and Admin
+- **FR-006**: System MUST enforce role-based access control for all protected features
 - **FR-007**: System MUST log out users and terminate sessions when requested
+- **FR-008**: System MUST handle OAuth callback errors gracefully (denied authorization, expired tokens, etc.)
 
 **Invite Request System:**
-- **FR-008**: System MUST provide a form for visitors to request Discord invites
-- **FR-009**: System MUST provide a form for visitors to request Matrix/Element invites
-- **FR-010**: System MUST store invite requests with status (pending, approved, rejected)
-- **FR-011**: System MUST allow admins to view all pending invite requests
-- **FR-012**: System MUST allow admins to approve or reject invite requests
-- **FR-013**: System MUST notify requesters when their invite request is processed
+- **FR-009**: System MUST provide a form for visitors to request Discord invites
+- **FR-010**: System MUST provide a form for visitors to request Matrix/Element invites
+- **FR-011**: System MUST store invite requests with status (pending, approved, rejected)
+- **FR-012**: System MUST allow admins to view all pending invite requests
+- **FR-013**: System MUST allow admins to approve or reject invite requests
+- **FR-014**: System MUST notify requesters when their invite request is processed
 
 **User Profiles:**
-- **FR-014**: System MUST create a basic profile automatically when a user registers
-- **FR-015**: System MUST allow members to add a biography to their profile
-- **FR-016**: System MUST allow members to add their Twitch streaming URL
-- **FR-017**: System MUST validate Twitch URLs when provided
-- **FR-018**: System MUST allow members to tag games they commonly play
-- **FR-019**: System MUST allow members to set privacy level (public/private) for each profile field
-- **FR-020**: System MUST enforce privacy settings when displaying profiles
-- **FR-021**: System MUST allow guests to view only public profile fields
-- **FR-022**: System MUST allow members to view each other's public profile fields
-- **FR-023**: System MUST allow admins to view all profile fields regardless of privacy setting
+- **FR-015**: System MUST create a basic profile automatically when a user first logs in via Discord OAuth
+- **FR-016**: System MUST populate profile with Discord username and avatar by default
+- **FR-017**: System MUST allow members to add a biography to their profile
+- **FR-018**: System MUST allow members to add their Twitch streaming URL
+- **FR-019**: System MUST validate Twitch URLs when provided
+- **FR-020**: System MUST allow members to tag games they commonly play
+- **FR-021**: System MUST allow members to set privacy level (public/private) for each profile field
+- **FR-022**: System MUST enforce privacy settings when displaying profiles
+- **FR-023**: System MUST allow guests to view only public profile fields
+- **FR-024**: System MUST allow members to view each other's public profile fields
+- **FR-025**: System MUST allow admins to view all profile fields regardless of privacy setting
 
 **Community Calendar:**
-- **FR-024**: System MUST display a calendar view showing events by date
-- **FR-025**: System MUST allow filtering events by date range
-- **FR-026**: System MUST allow guests to view all public events
-- **FR-027**: System MUST allow members to view public events and their own private events
-- **FR-028**: System MUST allow admins to view all events (public and private)
-- **FR-029**: System MUST allow non-admin members to create private events
-- **FR-030**: System MUST allow admins to create both public and private events
-- **FR-031**: System MUST allow event creators to edit their own events
-- **FR-032**: System MUST allow event creators to delete their own events
-- **FR-033**: System MUST allow admins to edit and delete any event
-- **FR-034**: System MUST store event details including name, date, time, description, visibility, and optional game association
+- **FR-026**: System MUST display a calendar view showing events by date
+- **FR-027**: System MUST allow filtering events by date range
+- **FR-028**: System MUST allow guests to view all public events
+- **FR-029**: System MUST allow members to view public events and their own private events
+- **FR-030**: System MUST allow admins to view all events (public and private)
+- **FR-031**: System MUST allow non-admin members to create private events
+- **FR-032**: System MUST allow admins to create both public and private events
+- **FR-033**: System MUST allow event creators to edit their own events
+- **FR-034**: System MUST allow event creators to delete their own events
+- **FR-035**: System MUST allow admins to edit and delete any event
+- **FR-036**: System MUST store event details including name, date, time, description, visibility, and optional game association
 
 **Game Pages:**
-- **FR-035**: System MUST display a list of existing game pages
-- **FR-036**: System MUST allow guests to view public game page content
-- **FR-037**: System MUST allow non-admin members to request new game pages
-- **FR-038**: System MUST store game page requests with status (pending, approved, rejected)
-- **FR-039**: System MUST prevent duplicate pending game page requests for the same game
-- **FR-040**: System MUST allow admins to view pending game page requests
-- **FR-041**: System MUST allow admins to approve game page requests with automatic page creation
-- **FR-042**: System MUST allow admins to reject game page requests with reason
-- **FR-043**: System MUST notify requesters when their game page request is processed
-- **FR-044**: System MUST allow admins to create game pages directly
-- **FR-045**: System MUST allow admins to edit existing game pages
-- **FR-046**: System MUST create game pages from a consistent template structure
+- **FR-037**: System MUST display a list of existing game pages
+- **FR-038**: System MUST allow guests to view public game page content
+- **FR-039**: System MUST allow non-admin members to request new game pages
+- **FR-040**: System MUST store game page requests with status (pending, approved, rejected)
+- **FR-041**: System MUST prevent duplicate pending game page requests for the same game
+- **FR-042**: System MUST allow admins to view pending game page requests
+- **FR-043**: System MUST allow admins to approve game page requests with automatic page creation
+- **FR-044**: System MUST allow admins to reject game page requests with reason
+- **FR-045**: System MUST notify requesters when their game page request is processed
+- **FR-046**: System MUST allow admins to create game pages directly
+- **FR-047**: System MUST allow admins to edit existing game pages
+- **FR-048**: System MUST create game pages from a consistent template structure
 
 **Admin User Management:**
-- **FR-047**: System MUST allow admins to view a list of all users
-- **FR-048**: System MUST allow admins to view user details including role and status
-- **FR-049**: System MUST allow admins to promote members to admin role
-- **FR-050**: System MUST allow admins to demote admins to member role
-- **FR-051**: System MUST allow admins to suspend user accounts
-- **FR-052**: System MUST prevent suspended users from logging in
-- **FR-053**: System MUST allow admins to reactivate suspended accounts
+- **FR-049**: System MUST allow admins to view a list of all users
+- **FR-050**: System MUST allow admins to view user details including role and status
+- **FR-051**: System MUST allow admins to promote members to admin role
+- **FR-052**: System MUST allow admins to demote admins to member role
+- **FR-053**: System MUST allow admins to suspend user accounts
+- **FR-054**: System MUST prevent suspended users from logging in
+- **FR-055**: System MUST allow admins to reactivate suspended accounts
 
 **Landing Page:**
-- **FR-054**: System MUST display community name, description, and values on the landing page
-- **FR-055**: System MUST display information about games the community plays
-- **FR-056**: System MUST display links to invite request forms prominently
-- **FR-057**: System MUST display the public community calendar on or linked from the landing page
+- **FR-056**: System MUST display community name, description, and values on the landing page
+- **FR-057**: System MUST display information about games the community plays
+- **FR-058**: System MUST display links to invite request forms prominently
+- **FR-059**: System MUST display the public community calendar on or linked from the landing page
 
 ### Key Entities
 
 **User:**
 - Represents a registered member of the community
-- Attributes: email, password (hashed), role (member/admin), account status (active/suspended), registration date
+- Attributes: discordId (unique), discordUsername, email (from Discord), avatarUrl (from Discord), role (member/admin), account status (active/suspended), registration date
 - Relationships: Has one Profile, Creates many Events, Creates many GamePageRequests
+- Note: Password field removed - authentication handled via Discord OAuth
 
 **Profile:**
 - Represents a member's public-facing community presence
@@ -352,7 +362,7 @@ Admins can create game-specific pages, approve game page requests, and create pu
 - **SC-001**: Visitors can understand what Space City Eidolons is about within 30 seconds of landing on the homepage
 - **SC-002**: Visitors can successfully submit an invite request in under 2 minutes
 - **SC-003**: 90% of invite requests receive admin processing within 48 hours
-- **SC-004**: New members can complete registration and profile creation in under 5 minutes
+- **SC-004**: New members can complete Discord OAuth login and profile setup in under 3 minutes
 
 **Member Engagement:**
 - **SC-005**: Members can find and view other members' public profiles to discover gaming partners
@@ -381,22 +391,42 @@ Admins can create game-specific pages, approve game page requests, and create pu
 **Security & Data Protection:**
 - **SC-021**: No authenticated user can access another user's private profile fields
 - **SC-022**: No member can access admin-only features
-- **SC-023**: All password handling meets security best practices
+- **SC-023**: OAuth tokens are securely stored and refreshed
 - **SC-024**: Privacy setting changes take effect immediately
 
 ## Out of Scope
 
 The following are explicitly excluded from this specification:
 
+- **Alternative authentication methods**: Email/password, magic links, other OAuth providers (planned as future enhancements after Discord OAuth is stable)
+- **Password management**: Password reset, password change, password requirements (not applicable with OAuth-only authentication)
 - **Real-time features**: Chat, live notifications, presence indicators
 - **Social features**: Direct messaging, friend requests, following/followers
 - **Advanced calendar features**: Recurring events, RSVP system, capacity limits, reminders
 - **Content management**: Blog posts, news articles, media galleries
-- **Integration features**: Automatic syncing with Discord/Matrix, game API integrations, streaming platform APIs
+- **Integration features**: Automatic syncing with Discord/Matrix, game API integrations, streaming platform APIs beyond Discord
 - **Advanced search**: Full-text search, faceted filtering, saved searches
 - **Mobile applications**: Native iOS or Android apps
 - **Game stats/tracking**: Player stats, match history, leaderboards
 - **Payment/commerce**: Memberships, donations, merchandise
+
+## Future Enhancements
+
+The following features are planned for future releases after the initial v1.0 launch:
+
+**Phase 2 Authentication Options:**
+- Email/password authentication as alternative to Discord OAuth
+- Magic link authentication (passwordless email login)
+- Google OAuth, GitHub OAuth as additional providers
+- Account linking (connect multiple OAuth providers to one account)
+
+**Phase 2+ Features:**
+- Email verification flow for email/password accounts
+- Password reset and password change functionality
+- Two-factor authentication (2FA)
+- Account recovery options
+- Notification preferences and email notifications
+- Advanced profile customization (banners, themes, badges)
 - **Advanced moderation**: Content flagging, reporting system, automated moderation
 
 These may be considered for future iterations but are not part of this initial specification.

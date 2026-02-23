@@ -32,7 +32,7 @@ Build a full-featured community hub website for Space City Eidolons gaming commu
 **Language/Version**: TypeScript 5.9 + Node.js 20 LTS  
 **Framework**: Fastify 5.x (high performance, TypeScript-first, good DX)  
 **API Style**: RESTful JSON APIs with consistent error handling  
-**Authentication**: JWT (access + refresh tokens), bcrypt for password hashing  
+**Authentication**: Discord OAuth 2.0 + JWT (access + refresh tokens) for session management  
 **Validation**: Zod schemas (shared with frontend where possible)  
 **ORM/Database Client**: Prisma 6.x for type-safe database access  
 **Storage**: Azure Database for PostgreSQL Flexible Server (v16)  
@@ -45,8 +45,8 @@ Build a full-featured community hub website for Space City Eidolons gaming commu
 - p95 latency < 200ms for reads
 - p95 latency < 500ms for writes  
 - Handle 100 concurrent requests
-**Constraints**: Stateless API for horizontal scaling, JWT must expire, secure password requirements  
-**Scale/Scope**: ~40 API endpoints, 6 database entities, role-based access control
+**Constraints**: Stateless API for horizontal scaling, JWT must expire, Discord OAuth scopes limited to `identify email`  
+**Scale/Scope**: ~35 API endpoints, 6 database entities, role-based access control
 
 ### Azure Infrastructure
 
@@ -288,7 +288,7 @@ spacecityeidolons-website-new/
 |----------|------------|-------------------------------------|
 | Separate Backend Service | Need server-side authentication, database, role-based access control, and secure API layer | Frontend-only with Firebase/Supabase would vendor-lock us and limit customization for complex auth/permissions logic |
 | PostgreSQL Database | Need relational data (users→profiles, events→games), ACID transactions for invite approvals, and robust query capabilities | Simpler key-value stores (Redis) or file-based storage cannot handle complex relationships or provide transactional guarantees |
-| JWT with Refresh Tokens | Need stateless auth for horizontal scaling but also secure token expiration and revocation | Session-based auth requires sticky sessions or shared session store, complicating deployment; single JWT without refresh is insecure |
+| Discord OAuth + JWT Session | Need secure authentication; community already uses Discord as primary platform; OAuth simplifies onboarding | Email/password requires complex password management, reset flows, and security overhead; pure OAuth without JWT complicates API auth |
 | React Query | Need server state caching, automatic refetching, optimistic updates, and request deduplication | Raw fetch/axios with useState leads to race conditions, stale data, and excessive re-renders; Context API alone doesn't solve these |
 | Monorepo Structure | Need shared TypeScript types between frontend/backend, coordinated deployments, and unified repository management | Separate repos create type drift, coordination overhead, and complicate local development setup |
 
@@ -381,51 +381,56 @@ spacecityeidolons-website-new/
 
 ### Phase 2: P2 - User Authentication & Registration
 
-**Goal**: Implement authentication system with registration, login, logout, and password reset.
+**Goal**: Implement Discord OAuth authentication system with automatic account creation on first login.
 
-**Duration Estimate**: 5-7 days
+**Duration Estimate**: 4-6 days (simpler than email/password due to no password management complexity)
 
-**Prerequisites**: Phase 1 complete
+**Prerequisites**: Phase 1 complete, Discord OAuth application registered
 
 **Frontend Work**:
 1. Create AuthContext for global auth state
-2. Build LoginPage with form validation
-3. Build RegisterPage with password requirements
-4. Build PasswordResetPage (email input only - actual reset out of scope for v1)
-5. Create ProtectedRoute component for auth gating
-6. Implement JWT token storage (localStorage) and refresh logic
-7. Add axios interceptors for auth headers and token refresh
-8. Create logout functionality
-9. Show login/register links in navigation
+2. Build LoginPage with "Login with Discord" button
+3. Build OAuth callback page at `/auth/callback` to handle Discord redirect
+4. Create ProtectedRoute component for auth gating
+5. Implement JWT token storage (localStorage) and refresh logic
+6. Add axios interceptors for auth headers and token refresh
+7. Create logout functionality
+8. Show Discord username/avatar in navigation when logged in
+9. Show login button in navigation when logged out
 
 **Backend Work**:
-1. Implement `/api/auth/register` endpoint with password hashing (bcrypt)
-2. Implement `/api/auth/login` endpoint with JWT generation
-3. Implement `/api/auth/refresh` endpoint for token refresh
-4. Implement `/api/auth/logout` endpoint (revoke refresh token)
-5. Create JWT middleware for protected routes
-6. Create role-based access control middleware
-7. Implement password reset request endpoint (stores reset token, doesn't send email)
-8. Define password requirements (min 8 chars, uppercase, lowercase, number, special char)
+1. Register Discord OAuth application and obtain client ID/secret
+2. Implement `/api/auth/discord` endpoint to initiate OAuth flow (redirect to Discord)
+3. Implement `/api/auth/discord/callback` endpoint to handle OAuth callback
+4. Exchange Discord authorization code for access token
+5. Fetch Discord user data (`identify` and `email` scopes)
+6. Create User record on first login with Discord ID, username, email, avatar
+7. Auto-create Profile record for new users
+8. Generate JWT access + refresh tokens for session management
+9. Implement `/api/auth/refresh` endpoint for token refresh
+10. Implement `/api/auth/logout` endpoint (revoke refresh token)
+11. Update JWT middleware to verify tokens on protected routes
 
 **Database**:
-- `users` table (already created in Phase 0 schema)
-- `refresh_tokens` table for token management
-- `password_reset_tokens` table for reset flow
+- Update `users` table: add `discordId`, `discordUsername`, `avatarUrl`; remove `password` field
+- `refresh_tokens` table for JWT session management (already created in Phase 0)
+- Remove `password_reset_tokens` table (not needed with OAuth)
 
 **Tests** (Written BEFORE implementation):
-- **Frontend**: Login/register form validation, token storage, protected route redirects
-- **Backend**: Password hashing, JWT generation/verification, auth middleware, registration validation
-- **E2E**: Complete registration flow, login, logout, access protected pages
+- **Frontend**: OAuth redirect flow, callback handling, token storage, protected route redirects
+- **Backend**: OAuth code exchange, user creation logic, JWT generation/verification, auth middleware
+- **E2E**: Complete Discord OAuth login flow, access protected pages, logout
 
 **Acceptance Validation**:
 - All 6 acceptance scenarios from User Story 2 passing
-- Users can register and login
+- Users can log in via Discord OAuth
+- First-time users get account + profile auto-created
+- Sessions persist across page refreshes
 - Protected routes require authentication
 - JWTs expire and refresh automatically
-- Passwords are securely hashed (verified in tests)
+- Logout clears session correctly
 
-**Rollback Strategy**: Disable auth routes, remove ProtectedRoute wrapper, database rollback for auth tables
+**Rollback Strategy**: Disable OAuth routes, remove ProtectedRoute wrapper, database rollback for user table changes
 
 ---
 

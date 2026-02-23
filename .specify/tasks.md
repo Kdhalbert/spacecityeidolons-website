@@ -192,71 +192,74 @@
 
 ## Phase 3: User Story 2 - User Authentication & Registration (Priority: P2)
 
-**Goal**: Community members can create accounts, log in, and access member-only features
+**Goal**: Community members can log in via Discord OAuth and access member-only features
 
-**Independent Test**: Complete registration, login, logout, password reset request, access protected routes
+**Independent Test**: Complete Discord OAuth login, logout, access protected routes
 
 ### Tests for User Story 2 (Write FIRST, ensure they FAIL)
 
-- [ ] T098 [P] [US2] Write unit test for password hashing in `api/tests/unit/utils/password.test.ts`
-- [ ] T099 [P] [US2] Write unit test for JWT generation/verification in `api/tests/unit/utils/jwt.test.ts`
-- [ ] T100 [P] [US2] Write integration test for POST /api/auth/register in `api/tests/integration/auth.test.ts`
-- [ ] T101 [P] [US2] Write integration test for POST /api/auth/login in `api/tests/integration/auth.test.ts`
-- [ ] T102 [P] [US2] Write integration test for POST /api/auth/refresh in `api/tests/integration/auth.test.ts`
-- [ ] T103 [P] [US2] Write integration test for POST /api/auth/logout in `api/tests/integration/auth.test.ts`
-- [ ] T104 [P] [US2] Write test for auth middleware in `api/tests/unit/middleware/auth.middleware.test.ts`
-- [ ] T105 [P] [US2] Write React component tests for LoginForm in `src/components/auth/__tests__/LoginForm.test.tsx`
-- [ ] T106 [P] [US2] Write React component tests for RegisterForm in `src/components/auth/__tests__/RegisterForm.test.tsx`
-- [ ] T107 [P] [US2] Write E2E test for complete auth flow in `e2e/tests/authentication.spec.ts`
+- [ ] T098 [P] [US2] Write unit test for JWT generation/verification in `api/tests/unit/utils/jwt.test.ts`
+- [ ] T099 [P] [US2] Write integration test for GET /api/auth/discord (OAuth initiation) in `api/tests/integration/auth.test.ts`
+- [ ] T100 [P] [US2] Write integration test for GET /api/auth/discord/callback in `api/tests/integration/auth.test.ts`
+- [ ] T101 [P] [US2] Write integration test for POST /api/auth/refresh in `api/tests/integration/auth.test.ts`
+- [ ] T102 [P] [US2] Write integration test for POST /api/auth/logout in `api/tests/integration/auth.test.ts`
+- [ ] T103 [P] [US2] Write test for auth middleware in `api/tests/unit/middleware/auth.middleware.test.ts`
+- [ ] T104 [P] [US2] Write React component tests for LoginPage in `src/pages/__tests__/LoginPage.test.tsx`
+- [ ] T105 [P] [US2] Write React component tests for AuthCallback in `src/pages/__tests__/AuthCallback.test.tsx`
+- [ ] T106 [P] [US2] Write E2E test for complete Discord OAuth flow in `e2e/tests/authentication.spec.ts`
 
 ### Backend Implementation for User Story 2
 
-- [ ] T108 [P] [US2] Create User Zod schema in `api/src/schemas/user.schema.ts` with email, password validation
-- [ ] T109 [P] [US2] Implement password hashing functions in `api/src/utils/password.ts` using bcrypt
-- [ ] T110 [P] [US2] Implement JWT generation/verification in `api/src/utils/jwt.ts` with access + refresh tokens
-- [ ] T111 [US2] Implement AuthService in `api/src/services/auth.service.ts` with register, login, refresh, logout methods
-- [ ] T112 [US2] Create POST /api/auth/register endpoint in `api/src/routes/auth.ts`
-- [ ] T113 [US2] Create POST /api/auth/login endpoint in `api/src/routes/auth.ts`
-- [ ] T114 [US2] Create POST /api/auth/refresh endpoint in `api/src/routes/auth.ts`
-- [ ] T115 [US2] Create POST /api/auth/logout endpoint in `api/src/routes/auth.ts`
-- [ ] T116 [US2] Create POST /api/auth/password-reset-request endpoint in `api/src/routes/auth.ts` (stores token, doesn't send email)
-- [ ] T117 [US2] Implement JWT authentication middleware in `api/src/middleware/auth.middleware.ts`
-- [ ] T118 [P] [US2] Implement role-based access control middleware in `api/src/middleware/role.middleware.ts`
-- [ ] T119 [P] [US2] Add password requirements validation (min 8 chars, uppercase, lowercase, number, special char)
-- [ ] T120 [P] [US2] Auto-create profile on user registration in AuthService
+- [ ] T107 [P] [US2] Register Discord OAuth application at https://discord.com/developers/applications
+- [ ] T108 [P] [US2] Add Discord OAuth config to `api/src/config/index.ts` (client ID, secret, redirect URI)
+- [ ] T109 [P] [US2] Update Prisma schema: add discordId, discordUsername, avatarUrl to User; remove password field
+- [ ] T110 [P] [US2] Create and run database migration for User table changes
+- [ ] T111 [P] [US2] Remove PasswordResetToken entity from Prisma schema (not needed with OAuth)
+- [ ] T112 [P] [US2] Implement JWT generation/verification in `api/src/utils/jwt.ts` with access + refresh tokens
+- [ ] T113 [US2] Implement AuthService in `api/src/services/auth.service.ts` with Discord OAuth methods
+- [ ] T114 [US2] Create GET /api/auth/discord endpoint in `api/src/routes/auth.ts` to initiate OAuth flow
+- [ ] T115 [US2] Create GET /api/auth/discord/callback endpoint in `api/src/routes/auth.ts` to handle OAuth callback
+- [ ] T116 [US2] Implement exchange authorization code for Discord access token in AuthService
+- [ ] T117 [US2] Implement fetch Discord user data (identify + email scopes) in AuthService
+- [ ] T118 [US2] Implement user creation on first login: create User with Discord data
+- [ ] T119 [US2] Auto-create Profile record when User is created (Discord username as displayName, avatar as avatarUrl)
+- [ ] T120 [US2] Create POST /api/auth/refresh endpoint in `api/src/routes/auth.ts`
+- [ ] T121 [US2] Create POST /api/auth/logout endpoint in `api/src/routes/auth.ts`
+- [ ] T122 [P] [US2] Update JWT authentication middleware to verify tokens and attach user to request
+- [ ] T123 [P] [US2] Implement role-based access control middleware in `api/src/middleware/role.middleware.ts`
+- [ ] T124 [P] [US2] Add error handling for OAuth errors (denied authorization, invalid code, expired state)
 
 ### Frontend Implementation for User Story 2
 
-- [ ] T121 [P] [US2] Create AuthContext in `src/context/AuthContext.tsx` for global auth state management
-- [ ] T122 [P] [US2] Create useAuth hook in `src/hooks/useAuth.ts` for auth operations
-- [ ] T123 [US2] Wrap App with AuthContext.Provider in `src/main.tsx`
-- [ ] T124 [P] [US2] Create LoginPage in `src/pages/LoginPage.tsx`
-- [ ] T125 [P] [US2] Create RegisterPage in `src/pages/RegisterPage.tsx`
-- [ ] T126 [P] [US2] Create PasswordResetPage in `src/pages/PasswordResetPage.tsx` (email input only)
-- [ ] T127 [P] [US2] Create LoginForm component in `src/components/auth/LoginForm.tsx` with validation
-- [ ] T128 [P] [US2] Create RegisterForm component in `src/components/auth/RegisterForm.tsx` with password requirements
-- [ ] T129 [P] [US2] Create PasswordResetForm component in `src/components/auth/PasswordResetForm.tsx`
-- [ ] T130 [US2] Create ProtectedRoute component in `src/components/layout/ProtectedRoute.tsx` for auth gating
-- [ ] T131 [US2] Create auth service functions in `src/services/auth.service.ts` for register, login, logout, refresh
+- [ ] T125 [P] [US2] Create AuthContext in `src/context/AuthContext.tsx` for global auth state management
+- [ ] T126 [P] [US2] Create useAuth hook in `src/hooks/useAuth.ts` for auth operations
+- [ ] T127 [US2] Wrap App with AuthContext.Provider in `src/main.tsx`
+- [ ] T128 [P] [US2] Create LoginPage in `src/pages/LoginPage.tsx` with "Login with Discord" button
+- [ ] T129 [P] [US2] Create AuthCallback page in `src/pages/AuthCallback.tsx` to handle OAuth redirect
+- [ ] T130 [US2] Update ProtectedRoute component in `src/config/router.tsx` to check auth and redirect
+- [ ] T131 [US2] Create auth service functions in `src/services/auth.service.ts` for OAuth flow and logout
 - [ ] T132 [US2] Implement JWT token storage in localStorage with secure practices
-- [ ] T133 [US2] Add axios interceptors for auth headers in `src/services/api.ts`
-- [ ] T134 [US2] Add axios interceptors for token refresh on 401 errors in `src/services/api.ts`
-- [ ] T135 [US2] Add login/register links to Header navigation
+- [ ] T133 [US2] Add axios interceptors for auth headers in `src/lib/api.ts`
+- [ ] T134 [US2] Add axios interceptors for token refresh on 401 errors in `src/lib/api.ts`
+- [ ] T135 [US2] Add login link to Header navigation
 - [ ] T136 [P] [US2] Add logout functionality to Header when authenticated
-- [ ] T137 [P] [US2] Show user email/name in Header when authenticated
-- [ ] T138 [US2] Add routes for /login, /register, /password-reset in App.tsx
+- [ ] T137 [P] [US2] Show Discord username and avatar in Header when authenticated
+- [ ] T138 [US2] Add routes for /login and /auth/callback in `src/config/router.tsx`
+- [ ] T139 [P] [US2] Add loading state handling during OAuth callback processing
+- [ ] T140 [P] [US2] Add error handling for failed OAuth attempts with user-friendly messages
 
 ### Validation & Testing
 
-- [ ] T139 [US2] Run all US2 tests - verify they now PASS
-- [ ] T140 [US2] Manual test: Register new account, verify user created and profile auto-created
-- [ ] T141 [US2] Manual test: Login with credentials, verify JWT tokens received
-- [ ] T142 [US2] Manual test: Logout, verify session cleared
-- [ ] T143 [US2] Manual test: Access protected route without auth, verify redirect to login
-- [ ] T144 [US2] Manual test: Token refresh on expiration
-- [ ] T145 [US2] Verify all 6 acceptance scenarios from spec.md pass
+- [ ] T141 [US2] Run all US2 tests - verify they now PASS
+- [ ] T142 [US2] Manual test: Click "Login with Discord", authorize app, verify redirected back and logged in
+- [ ] T143 [US2] Manual test: First-time Discord login creates User and Profile records
+- [ ] T144 [US2] Manual test: Logout, verify session cleared and redirected
+- [ ] T145 [US2] Manual test: Access protected route without auth, verify redirect to login
+- [ ] T146 [US2] Manual test: Token refresh on expiration
+- [ ] T147 [US2] Manual test: Deny Discord authorization, verify graceful error handling
+- [ ] T148 [US2] Verify all 6 acceptance scenarios from spec.md pass
 
-**Checkpoint**: User Story 2 complete - authentication system fully functional
+**Checkpoint**: User Story 2 complete - Discord OAuth authentication system fully functional
 
 ---
 
@@ -794,10 +797,10 @@ Continue pattern through remaining user stories.
 **Total Tasks**: 402 tasks
 
 ### Tasks by Phase:
-- Phase 0 (Infrastructure): 39 tasks
+- Phase 0 (Infrastructure): 47 tasks
 - Phase 1 (Foundational): 22 tasks
 - Phase 2 (US1 - P1): 29 tasks
-- Phase 3 (US2 - P2): 48 tasks
+- Phase 3 (US2 - P2): 51 tasks (Discord OAuth authentication)
 - Phase 4 (US3 - P3): 38 tasks
 - Phase 5 (US4 - P3): 34 tasks
 - Phase 6 (US5 - P4): 31 tasks
@@ -809,7 +812,7 @@ Continue pattern through remaining user stories.
 
 ### Tasks by User Story:
 - US1: 29 tasks (Public Landing & Invite Requests)
-- US2: 48 tasks (Auth & Registration)
+- US2: 51 tasks (Discord OAuth Authentication - simplified from original 48)
 - US3: 38 tasks (Member Profiles)
 - US4: 34 tasks (Public Calendar)
 - US5: 31 tasks (Private Event Creation)
@@ -817,12 +820,12 @@ Continue pattern through remaining user stories.
 - US7: 34 tasks (Admin User Management)
 - US8: 35 tasks (Admin Game/Event Management)
 
-### Parallelizable Tasks: ~180 tasks marked with [P]
+### Parallelizable Tasks: ~185 tasks marked with [P]
 
 ### Independent Test Criteria by User Story:
 
 - **US1**: Visit site unauthenticated, submit invite requests, see confirmation
-- **US2**: Register account, login, logout, access protected routes
+- **US2**: Complete Discord OAuth login, logout, access protected routes
 - **US3**: Edit profile, set privacy, view as different roles
 - **US4**: View calendar, filter events, see role-based visibility
 - **US5**: Create/edit/delete private events, verify ownership
@@ -836,8 +839,10 @@ Continue pattern through remaining user stories.
 
 **Suggested MVP Scope**: Phase 0 + Phase 1 + Phase 2 (US1 - Public Landing Page & Invite Requests)
 
+**Authentication Approach**: Discord OAuth 2.0 as primary authentication method (v1.0). Email/password and other OAuth providers planned for v2.0+.
+
 ---
 
-**Version**: 1.0.0  
+**Version**: 1.0.1 (Updated for Discord OAuth)  
 **Generated**: 2026-02-23  
 **Ready for**: Implementation (after spec approval)
