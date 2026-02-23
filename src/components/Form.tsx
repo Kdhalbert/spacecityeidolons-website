@@ -1,8 +1,8 @@
 import React from 'react';
-import { FormProvider, UseFormReturn } from 'react-hook-form';
+import { FormProvider, type UseFormReturn } from 'react-hook-form';
 
 interface FormProps<T extends Record<string, any>>
-  extends React.FormHTMLAttributes<HTMLFormElement> {
+  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   methods: UseFormReturn<T>;
   onSubmit: (data: T) => Promise<void> | void;
   children: React.ReactNode;

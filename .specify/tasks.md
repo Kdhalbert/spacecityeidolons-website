@@ -144,20 +144,24 @@
 
 ### Tests for User Story 1 (Write FIRST, ensure they FAIL)
 
-- [ ] T070 [P] [US1] Write unit test for InviteRequest validation in `api/tests/unit/schemas/invite.schema.test.ts`
-- [ ] T071 [P] [US1] Write integration test for POST /api/invites in `api/tests/integration/invites.test.ts`
-- [ ] T072 [P] [US1] Write integration test for GET /api/invites (admin only) in `api/tests/integration/invites.test.ts`
-- [ ] T073 [P] [US1] Write React component test for invite forms in `src/components/invites/__tests__/InviteForm.test.tsx`
-- [ ] T074 [P] [US1] Write E2E test for complete invite request flow in `e2e/tests/invite-request.spec.ts`
+- [x] T070 [P] [US1] Write unit test for InviteRequest validation in `api/tests/unit/schemas/invite.schema.test.ts` — PR #11: 11 test cases
+- [x] T071 [P] [US1] Write integration test for POST /api/invites in `api/tests/integration/invites.test.ts` — PR #11: 11 test cases
+- [x] T072 [P] [US1] Write integration test for GET /api/invites (admin only) in `api/tests/integration/invites.test.ts` — PR #11: 11 test cases (GET + PATCH)
+- [x] T073 [P] [US1] Write React component test for invite forms in `src/components/InviteRequestForm.test.tsx` — PR #11: 28 test cases
+- [x] T074 [P] [US1] Write E2E test for complete invite request flow in `e2e/invite-request.spec.ts` — PR #11: 15 test cases
+
+**TDD RED Phase Complete**: 76 test cases written and failing (expected) — PR #11 merged
 
 ### Backend Implementation for User Story 1
 
-- [ ] T075 [P] [US1] Create InviteRequest Zod schema in `api/src/schemas/invite.schema.ts` with email, name, platform validation
-- [ ] T076 [US1] Implement InviteRequestService in `api/src/services/invite.service.ts` with create and list methods
-- [ ] T077 [US1] Create POST /api/invites endpoint in `api/src/routes/invites.ts` for creating invite requests
-- [ ] T078 [US1] Create GET /api/invites endpoint in `api/src/routes/invites.ts` for admins to list requests (admin middleware not yet implemented)
-- [ ] T079 [P] [US1] Add request validation for invite endpoints
-- [ ] T080 [P] [US1] Add error handling for duplicate email submissions
+- [x] T075 [P] [US1] Create InviteRequest Zod schema in `api/src/schemas/inviteRequest.schema.ts` with email, name, platform validation — PR #12
+- [x] T076 [US1] Implement InviteRequestService in `api/src/services/inviteRequest.service.ts` with create and list methods — PR #12
+- [x] T077 [US1] Create POST /api/invites endpoint in `api/src/routes/invites.ts` for creating invite requests — PR #12
+- [x] T078 [US1] Create GET /api/invites endpoint in `api/src/routes/invites.ts` for admins to list requests — PR #12 (+ PATCH, DELETE endpoints)
+- [x] T079 [P] [US1] Add request validation for invite endpoints — PR #12 (Zod validation with error handling)
+- [x] T080 [P] [US1] Add error handling for duplicate email submissions — PR #12 (email+platform duplicate detection)
+
+**TDD GREEN Phase In Progress**: 8/23 integration tests passing, auth middleware created, ready for frontend — PR #12
 
 ### Frontend Implementation for User Story 1
 

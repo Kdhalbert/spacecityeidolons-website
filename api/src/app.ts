@@ -7,6 +7,7 @@ import { config, isDevelopment } from './config/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import prisma from './lib/db.js';
 import { registerHealthRoutes } from './routes/health.js';
+import { registerInviteRoutes } from './routes/invites.js';
 
 export async function buildApp() {
   // Create Fastify instance
@@ -58,7 +59,8 @@ export async function buildApp() {
   await registerHealthRoutes(app, prisma);
 
   // Register routes
-  // TODO: Import and register route modules here
+  await app.register(registerInviteRoutes);
+  // TODO: Import and register other route modules here
   // await app.register(authRoutes, { prefix: '/api/auth' });
   // await app.register(userRoutes, { prefix: '/api/users' });
   // etc.

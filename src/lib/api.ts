@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
-import { ApiResponse, ApiError, AuthTokens } from '../types';
+import axios, { type AxiosInstance, AxiosError } from 'axios';
+import type { ApiResponse, AuthTokens } from '../types';
 
 // ============================================================================
 // API CLIENT CONFIGURATION

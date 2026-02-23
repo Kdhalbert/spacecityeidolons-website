@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
-import { buildApp } from '../../app';
+import { buildApp } from '../../src/app.js';
 import { FastifyInstance } from 'fastify';
-import { Platform, InviteStatus } from '../../types';
+import { Platform, InviteStatus } from '../../../src/types/index.js';
 
 describe('Invite Requests API', () => {
   let app: FastifyInstance;
