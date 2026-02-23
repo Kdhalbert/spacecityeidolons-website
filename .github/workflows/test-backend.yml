@@ -1,0 +1,98 @@
+name: Backend CI Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'api/**'
+      - '.github/workflows/test-backend.yml'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'api/**'
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: spacecity_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: npm ci
+
+      - name: Generate Prisma Client
+        working-directory: ./api
+        env:
+          DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/spacecity_test?schema=public
+        run: npm run prisma:generate
+
+      - name: Run database migrations
+        working-directory: ./api
+        env:
+          DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/spacecity_test?schema=public
+        run: npm run prisma:migrate:prod
+
+      - name: Lint
+        working-directory: ./api
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: ./api
+        env:
+          DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/spacecity_test?schema=public
+          NODE_ENV: test
+          JWT_SECRET: test-secret-key-min-32-characters-long
+          JWT_REFRESH_SECRET: test-refresh-secret-key-min-32-characters-long
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./api/coverage/coverage-final.json
+          flags: backend
+          name: backend-coverage
+          fail_ci_if_error: false
+
+      - name: Build
+        working-directory: ./api
+        run: npm run build
+
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "## Backend Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Tests completed. Check the logs for details." >> $GITHUB_STEP_SUMMARY

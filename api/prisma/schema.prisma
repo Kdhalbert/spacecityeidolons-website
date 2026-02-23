@@ -1,0 +1,207 @@
+// Prisma schema for Space City Eidolons Community Hub
+// Database: PostgreSQL 16
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User entity - authentication and authorization
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // bcrypt hashed
+  role      Role     @default(MEMBER)
+  status    UserStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile          Profile?
+  refreshTokens    RefreshToken[]
+  passwordResets   PasswordResetToken[]
+  createdEvents    Event[]           @relation("EventCreator")
+  gamePageRequests GamePageRequest[] @relation("GamePageRequester")
+
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+enum Role {
+  GUEST
+  MEMBER
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+// Profile entity - user profile information
+model Profile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  displayName    String?
+  bio            String?
+  twitchUrl      String?
+  gamesPlayed    String[] // Array of game names
+  avatarUrl      String?
+  location       String?
+  timezone       String?
+  privacyProfile Boolean  @default(false) // true = private, false = public
+  privacyEvents  Boolean  @default(false) // true = hide events, false = show events
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("profiles")
+}
+
+// InviteRequest entity - community invite requests
+model InviteRequest {
+  id        String       @id @default(uuid())
+  email     String
+  name      String
+  platform  Platform
+  message   String?
+  status    InviteStatus @default(PENDING)
+  adminNote String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([status])
+  @@index([platform])
+  @@map("invite_requests")
+}
+
+enum Platform {
+  DISCORD
+  MATRIX
+}
+
+enum InviteStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Event entity - community events (game sessions, meetings)
+model Event {
+  id          String          @id @default(uuid())
+  title       String
+  description String?
+  date        DateTime        // Event date
+  time        String          // Event time (e.g., "19:00")
+  duration    Int?            // Duration in minutes
+  location    String?         // Virtual/physical location
+  visibility  EventVisibility @default(PUBLIC)
+  maxAttendees Int?           // Optional max attendees
+  tags        String[]        // Event tags (e.g., ["RPG", "Beginner-friendly"])
+  creatorId   String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  // Relations
+  creator User @relation("EventCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([date])
+  @@index([visibility])
+  @@index([creatorId])
+  @@map("events")
+}
+
+enum EventVisibility {
+  PUBLIC
+  MEMBERS_ONLY
+  PRIVATE
+}
+
+// Game entity - game information pages
+model Game {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique // URL-friendly name
+  description String?
+  content     String?  // Rich text content (markdown)
+  imageUrl    String?
+  category    String?  // e.g., "RPG", "Board Game", "Video Game"
+  tags        String[] // Game tags
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([category])
+  @@map("games")
+}
+
+// GamePageRequest entity - member requests for new game pages
+model GamePageRequest {
+  id          String              @id @default(uuid())
+  requesterId String
+  gameName    String
+  description String?
+  reason      String              // Why this game page is needed
+  status      GameRequestStatus   @default(PENDING)
+  adminNote   String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  // Relations
+  requester User @relation("GamePageRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([requesterId])
+  @@map("game_page_requests")
+}
+
+enum GameRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  IN_PROGRESS
+}
+
+// RefreshToken entity - JWT refresh token management
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+// PasswordResetToken entity - password reset flow
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
