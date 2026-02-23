@@ -1,5 +1,5 @@
 import { apiPost, setTokens, clearTokens } from '../lib/api';
-import type { AuthResponse, RefreshTokenRequest, RefreshTokenResponse } from '../types';
+import type { AuthResponse, RefreshTokenResponse } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
