@@ -103,34 +103,34 @@
 
 ### Shared Type Definitions
 
-- [ ] T048 [P] Create shared TypeScript types in `src/types/index.ts` for User, Role, Profile, Event, Game
-- [ ] T049 [P] Create Zod schema for User in `api/src/schemas/user.schema.ts`
-- [ ] T050 [P] Create Zod schema for validation utilities in `src/utils/validation.ts`
+- [x] T048 [P] Create shared TypeScript types in `src/types/index.ts` and `api/src/types/index.ts` for User, Role, Profile, Event, Game
+- [x] T049 [P] Create Zod schema for User in `api/src/schemas/user.schema.ts`
+- [x] T050 [P] Create Zod schema for validation utilities in `src/utils/validation.ts` and `api/src/utils/validation.ts`
 
 ### Frontend Foundation
 
-- [ ] T051 Install frontend dependencies: react-router-dom, @tanstack/react-query, react-hook-form, zod, axios, date-fns in root `package.json`
-- [ ] T052 [P] Create Axios instance with interceptors in `src/services/api.ts`
-- [ ] T053 [P] Create React Query provider setup in `src/main.tsx`
-- [ ] T054 [P] Create layout components directory structure: src/components/layout/, src/components/common/, src/pages/
-- [ ] T055 Create base Header component in `src/components/layout/Header.tsx`
-- [ ] T056 Create base Footer component in `src/components/layout/Footer.tsx`
-- [ ] T057 [P] Create reusable Button component in `src/components/common/Button.tsx`
-- [ ] T058 [P] Create reusable Input component in `src/components/common/Input.tsx`
-- [ ] T059 [P] Create reusable Form component wrapper in `src/components/common/Form.tsx`
-- [ ] T060 [P] Create Loading component in `src/components/common/Loading.tsx`
-- [ ] T061 [P] Create ErrorBoundary component in `src/components/common/ErrorBoundary.tsx`
-- [ ] T062 Configure React Router in `src/App.tsx` with base route structure
-- [ ] T063 [P] Create constants file in `src/utils/constants.ts` for app-wide constants
-- [ ] T064 [P] Create formatting utilities in `src/utils/formatting.ts` for dates, text
+- [x] T051 Install frontend dependencies: react-router-dom, @tanstack/react-query, react-hook-form, zod, axios, date-fns in root `package.json`
+- [x] T052 [P] Create Axios instance with interceptors in `src/lib/api.ts` with token management and auto-refresh
+- [x] T053 [P] Create React Router configuration in `src/config/router.tsx` with protected routes
+- [x] T054 [P] Create layout components directory structure: src/components/layout/, src/components/, src/pages/
+- [x] T055 Create base Header component in `src/components/layout/Layout.tsx`
+- [x] T056 Create base Footer component in `src/components/layout/Layout.tsx`
+- [x] T057 [P] Create reusable Button component in `src/components/Button.tsx`
+- [x] T058 [P] Create reusable Input component in `src/components/Input.tsx`
+- [x] T059 [P] Create reusable Form component wrapper in `src/components/Form.tsx` with React Hook Form integration
+- [x] T060 [P] Create Loading component in `src/components/Loading.tsx`
+- [x] T061 [P] Create ErrorBoundary component in `src/components/ErrorBoundary.tsx`
+- [x] T062 Configure React Router in `src/App.tsx` with outlet structure for route nesting
+- [x] T063 [P] Create placeholder pages: HomePage, GamesPage, EventsPage, ProfilePage, LoginPage, RegisterPage, NotFoundPage
+- [x] T064 [P] Update `src/main.tsx` to use RouterProvider with router configuration
 
 ### Backend Foundation
 
-- [ ] T065 [P] Create base route handler structure in `api/src/routes/` directory
-- [ ] T066 [P] Setup route registration in `api/src/app.ts` for all planned endpoints
-- [ ] T067 [P] Create utility functions for password hashing in `api/src/utils/password.ts` using bcrypt
-- [ ] T068 [P] Create JWT token utilities in `api/src/utils/jwt.ts` for generation and verification
-- [ ] T069 [P] Create base service class patterns in `api/src/services/` directory
+- [x] T065 [P] Create password hashing utilities in `api/src/utils/password.ts` using bcrypt
+- [x] T066 [P] Create JWT token utilities in `api/src/utils/jwt.ts` for generation/verification
+- [x] T067 [P] Create base service class pattern in `api/src/services/BaseService.ts` with CRUD operations
+- [x] T068 [P] Create pagination helpers in BaseService with metadata calculation
+- [x] T069 [P] Test utilities are available and importable from respective modules
 
 **Checkpoint**: Foundation ready - both frontend and backend have shared infrastructure, user story work can now begin in parallel
 
