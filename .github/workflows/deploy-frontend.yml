@@ -76,26 +76,6 @@ jobs:
         with:
           name: frontend-build
 
-      - name: Deploy to VM via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
-          script_stop: true
-          script: |
-            # Create backup with timestamp
-            BACKUP_DIR="/var/www/html.backup.$(date +%Y%m%d_%H%M%S)"
-            echo "📦 Creating backup: $BACKUP_DIR"
-            cp -r /var/www/html "$BACKUP_DIR"
-            
-            # Keep only last 5 backups
-            cd /var/www
-            ls -dt html.backup.* 2>/dev/null | tail -n +6 | xargs -r rm -rf
-            
-            echo "✅ Backup complete"
-
       - name: Upload deployment package
         uses: appleboy/scp-action@v0.1.7
         with:
