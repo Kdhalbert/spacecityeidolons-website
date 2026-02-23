@@ -5,6 +5,8 @@ import sensible from '@fastify/sensible';
 import jwt from '@fastify/jwt';
 import { config, isDevelopment } from './config/index.js';
 import { errorHandler } from './middleware/error.middleware.js';
+import prisma from './lib/db.js';
+import { registerHealthRoutes } from './routes/health.js';
 
 export async function buildApp() {
   // Create Fastify instance
@@ -52,14 +54,8 @@ export async function buildApp() {
     },
   });
 
-  // Health check endpoint
-  app.get('/health', async () => {
-    return { 
-      status: 'ok', 
-      timestamp: new Date().toISOString(),
-      environment: config.NODE_ENV,
-    };
-  });
+  // Register health check routes with database connectivity monitoring
+  await registerHealthRoutes(app, prisma);
 
   // Register routes
   // TODO: Import and register route modules here
