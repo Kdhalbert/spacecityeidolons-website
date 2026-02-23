@@ -88,11 +88,11 @@ jobs:
             # Create backup with timestamp
             BACKUP_DIR="/var/www/html.backup.$(date +%Y%m%d_%H%M%S)"
             echo "📦 Creating backup: $BACKUP_DIR"
-            sudo cp -r /var/www/html "$BACKUP_DIR"
+            cp -r /var/www/html "$BACKUP_DIR"
             
             # Keep only last 5 backups
             cd /var/www
-            ls -dt html.backup.* 2>/dev/null | tail -n +6 | xargs -r sudo rm -rf
+            ls -dt html.backup.* 2>/dev/null | tail -n +6 | xargs -r rm -rf
             
             echo "✅ Backup complete"
 
@@ -116,14 +116,13 @@ jobs:
           script_stop: true
           script: |
             echo "🗑️  Clearing old files..."
-            sudo rm -rf /var/www/html/*
+            rm -rf /var/www/html/*
             
             echo "📂 Extracting new build..."
-            sudo tar -xzf /tmp/frontend-deploy.tar.gz -C /var/www/html/
+            tar -xzf /tmp/frontend-deploy.tar.gz -C /var/www/html/
             
             echo "🔒 Setting permissions..."
-            sudo chown -R www-data:www-data /var/www/html
-            sudo chmod -R 755 /var/www/html
+            chmod -R 755 /var/www/html
             
             echo "🔄 Reloading web server..."
             if systemctl is-active --quiet nginx; then
@@ -150,8 +149,8 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT || 22 }}
           script: |
             echo "📋 Deployment verification:"
-            echo "Files deployed: $(sudo find /var/www/html -type f | wc -l)"
-            echo "Disk usage: $(sudo du -sh /var/www/html)"
+            echo "Files deployed: $(find /var/www/html -type f | wc -l)"
+            echo "Disk usage: $(du -sh /var/www/html)"
             if [ -f /var/www/html/index.html ]; then
               echo "✅ index.html present"
             else
