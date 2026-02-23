@@ -1,5 +1,45 @@
 # Deployment Warnings & Future Action Items
 
+## 🔄 Standard PR Workflow for Future Deployments
+
+**ALL FUTURE WORK should follow this process:**
+
+1. **Create feature branch from main:**
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/description-of-work
+   ```
+
+2. **Make changes, commit, and push:**
+   ```bash
+   git add .
+   git commit -m "feat: Description of changes"
+   git push origin feature/description-of-work
+   ```
+
+3. **Create PR on GitHub:**
+   ```bash
+   gh pr create --base main --head feature/description-of-work \
+     --title "feat: Your feature title" \
+     --body "## Changes
+   - Details of changes
+   - More details
+   
+   ## Related Issues
+   - Closes #123"
+   ```
+
+4. **Merge PR to main when ready:**
+   - GitHub Actions workflows automatically trigger on push to main
+   - Workflows will: validate, test, build, deploy
+
+5. **Monitor deployment:**
+   - Check **GitHub Actions** tab for workflow status
+   - Confirm all workflows pass before considering deployment complete
+
+---
+
 ## Phase: Azure Infrastructure & Backend Deployment (Feb 23, 2026)
 
 ### ⚠️ CRITICAL - Key Vault RBAC Access Issue

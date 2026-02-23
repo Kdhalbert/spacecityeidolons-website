@@ -214,6 +214,45 @@ Configure these in your repository (Settings → Secrets and variables → Actio
 - `JWT_SECRET` - Generate with: `openssl rand -base64 48`
 - `JWT_REFRESH_SECRET` - Generate with: `openssl rand -base64 48`
 
+### Standard PR Workflow for All Deployments
+
+**All changes must go through a pull request workflow:**
+
+1. Create a feature branch from main:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make changes and commit:
+   ```bash
+   git add .
+   git commit -m "feat: Description of your changes"
+   git push origin feature/your-feature-name
+   ```
+
+3. Create a pull request:
+   ```bash
+   gh pr create --base main --head feature/your-feature-name \
+     --title "feat: Your feature title" \
+     --body "## Changes
+   - Details of changes"
+   ```
+
+4. Merge to main when ready:
+   ```bash
+   # Via GitHub UI or CLI:
+   gh pr merge <pr-number> --merge
+   ```
+
+**GitHub Actions automatically triggers on merge to main:**
+- Infrastructure validation
+- Backend and frontend tests
+- Deployment to Azure services
+
+**For more details, see [DEPLOYMENT_WARNINGS.md](DEPLOYMENT_WARNINGS.md#standard-pr-workflow-for-future-deployments)**
+
 ### Automated Deployment (Recommended)
 
 **1. Deploy Infrastructure:**
