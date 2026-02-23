@@ -253,6 +253,8 @@ Configure these in your repository (Settings → Secrets and variables → Actio
      --body "## Changes
    - Details of changes"
    ```
+   
+   > See [CONTRIBUTING.md](CONTRIBUTING.md) and [Version Control Practices](.specify/memory/constitution.md) for detailed Git workflow guidelines.
 
 4. Merge to main when ready:
    ```bash
