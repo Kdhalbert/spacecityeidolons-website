@@ -1,9 +1,9 @@
-import prisma from '../lib/db';
-import { Platform, InviteStatus } from '../../../src/types';
+import prisma from '../lib/db.js';
+import { Platform, InviteStatus } from '../../../src/types/index.js';
 import {
   CreateInviteRequestInput,
   UpdateInviteRequestInput,
-} from '../schemas/inviteRequest.schema';
+} from '../schemas/inviteRequest.schema.js';
 
 export class InviteRequestService {
   /**
