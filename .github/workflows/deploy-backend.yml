@@ -12,6 +12,14 @@ on:
           - dev
           - staging
           - prod
+      run_migrations:
+        description: 'Run database migrations'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
   push:
     branches:
       - master
@@ -90,6 +98,7 @@ jobs:
           package: ./api
 
       - name: Run database migrations
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
         run: |
           # Set database URL from Key Vault
           DATABASE_URL=$(az keyvault secret show \
@@ -106,5 +115,5 @@ jobs:
           echo "## Backend Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: ${{ github.event.inputs.environment || 'dev' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **App Service**: ${{ steps.get-app-name.outputs.appName }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Health Check**: https://${{ steps.get-app-name.outputs.appName }}.azurewebsites.net/health" >> $GITHUB_STEP_SUMMARY
+          echo "- **App Service**: ${{ env.AZURE_APP_SERVICE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Health Check**: https://${{ env.AZURE_APP_SERVICE_NAME }}.azurewebsites.net/health" >> $GITHUB_STEP_SUMMARY
