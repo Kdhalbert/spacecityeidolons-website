@@ -31,12 +31,28 @@
    ```
 
 4. **Merge PR to main when ready:**
-   - GitHub Actions workflows automatically trigger on push to main
+   - ⚠️ **IMPORTANT**: PRs require manual approval before merging
+   - GitHub Actions workflows automatically trigger on push to main ONLY
    - Workflows will: validate, test, build, deploy
+   - Do NOT enable auto-merge - all production merges must be manual
 
 5. **Monitor deployment:**
    - Check **GitHub Actions** tab for workflow status
    - Confirm all workflows pass before considering deployment complete
+
+---
+
+## 🔐 Pull Request Approval Policy
+
+**All PRs require manual review and approval before merging to main.**
+
+- No auto-merge enabled (GitHub setting)
+- All GitHub Actions workflows trigger AFTER merge to main
+- Code review required from at least 1 team member
+- Required checks must pass before merge button is enabled
+- Merges must be performed through GitHub UI (not `git push`)
+
+This ensures human oversight of all production changes.
 
 ---
 
