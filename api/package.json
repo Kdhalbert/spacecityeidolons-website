@@ -19,7 +19,13 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
   },
-  "keywords": ["fastify", "typescript", "api", "gaming", "community"],
+  "keywords": [
+    "fastify",
+    "typescript",
+    "api",
+    "gaming",
+    "community"
+  ],
   "author": "Space City Eidolons",
   "license": "MIT",
   "dependencies": {
