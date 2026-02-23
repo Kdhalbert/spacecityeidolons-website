@@ -25,7 +25,8 @@ permissions:
 
 env:
   NODE_VERSION: '20.x'
-  AZURE_RESOURCE_GROUP: rg-spacecity-${{ github.event.inputs.environment || 'dev' }}
+  AZURE_RESOURCE_GROUP: spacecityeidolons-rg
+  AZURE_APP_SERVICE_NAME: spacecity-api-dev-xdtfmqqqnpcha
 
 jobs:
   build:
@@ -82,18 +83,10 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Get App Service name
-        id: get-app-name
-        run: |
-          APP_NAME=$(az webapp list \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --query "[?contains(name, 'spacecity-api')].name | [0]" -o tsv)
-          echo "appName=$APP_NAME" >> $GITHUB_OUTPUT
-
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ steps.get-app-name.outputs.appName }}
+          app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
           package: ./api
 
       - name: Run database migrations

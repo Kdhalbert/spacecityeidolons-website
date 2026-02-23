@@ -24,7 +24,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_RESOURCE_GROUP: rg-spacecity-${{ github.event.inputs.environment || 'dev' }}
+  AZURE_RESOURCE_GROUP: spacecityeidolons-rg
   AZURE_LOCATION: eastus
 
 jobs:
