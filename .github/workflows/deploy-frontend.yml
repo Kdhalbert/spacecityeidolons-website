@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Frontend to VM
 
 on:
   workflow_dispatch:
@@ -6,12 +6,11 @@ on:
       environment:
         description: 'Environment to deploy'
         required: true
-        default: 'dev'
+        default: 'production'
         type: choice
         options:
-          - dev
+          - production
           - staging
-          - prod
   push:
     branches:
       - master
@@ -22,26 +21,19 @@ on:
       - 'package.json'
       - 'vite.config.ts'
       - '.github/workflows/deploy-frontend.yml'
-
-permissions:
-  id-token: write
-  contents: read
+      - '.env.production'
 
 env:
   NODE_VERSION: '20.x'
-  AZURE_RESOURCE_GROUP: rg-spacecity-${{ github.event.inputs.environment || 'dev' }}
+  API_URL: https://spacecity-api-dev-xdtfmqqqnpcha.azurewebsites.net
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy Frontend
+  build:
+    name: Build Frontend
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'dev' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          submodules: true
-          lfs: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,65 +41,133 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Get Static Web App name and deployment token
-        id: get-swa
+      - name: Create production environment file
         run: |
-          SWA_NAME=$(az staticwebapp list \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --query "[?contains(name, 'spacecity-web')].name | [0]" -o tsv)
-          
-          DEPLOYMENT_TOKEN=$(az staticwebapp secrets list \
-            --name $SWA_NAME \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --query properties.apiKey -o tsv)
-          
-          echo "swaName=$SWA_NAME" >> $GITHUB_OUTPUT
-          echo "::add-mask::$DEPLOYMENT_TOKEN"
-          echo "deploymentToken=$DEPLOYMENT_TOKEN" >> $GITHUB_OUTPUT
-
-      - name: Get API URL
-        id: get-api-url
-        run: |
-          API_URL=$(az webapp list \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --query "[?contains(name, 'spacecity-api')].defaultHostName | [0]" -o tsv)
-          echo "apiUrl=https://$API_URL" >> $GITHUB_OUTPUT
+          echo "VITE_API_URL=${{ env.API_URL }}" > .env.production
+          cat .env.production
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        env:
-          VITE_API_URL: ${{ steps.get-api-url.outputs.apiUrl }}
+      - name: Build production bundle
         run: npm run build
 
-      - name: Deploy to Azure Static Web Apps
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Create deployment package
+        run: |
+          cd dist
+          tar -czf ../frontend-deploy.tar.gz .
+          cd ..
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          azure_static_web_apps_api_token: ${{ steps.get-swa.outputs.deploymentToken }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: 'upload'
-          app_location: '/'
-          api_location: ''
-          output_location: 'dist'
+          name: frontend-build
+          path: frontend-deploy.tar.gz
+          retention-days: 7
+
+  deploy:
+    name: Deploy to VM (spacecityeidolons.com)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+
+      - name: Deploy to VM via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          script_stop: true
+          script: |
+            # Create backup with timestamp
+            BACKUP_DIR="/var/www/html.backup.$(date +%Y%m%d_%H%M%S)"
+            echo "📦 Creating backup: $BACKUP_DIR"
+            sudo cp -r /var/www/html "$BACKUP_DIR"
+            
+            # Keep only last 5 backups
+            cd /var/www
+            ls -dt html.backup.* 2>/dev/null | tail -n +6 | xargs -r sudo rm -rf
+            
+            echo "✅ Backup complete"
+
+      - name: Upload deployment package
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          source: "frontend-deploy.tar.gz"
+          target: "/tmp/"
+
+      - name: Extract and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          script_stop: true
+          script: |
+            echo "🗑️  Clearing old files..."
+            sudo rm -rf /var/www/html/*
+            
+            echo "📂 Extracting new build..."
+            sudo tar -xzf /tmp/frontend-deploy.tar.gz -C /var/www/html/
+            
+            echo "🔒 Setting permissions..."
+            sudo chown -R www-data:www-data /var/www/html
+            sudo chmod -R 755 /var/www/html
+            
+            echo "🔄 Reloading web server..."
+            if systemctl is-active --quiet nginx; then
+              sudo systemctl reload nginx
+              echo "✅ Nginx reloaded"
+            elif systemctl is-active --quiet apache2; then
+              sudo systemctl reload apache2
+              echo "✅ Apache reloaded"
+            else
+              echo "⚠️  Web server not detected, skipping reload"
+            fi
+            
+            echo "🧹 Cleaning up..."
+            rm -f /tmp/frontend-deploy.tar.gz
+            
+            echo "✅ Deployment complete!"
+
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT || 22 }}
+          script: |
+            echo "📋 Deployment verification:"
+            echo "Files deployed: $(sudo find /var/www/html -type f | wc -l)"
+            echo "Disk usage: $(sudo du -sh /var/www/html)"
+            if [ -f /var/www/html/index.html ]; then
+              echo "✅ index.html present"
+            else
+              echo "❌ index.html missing!"
+              exit 1
+            fi
 
       - name: Deployment Summary
         run: |
-          SWA_URL=$(az staticwebapp show \
-            --name ${{ steps.get-swa.outputs.swaName }} \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --query defaultHostname -o tsv)
-          
-          echo "## Frontend Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Environment**: ${{ github.event.inputs.environment || 'dev' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Static Web App**: ${{ steps.get-swa.outputs.swaName }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL**: https://$SWA_URL" >> $GITHUB_STEP_SUMMARY
-          echo "- **API URL**: ${{ steps.get-api-url.outputs.apiUrl }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployed to**: spacecityeidolons.com" >> $GITHUB_STEP_SUMMARY
+          echo "**Backend API**: ${{ env.API_URL }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔍 Post-Deployment Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Clear Cloudflare cache (Caching → Purge Everything)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Verify site: https://spacecityeidolons.com" >> $GITHUB_STEP_SUMMARY
+          echo "3. Test invite forms and navigation" >> $GITHUB_STEP_SUMMARY
