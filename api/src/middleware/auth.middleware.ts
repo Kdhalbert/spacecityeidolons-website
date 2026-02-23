@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Role } from '../../../src/types';
+import { Role } from '../../../src/types/index.js';
 
 /**
  * Middleware to verify JWT token and attach user to request
