@@ -37,11 +37,13 @@ describe('InviteRequestForm', () => {
     it('submits valid Discord invite request', async () => {
       const user = userEvent.setup();
       mockApiPost.mockResolvedValueOnce({
-        id: '123',
-        email: 'test@example.com',
-        name: 'Test User',
-        platform: Platform.DISCORD,
-        status: 'PENDING',
+        data: {
+          id: '123',
+          email: 'test@example.com',
+          name: 'Test User',
+          platform: Platform.DISCORD,
+          status: 'PENDING',
+        },
       });
 
       render(<InviteRequestForm platform={Platform.DISCORD} />);
@@ -71,8 +73,10 @@ describe('InviteRequestForm', () => {
     it('shows success message after successful submission', async () => {
       const user = userEvent.setup();
       mockApiPost.mockResolvedValueOnce({
-        id: '123',
-        status: 'PENDING',
+        data: {
+          id: '123',
+          status: 'PENDING',
+        },
       });
 
       render(<InviteRequestForm platform={Platform.DISCORD} />);
@@ -105,11 +109,13 @@ describe('InviteRequestForm', () => {
     it('submits valid Matrix invite request', async () => {
       const user = userEvent.setup();
       mockApiPost.mockResolvedValueOnce({
-        id: '456',
-        email: 'matrix@example.com',
-        name: 'Matrix User',
-        platform: Platform.MATRIX,
-        status: 'PENDING',
+        data: {
+          id: '456',
+          email: 'matrix@example.com',
+          name: 'Matrix User',
+          platform: Platform.MATRIX,
+          status: 'PENDING',
+        },
       });
 
       render(<InviteRequestForm platform={Platform.MATRIX} />);
@@ -180,7 +186,7 @@ describe('InviteRequestForm', () => {
 
     it('trims whitespace from inputs', async () => {
       const user = userEvent.setup();
-      mockApiPost.mockResolvedValueOnce({ id: '123', status: 'PENDING' });
+      mockApiPost.mockResolvedValueOnce({ data: { id: '123', status: 'PENDING' } });
 
       render(<InviteRequestForm platform={Platform.DISCORD} />);
 
@@ -237,7 +243,7 @@ describe('InviteRequestForm', () => {
   describe('Error Handling', () => {
     it('shows error message when API call fails', async () => {
       const user = userEvent.setup();
-      mockApiPost.mockRejectedValueOnce(new Error('Network error'));
+      mockApiPost.mockResolvedValueOnce({ error: { statusCode: 500, message: 'Network error' } });
 
       render(<InviteRequestForm platform={Platform.DISCORD} />);
 
@@ -252,10 +258,10 @@ describe('InviteRequestForm', () => {
 
     it('shows specific error for duplicate email', async () => {
       const user = userEvent.setup();
-      mockApiPost.mockRejectedValueOnce({
-        response: {
-          status: 409,
-          data: { message: 'Invite request already exists' },
+      mockApiPost.mockResolvedValueOnce({
+        error: {
+          statusCode: 409,
+          message: 'Invite request already exists',
         },
       });
 
@@ -273,8 +279,8 @@ describe('InviteRequestForm', () => {
     it('allows retry after error', async () => {
       const user = userEvent.setup();
       mockApiPost
-        .mockRejectedValueOnce(new Error('Network error'))
-        .mockResolvedValueOnce({ id: '123', status: 'PENDING' });
+        .mockResolvedValueOnce({ error: { statusCode: 500, message: 'Network error' } })
+        .mockResolvedValueOnce({ data: { id: '123', status: 'PENDING' } });
 
       render(<InviteRequestForm platform={Platform.DISCORD} />);
 
@@ -300,7 +306,7 @@ describe('InviteRequestForm', () => {
   describe('Form Reset', () => {
     it('clears form after successful submission', async () => {
       const user = userEvent.setup();
-      mockApiPost.mockResolvedValueOnce({ id: '123', status: 'PENDING' });
+      mockApiPost.mockResolvedValueOnce({ data: { id: '123', status: 'PENDING' } });
 
       render(<InviteRequestForm platform={Platform.DISCORD} />);
 
