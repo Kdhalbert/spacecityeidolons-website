@@ -112,6 +112,7 @@ All code must be reviewed by at least one other person before merging.
   - No unnecessary complexity
   - Security concerns are addressed
   - Performance is acceptable
+- Never commit directly to master; all changes must go through a PR from a feature branch
 - Reviewers must provide constructive, specific feedback
 - Authors must respond to all feedback before merging
 - Approval required before merge
