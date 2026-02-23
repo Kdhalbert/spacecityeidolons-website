@@ -1,12 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export const Header: React.FC = () => {
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
+  
   const scrollToInvite = () => {
     const inviteSection = document.querySelector('#join-section');
     if (inviteSection) {
       inviteSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const getDiscordAvatarUrl = () => {
+    if (user?.discordId && user?.discordAvatar) {
+      return `https://cdn.discordapp.com/avatars/${user.discordId}/${user.discordAvatar}.png`;
+    }
+    return null;
   };
 
   return (
@@ -19,10 +33,53 @@ export const Header: React.FC = () => {
           <Link to="/">Home</Link>
           <Link to="/games">Games</Link>
           <Link to="/events">Events</Link>
-          <Link to="/profile">Profile</Link>
-          <button onClick={scrollToInvite} className="invite-btn">
-            Request Invite
-          </button>
+          {isAuthenticated && <Link to="/profile">Profile</Link>}
+          
+          {!isLoading && (
+            <>
+              {isAuthenticated ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {getDiscordAvatarUrl() && (
+                      <img 
+                        src={getDiscordAvatarUrl()!} 
+                        alt={user?.discordUsername}
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '50%',
+                          border: '2px solid var(--purple-lighter)',
+                        }}
+                      />
+                    )}
+                    <span style={{ fontFamily: 'sans-serif', color: 'var(--text-primary)' }}>
+                      {user?.discordUsername}
+                    </span>
+                  </div>
+                  <button 
+                    onClick={handleLogout}
+                    className="invite-btn"
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: '1px solid var(--purple-lighter)',
+                      color: 'var(--text-primary)',
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <button onClick={scrollToInvite} className="invite-btn">
+                    Request Invite
+                  </button>
+                  <Link to="/login" className="invite-btn" style={{ textDecoration: 'none' }}>
+                    Login
+                  </Link>
+                </>
+              )}
+            </>
+          )}
         </nav>
       </div>
     </header>

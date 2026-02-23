@@ -1,5 +1,6 @@
-import { createBrowserRouter, type RouteObject } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject, Navigate } from 'react-router-dom';
 import App from '../App';
+import { useAuth } from '../context/AuthContext';
 
 // Lazy load pages for code splitting
 import { lazy, Suspense } from 'react';
@@ -10,7 +11,7 @@ const GamesPage = lazy(() => import('../pages/GamesPage'));
 const EventsPage = lazy(() => import('../pages/EventsPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
-const RegisterPage = lazy(() => import('../pages/RegisterPage'));
+const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 
 // ============================================================================
@@ -22,8 +23,16 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  // TODO: Implement auth check
-  // For now, just return the element
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
   return <Suspense fallback={<Loading />}>{element}</Suspense>;
 };
 
@@ -61,8 +70,8 @@ export const routes: RouteObject[] = [
         element: <PublicRoute element={<LoginPage />} />,
       },
       {
-        path: 'register',
-        element: <PublicRoute element={<RegisterPage />} />,
+        path: 'auth/callback',
+        element: <PublicRoute element={<AuthCallback />} />,
       },
       {
         path: '*',
