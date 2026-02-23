@@ -51,8 +51,10 @@ export enum GameRequestStatus {
 
 export interface User {
   id: string;
-  email: string;
-  password?: string; // Omitted in API responses
+  email: string | null;
+  discordId: string;
+  discordUsername: string;
+  discordAvatar: string | null;
   role: Role;
   status: UserStatus;
   createdAt: Date;
@@ -203,20 +205,20 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  displayName?: string;
-}
-
 export interface AuthResponse {
   user: UserWithProfile;
-  tokens: AuthTokens;
+  accessToken: string;
+  refreshToken: string;
+  profile?: Profile;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  user: User;
 }
 
 // ============================================================================
