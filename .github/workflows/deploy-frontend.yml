@@ -104,16 +104,7 @@ jobs:
             echo "🔒 Setting permissions..."
             chmod -R 755 /var/www/html
             
-            echo "🔄 Reloading web server..."
-            if systemctl is-active --quiet nginx; then
-              sudo systemctl reload nginx
-              echo "✅ Nginx reloaded"
-            elif systemctl is-active --quiet apache2; then
-              sudo systemctl reload apache2
-              echo "✅ Apache reloaded"
-            else
-              echo "⚠️  Web server not detected, skipping reload"
-            fi
+            echo "ℹ️  Skipping web server reload (not needed for static file changes)"
             
             echo "🧹 Cleaning up..."
             rm -f /tmp/frontend-deploy.tar.gz
