@@ -1,5 +1,4 @@
 import { PrismaClient, Role, UserStatus, Platform, InviteStatus, EventVisibility, GameRequestStatus } from '@prisma/client';
-import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -7,13 +6,13 @@ async function main() {
   console.log('🌱 Starting database seed...');
 
   // Create admin user
-  const adminPassword = await bcrypt.hash('Admin123!@#', 10);
   const admin = await prisma.user.upsert({
     where: { email: 'admin@spacecityeidolons.com' },
     update: {},
     create: {
       email: 'admin@spacecityeidolons.com',
-      password: adminPassword,
+      discordId: '123456789012345678',
+      discordUsername: 'admin_user',
       role: Role.ADMIN,
       status: UserStatus.ACTIVE,
       profile: {
@@ -29,13 +28,13 @@ async function main() {
   console.log('✅ Created admin user:', admin.email);
 
   // Create test member
-  const memberPassword = await bcrypt.hash('Member123!@#', 10);
   const member = await prisma.user.upsert({
     where: { email: 'member@example.com' },
     update: {},
     create: {
       email: 'member@example.com',
-      password: memberPassword,
+      discordId: '987654321098765432',
+      discordUsername: 'test_member',
       role: Role.MEMBER,
       status: UserStatus.ACTIVE,
       profile: {

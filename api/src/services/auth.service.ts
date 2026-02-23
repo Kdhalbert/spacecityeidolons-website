@@ -60,7 +60,7 @@ export class AuthService {
       throw new Error(`Failed to exchange code for token: ${error}`);
     }
 
-    return response.json();
+    return response.json() as Promise<DiscordTokenResponse>;
   }
 
   /**
@@ -78,7 +78,7 @@ export class AuthService {
       throw new Error(`Failed to fetch Discord user: ${error}`);
     }
 
-    return response.json();
+    return response.json() as Promise<DiscordUser>;
   }
 
   /**

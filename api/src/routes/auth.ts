@@ -18,7 +18,7 @@ export async function registerAuthRoutes(fastify: FastifyInstance) {
    */
   fastify.get(
     '/api/auth/discord',
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       const authUrl = authService.generateDiscordAuthUrl();
       return reply.redirect(authUrl);
     }
@@ -117,7 +117,7 @@ export async function registerAuthRoutes(fastify: FastifyInstance) {
     {
       preHandler: authenticate,
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       // Token is validated by authenticate middleware
       // In a production system, you might want to add the token to a blacklist here
       return reply.code(200).send({

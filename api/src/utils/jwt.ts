@@ -17,16 +17,16 @@ export interface AuthTokens {
  * Generate JWT access and refresh tokens for a user
  */
 export function generateTokens(payload: JWTPayload): AuthTokens {
-  const accessToken = jwt.sign(payload, config.JWT_SECRET, {
+  const accessToken = jwt.sign(payload, config.JWT_SECRET as string, {
     expiresIn: config.JWT_ACCESS_EXPIRES_IN,
-  });
+  } as any);
 
   const refreshToken = jwt.sign(
     { userId: payload.userId },
-    config.JWT_REFRESH_SECRET,
+    config.JWT_REFRESH_SECRET as string,
     {
       expiresIn: config.JWT_REFRESH_EXPIRES_IN,
-    }
+    } as any
   );
 
   return { accessToken, refreshToken };
