@@ -47,7 +47,7 @@
 - [x] T016 [P] Add GamePageRequest entity to schema with requesterId, gameName, status fields
 - [x] T017 [P] Add RefreshToken entity to schema for JWT token management
 - [x] T018 [P] Add PasswordResetToken entity to schema for password reset flow
-- [ ] T019 Create initial Prisma migration with `prisma migrate dev` for all entities
+- [x] T019 Create initial Prisma migration with `prisma migrate dev` for all entities
 - [x] T020 Create database seed file in `api/prisma/seed.ts` with sample data for development
 
 ### Azure Infrastructure
