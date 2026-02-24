@@ -5,7 +5,7 @@ import {
   updateInviteRequestSchema,
 } from '../schemas/inviteRequest.schema.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
-import { Platform, InviteStatus } from '../../../src/types/index.js';
+import { Platform, InviteStatus } from '../types/index.js';
 
 interface CreateInviteRequestBody {
   email: string;

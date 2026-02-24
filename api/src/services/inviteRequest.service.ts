@@ -1,5 +1,5 @@
 import prisma from '../lib/db.js';
-import { Platform, InviteStatus } from '../../../src/types/index.js';
+import { Platform, InviteStatus } from '../types/index.js';
 import {
   CreateInviteRequestInput,
   UpdateInviteRequestInput,

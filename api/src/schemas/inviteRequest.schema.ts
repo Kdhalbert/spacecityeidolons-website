@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Platform, InviteStatus } from '../../../src/types/index.js';
+import { Platform, InviteStatus } from '../types/index.js';
 
 /**
  * Schema for creating a new invite request
