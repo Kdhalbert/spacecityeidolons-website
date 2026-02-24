@@ -111,11 +111,21 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Stop App Service
+        run: |
+          echo "Stopping app service to prevent deployment conflicts..."
+          az webapp stop --name ${{ env.AZURE_APP_SERVICE_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
+
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
           package: app-content/
+
+      - name: Start App Service
+        run: |
+          echo "Starting app service..."
+          az webapp start --name ${{ env.AZURE_APP_SERVICE_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
