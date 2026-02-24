@@ -67,11 +67,13 @@ jobs:
         run: |
           mkdir -p deploy-package
           cp -r api/dist deploy-package/
-          cp -r api/node_modules deploy-package/
           cp api/package.json deploy-package/
           cp api/package-lock.json deploy-package/
           cp api/web.config deploy-package/
           cp -r api/prisma deploy-package/
+          echo "Package structure created (node_modules will be installed by Azure):"
+          ls -la deploy-package/ | head -20
+          echo "Dist contents:"
           ls -la deploy-package/dist/ | head -20
 
       - name: Upload artifact
