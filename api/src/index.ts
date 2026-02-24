@@ -3,9 +3,16 @@ import { config } from './config/index.js';
 
 async function start() {
   try {
+    console.log('[STARTUP] Loading configuration...');
+    console.log('[STARTUP] Environment:', config.NODE_ENV);
+    console.log('[STARTUP] API listening on:', `http://${config.HOST}:${config.PORT}`);
+    
+    console.log('[STARTUP] Building Fastify application...');
     const app = await buildApp();
+    console.log('[STARTUP] Application built successfully');
 
     // Start server
+    console.log('[STARTUP] Starting server...');
     await app.listen({
       port: config.PORT,
       host: config.HOST,
@@ -26,9 +33,10 @@ async function start() {
       });
     });
   } catch (error) {
-    console.error(error);
+    console.error('[STARTUP ERROR]', error);
     process.exit(1);
   }
 }
 
+console.log('[STARTUP] Application starting...');
 start();
