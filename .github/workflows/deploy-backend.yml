@@ -57,7 +57,13 @@ jobs:
 
       - name: Generate Prisma Client
         working-directory: ./api
-        run: npm run prisma:generate
+        run: |
+          npm run prisma:generate
+          # Create a compressed archive of node_modules for faster deployment
+          echo "Creating node_modules archive..."
+          cd node_modules
+          tar -czf ../node_modules.tar.gz .
+          cd ..
 
       - name: Build
         working-directory: ./api
@@ -67,12 +73,13 @@ jobs:
         run: |
           mkdir -p deploy-package
           cp -r api/dist deploy-package/
+          cp api/node_modules.tar.gz deploy-package/
           cp api/package.json deploy-package/
           cp api/package-lock.json deploy-package/
           cp api/web.config deploy-package/
           cp -r api/prisma deploy-package/
-          echo "Package structure created (node_modules will be installed by Azure):"
-          ls -la deploy-package/ | head -20
+          echo "Package structure created:"
+          ls -lh deploy-package/ | head -20
           echo "Dist contents:"
           ls -la deploy-package/dist/ | head -20
 
