@@ -67,7 +67,6 @@ jobs:
         run: |
           mkdir -p deploy-package
           cp -r api/dist deploy-package/
-          cp -r api/node_modules deploy-package/
           cp api/package.json deploy-package/
           cp api/package-lock.json deploy-package/
           cp api/web.config deploy-package/
@@ -89,7 +88,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-build
-          path: deploy-output
+          path: .
 
       - name: Azure Login
         uses: azure/login@v2
@@ -100,7 +99,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
-          package: deploy-output/
+          package: .
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
