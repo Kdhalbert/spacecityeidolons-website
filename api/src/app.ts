@@ -10,6 +10,7 @@ import { registerHealthRoutes } from './routes/health.js';
 import { registerInviteRoutes } from './routes/invites.js';
 import { registerAuthRoutes } from './routes/auth.js';
 
+// Build Fastify application with all plugins and routes
 export async function buildApp() {
   // Create Fastify instance
   const app = Fastify({
