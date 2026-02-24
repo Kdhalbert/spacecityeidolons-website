@@ -9,9 +9,14 @@ export async function registerHealthRoutes(fastify: FastifyInstance, prisma: Pri
    */
   fastify.get('/health', async (_request: FastifyRequest, reply: FastifyReply) => {
     try {
-      // Test database connectivity
+      // Test database connectivity with timeout
       const startTime = Date.now();
-      await prisma.$queryRaw`SELECT 1`;
+      const dbCheckPromise = prisma.$queryRaw`SELECT 1`;
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database check timeout')), 5000)
+      );
+      
+      await Promise.race([dbCheckPromise, timeoutPromise]);
       const dbLatency = Date.now() - startTime;
 
       const now = new Date();

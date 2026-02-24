@@ -36,6 +36,22 @@ export async function buildApp() {
     },
   });
 
+  // Verify database connection on startup with timeout
+  try {
+    console.log('[STARTUP] Verifying database connectivity...');
+    const dbCheckTimeout = new Promise((_resolve, reject) => 
+      setTimeout(() => reject(new Error('Database check timeout after 10s')), 10000)
+    );
+    const dbCheck = prisma.$queryRaw`SELECT 1`;
+    await Promise.race([dbCheck, dbCheckTimeout]);
+    console.log('[STARTUP] Database connectivity verified');
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('[STARTUP] Database check failed:', msg);
+    console.error('[STARTUP] DATABASE_URL:', process.env.DATABASE_URL ? 'set' : 'NOT SET');
+    throw error;
+  }
+
   // Register plugins
   await app.register(helmet, {
     contentSecurityPolicy: false, // Disable CSP for API
