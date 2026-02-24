@@ -70,6 +70,7 @@ jobs:
           cp -r api/node_modules deploy-package/
           cp api/package.json deploy-package/
           cp api/package-lock.json deploy-package/
+          cp api/web.config deploy-package/
           cp -r api/prisma deploy-package/
 
       - name: Upload artifact
