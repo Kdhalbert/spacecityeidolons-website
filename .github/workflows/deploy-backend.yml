@@ -71,6 +71,11 @@ jobs:
           cp api/package-lock.json deploy-package/
           cp api/web.config deploy-package/
           cp -r api/prisma deploy-package/
+          # Create .deployment file to trigger npm install on Azure
+          cat > deploy-package/.deployment << 'EOF'
+          [config]
+          command = npm install && npm run prisma:generate
+          EOF
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
