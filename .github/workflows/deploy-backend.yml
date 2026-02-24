@@ -94,10 +94,17 @@ jobs:
 
       - name: Verify structure
         run: |
-          echo "Checking dist structure:"
+          echo "Checking deployment structure:"
           ls -la app-content/ | head -20
           echo "---"
+          echo "Checking dist directory:"
           ls -la app-content/dist/ 2>/dev/null | head -20 || echo "dist/ not found!"
+          echo "---"
+          echo "Checking for index.js:"
+          ls -la app-content/dist/index.js 2>/dev/null || echo "dist/index.js not found!"
+          echo "---"
+          echo "Full dist contents:"
+          find app-content/dist/ -name "*.js" | head -30
 
       - name: Azure Login
         uses: azure/login@v2
