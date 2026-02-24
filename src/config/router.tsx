@@ -9,7 +9,9 @@ import { Loading } from '../components/Loading';
 const HomePage = lazy(() => import('../pages/HomePage'));
 const GamesPage = lazy(() => import('../pages/GamesPage'));
 const EventsPage = lazy(() => import('../pages/EventsPage'));
+const ProfilesPage = lazy(() => import('../pages/ProfilesPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
+const ProfileEditPage = lazy(() => import('../pages/ProfileEditPage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
@@ -62,8 +64,21 @@ export const routes: RouteObject[] = [
         element: <PublicRoute element={<EventsPage />} />,
       },
       {
+        path: 'profiles',
+        element: <PublicRoute element={<ProfilesPage />} />,
+      },
+      {
         path: 'profile',
-        element: <ProtectedRoute element={<ProfilePage />} />,
+        children: [
+          {
+            path: 'edit',
+            element: <ProtectedRoute element={<ProfileEditPage />} />,
+          },
+          {
+            path: ':userId',
+            element: <PublicRoute element={<ProfilePage />} />,
+          },
+        ],
       },
       {
         path: 'login',

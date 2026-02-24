@@ -171,6 +171,33 @@ export async function apiPost<T>(
   }
 }
 
+export async function apiPut<T>(
+  url: string,
+  data?: any,
+  config?: any
+): Promise<ApiResponse<T>> {
+  try {
+    const response = await apiClient.put<ApiResponse<T>>(url, data, config);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: {
+          statusCode: error.response?.status || 500,
+          message: error.response?.data?.error?.message || error.message,
+          details: error.response?.data?.error?.details,
+        },
+      };
+    }
+    return {
+      error: {
+        statusCode: 500,
+        message: 'An unexpected error occurred',
+      },
+    };
+  }
+}
+
 export async function apiPatch<T>(
   url: string,
   data?: any,

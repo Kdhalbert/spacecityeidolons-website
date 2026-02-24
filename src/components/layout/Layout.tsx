@@ -33,7 +33,8 @@ export const Header: React.FC = () => {
           <Link to="/">Home</Link>
           <Link to="/games">Games</Link>
           <Link to="/events">Events</Link>
-          {isAuthenticated && <Link to="/profile">Profile</Link>}
+          <Link to="/profiles">Profiles</Link>
+          {isAuthenticated && user && <Link to={`/profile/${user.id}`}>My Profile</Link>}
           
           {!isLoading && (
             <>
