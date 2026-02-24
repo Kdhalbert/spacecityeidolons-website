@@ -39,6 +39,16 @@ coverage/
 api/dist/
 api/node_modules/
 
+# TypeScript compiled output (should not commit)
+api/prisma/*.d.ts
+api/prisma/*.d.ts.map
+api/prisma/*.js
+api/prisma/*.js.map
+src/types/*.d.ts
+src/types/*.d.ts.map
+src/types/*.js
+src/types/*.js.map
+
 # Infrastructure secrets
 infrastructure/bicep/*.parameters.dev.json
 infrastructure/bicep/*.parameters.staging.json
