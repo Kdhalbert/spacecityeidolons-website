@@ -67,45 +67,12 @@ const ProfilePage: React.FC = () => {
 
       <PageSection>
         <DarkCard>
-          <div style={{ padding: '32px' }}>
-            <ProfileCard
-              profile={profile}
-              isOwnProfile={isOwnProfile}
-              isAdmin={isAdmin}
-              onEdit={() => navigate(`/profile/${userId}/edit`)}
-            />
-
-            {/* Additional sections could go here */}
-            {profile.bio && (
-              <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                <h3 style={{ marginBottom: '12px', fontSize: '1.1rem' }}>About</h3>
-                <p style={{ whiteSpace: 'pre-wrap' }}>{profile.bio}</p>
-              </div>
-            )}
-
-            {profile.gamesPlayed && profile.gamesPlayed.length > 0 && (
-              <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                <h3 style={{ marginBottom: '12px', fontSize: '1.1rem' }}>Games</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {profile.gamesPlayed.map((game) => (
-                    <span
-                      key={game}
-                      style={{
-                        backgroundColor: 'rgba(88, 101, 242, 0.2)',
-                        color: 'var(--purple-lighter)',
-                        padding: '8px 16px',
-                        borderRadius: '16px',
-                        fontFamily: 'sans-serif',
-                        fontSize: '0.9rem',
-                      }}
-                    >
-                      {game}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <ProfileCard
+            profile={profile}
+            isOwnProfile={isOwnProfile}
+            isAdmin={isAdmin}
+            onEdit={() => navigate('/profile/edit')}
+          />
         </DarkCard>
       </PageSection>
     </>

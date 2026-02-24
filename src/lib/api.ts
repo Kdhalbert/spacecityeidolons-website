@@ -124,8 +124,8 @@ export async function apiGet<T>(
   config?: any
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient.get<ApiResponse<T>>(url, config);
-    return response.data;
+    const response = await apiClient.get<T>(url, config);
+    return { data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
@@ -150,8 +150,8 @@ export async function apiPost<T>(
   config?: any
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient.post<ApiResponse<T>>(url, data, config);
-    return response.data;
+    const response = await apiClient.post<T>(url, data, config);
+    return { data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
@@ -177,8 +177,8 @@ export async function apiPut<T>(
   config?: any
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient.put<ApiResponse<T>>(url, data, config);
-    return response.data;
+    const response = await apiClient.put<T>(url, data, config);
+    return { data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
@@ -204,8 +204,8 @@ export async function apiPatch<T>(
   config?: any
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient.patch<ApiResponse<T>>(url, data, config);
-    return response.data;
+    const response = await apiClient.patch<T>(url, data, config);
+    return { data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {
@@ -230,8 +230,8 @@ export async function apiDelete<T>(
   config?: any
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient.delete<ApiResponse<T>>(url, config);
-    return response.data;
+    const response = await apiClient.delete<T>(url, config);
+    return { data: response.data };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       return {

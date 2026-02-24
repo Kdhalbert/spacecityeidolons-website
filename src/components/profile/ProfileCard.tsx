@@ -1,5 +1,4 @@
 import React from 'react';
-import { DarkCard, PageSection } from '../ui';
 import type { Profile } from '../../types';
 
 interface ProfileCardProps {
@@ -27,9 +26,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   return (
-    <PageSection>
-      <DarkCard>
-        <div style={{ padding: '32px' }}>
+    <div style={{ padding: '32px' }}>
           {/* Header with Avatar and Name */}
           <div style={{ display: 'flex', gap: '24px', marginBottom: '32px', alignItems: 'flex-start' }}>
             {getDiscordAvatarUrl() && (
@@ -136,8 +133,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             Joined {new Date(profile.createdAt).toLocaleDateString()}
           </p>
         </div>
-      </DarkCard>
-    </PageSection>
   );
 };
 

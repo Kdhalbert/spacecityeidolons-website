@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { profileService } from '../services/profile.service.js';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
+import { authenticate, optionalAuthenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import { profileUpdateSchema } from '../schemas/profile.schema.js';
 import type { Role } from '@prisma/client';
 
@@ -16,6 +16,7 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
    */
   fastify.get<{ Params: GetProfileParams }>(
     '/api/profiles/:userId',
+    { preHandler: optionalAuthenticate },
     async (request: FastifyRequest<{ Params: GetProfileParams }>, reply: FastifyReply) => {
       try {
         const { userId } = request.params;
@@ -111,6 +112,7 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
    */
   fastify.get<{ Querystring: any }>(
     '/api/profiles',
+    { preHandler: optionalAuthenticate },
     async (request: FastifyRequest<{ Querystring: any }>, reply: FastifyReply) => {
       try {
         const { game, search } = request.query;
@@ -120,9 +122,9 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
         let profiles;
 
         if (game) {
-          profiles = await profileService.getProfilesByGame(game);
+          profiles = await profileService.getProfilesByGame(game, viewerUserId, viewerRole);
         } else if (search) {
-          profiles = await profileService.searchProfiles(search, 50);
+          profiles = await profileService.searchProfiles(search, 50, viewerUserId, viewerRole);
         } else {
           profiles = await profileService.getAllProfiles(viewerUserId, viewerRole);
         }

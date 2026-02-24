@@ -1,11 +1,6 @@
 import { apiGet, apiPut } from '../lib/api';
 import type { Profile } from '../types';
 
-export interface GetProfileResponse {
-  data: Profile;
-  _filtered?: boolean;
-}
-
 export interface ListProfilesResponse {
   data: Profile[];
   count: number;
@@ -20,11 +15,11 @@ export const profileService = {
    */
   async getProfile(userId: string): Promise<Profile> {
     try {
-      const response = await apiGet<GetProfileResponse>(`/profiles/${userId}`);
+      const response = await apiGet<Profile>(`/profiles/${userId}`);
       if (response.error) {
         throw new Error(response.error.message);
       }
-      return response.data!.data;
+      return response.data!;
     } catch (error) {
       console.error(`Error fetching profile for user ${userId}:`, error);
       throw error;
@@ -88,14 +83,14 @@ export const profileService = {
     }
   ): Promise<Profile> {
     try {
-      const response = await apiPut<GetProfileResponse>(
+      const response = await apiPut<Profile>(
         `/profiles/${userId}`,
         data
       );
       if (response.error) {
         throw new Error(response.error.message);
       }
-      return response.data!.data;
+      return response.data!;
     } catch (error) {
       console.error(`Error updating profile for user ${userId}:`, error);
       throw error;
@@ -107,8 +102,10 @@ export const profileService = {
    */
   async getProfileStats(): Promise<{
     totalProfiles: number;
-    profilesWithBio: number;
-    gamesPlayed: { [key: string]: number };
+    withBio: number;
+    withTwitchUrl: number;
+    privacyEnabledProfile: number;
+    privacyEnabledEvents: number;
   }> {
     try {
       const response = await apiGet<any>('/profiles/stats');

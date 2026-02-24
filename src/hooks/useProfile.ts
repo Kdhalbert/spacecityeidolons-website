@@ -73,7 +73,10 @@ export const useUpdateProfile = () => {
       gamesPlayed?: string[];
       privacyProfile?: boolean;
       privacyEvents?: boolean;
-    }) => profileService.updateProfile(data.userId, data),
+    }) => {
+      const { userId, ...updateData } = data;
+      return profileService.updateProfile(userId, updateData);
+    },
     onSuccess: (updatedProfile) => {
       // Update cache for this specific profile
       queryClient.setQueryData(

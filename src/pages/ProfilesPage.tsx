@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useProfiles, useSearchProfiles, useProfilesByGame } from '../hooks/useProfile';
 import { ProfileCard } from '../components/profile/ProfileCard';
 import { PageHero, PageSection, DarkCard } from '../components/ui';
+import type { Profile } from '../types';
 
 /**
  * ProfilesPage - browse and search community profiles
@@ -18,7 +19,7 @@ const ProfilesPage: React.FC = () => {
   const searchProfilesQuery = useSearchProfiles(searchQuery);
   const gameProfilesQuery = useProfilesByGame(selectedGame);
 
-  let profiles = [];
+  let profiles: Profile[] = [];
   let isLoading = false;
 
   if (viewMode === 'search' && searchQuery) {
@@ -90,7 +91,7 @@ const ProfilesPage: React.FC = () => {
           <div style={{ padding: '0 24px 24px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             <button
               onClick={() => handleGameFilter('')}
-              className={selectedGame === '' ? 'invite-btn' : 'invite-btn'}
+              className="invite-btn"
               style={{
                 backgroundColor: selectedGame === '' ? 'var(--purple)' : 'rgba(88, 101, 242, 0.2)',
                 border: 'none',
@@ -135,13 +136,14 @@ const ProfilesPage: React.FC = () => {
         ) : profiles.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
             {profiles.map((profile) => (
-              <div
-                key={profile.userId}
-                onClick={() => navigate(`/profile/${profile.userId}`)}
-                style={{ cursor: 'pointer' }}
-              >
-                <ProfileCard profile={profile} />
-              </div>
+              <DarkCard key={profile.userId}>
+                <div
+                  onClick={() => navigate(`/profile/${profile.userId}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <ProfileCard profile={profile} />
+                </div>
+              </DarkCard>
             ))}
           </div>
         ) : (

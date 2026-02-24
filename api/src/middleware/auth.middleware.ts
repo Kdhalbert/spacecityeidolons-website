@@ -41,9 +41,31 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
 }
 
 /**
- * Middleware to verify user has admin role
- * Must be used after authenticate middleware
+ * Optional middleware to verify JWT token if present
+ * Does not return 401 when no token is provided - allows public access
+ * Populates request.user when a valid token is provided
  */
+export async function optionalAuthenticate(request: FastifyRequest, _reply: FastifyReply) {
+  try {
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader) {
+      return; // No token - continue as unauthenticated
+    }
+
+    const parts = authHeader.split(' ');
+    if (parts.length !== 2 || parts[0] !== 'Bearer') {
+      return; // Malformed header - treat as unauthenticated
+    }
+
+    const token = parts[1];
+    const payload = verifyAccessToken(token);
+    request.user = payload;
+  } catch {
+    // Invalid token - continue as unauthenticated (do not 401)
+  }
+}
+
 export async function requireAdmin(request: FastifyRequest, reply: FastifyReply) {
   const user = request.user as any;
   

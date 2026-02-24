@@ -6,11 +6,22 @@ import { Input } from '../Input';
 import { PageSection, DarkCard } from '../ui';
 import type { Profile } from '../../types';
 
+// Twitch profile URL must match: https://twitch.tv/<username> (or with www.)
+const twitchProfileUrlRegex = /^https?:\/\/(www\.)?twitch\.tv\/[A-Za-z0-9_]+\/?$/;
+
 // Validation schema for profile updates
 const profileUpdateSchema = z.object({
   displayName: z.string().max(100).optional(),
   bio: z.string().max(500).optional(),
-  twitchUrl: z.string().url().optional().or(z.literal('')),
+  twitchUrl: z
+    .string()
+    .trim()
+    .regex(
+      twitchProfileUrlRegex,
+      'Must be a valid Twitch profile URL, e.g. https://twitch.tv/username'
+    )
+    .optional()
+    .or(z.literal('')),
   location: z.string().optional(),
   timezone: z.string().optional(),
   gamesPlayed: z.array(z.string()).optional(),
@@ -39,6 +50,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(profileUpdateSchema),
@@ -57,6 +69,21 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
   const displayName = watch('displayName');
   const bio = watch('bio');
   const twitchUrl = watch('twitchUrl');
+
+  useEffect(() => {
+    if (profile) {
+      reset({
+        displayName: profile.displayName || '',
+        bio: profile.bio || '',
+        twitchUrl: profile.twitchUrl || '',
+        location: profile.location || '',
+        timezone: profile.timezone || '',
+        gamesPlayed: profile.gamesPlayed || [],
+        privacyProfile: profile.privacyProfile || false,
+        privacyEvents: profile.privacyEvents || false,
+      });
+    }
+  }, [profile, reset]);
 
   useEffect(() => {
     if (profile?.gamesPlayed) {
@@ -155,7 +182,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
                     type="text"
                     value={gameInput}
                     onChange={(e) => setGameInput(e.target.value)}
-                    onKeyPress={(e) => {
+                    onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
                         handleAddGame();

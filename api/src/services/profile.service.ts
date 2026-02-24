@@ -152,7 +152,7 @@ export class ProfileService {
    * @param limit - Maximum results
    * @returns Array of matching profiles (filtered)
    */
-  async searchProfiles(query: string, limit: number = 10): Promise<FilteredProfile[]> {
+  async searchProfiles(query: string, limit: number = 10, viewerUserId?: string, viewerRole?: Role): Promise<FilteredProfile[]> {
     const profiles = await prisma.profile.findMany({
       where: {
         displayName: {
@@ -164,8 +164,9 @@ export class ProfileService {
       orderBy: { displayName: 'asc' },
     });
 
-    // Apply default privacy filtering (non-owner, non-admin view)
-    return profiles.map((profile) => this.applyPrivacyFilter(profile, false, 'GUEST' as any));
+    return profiles.map((profile) =>
+      this.applyPrivacyFilter(profile, profile.userId === viewerUserId, viewerRole)
+    );
   }
 
   /**
@@ -173,7 +174,7 @@ export class ProfileService {
    * @param gameName - Game name to filter by
    * @returns Array of profiles that play this game
    */
-  async getProfilesByGame(gameName: string): Promise<FilteredProfile[]> {
+  async getProfilesByGame(gameName: string, viewerUserId?: string, viewerRole?: Role): Promise<FilteredProfile[]> {
     const profiles = await prisma.profile.findMany({
       where: {
         gamesPlayed: {
@@ -183,17 +184,11 @@ export class ProfileService {
       orderBy: { displayName: 'asc' },
     });
 
-    return profiles.map((profile) => this.applyPrivacyFilter(profile, false, 'GUEST' as any));
+    return profiles.map((profile) =>
+      this.applyPrivacyFilter(profile, profile.userId === viewerUserId, viewerRole)
+    );
   }
 
-  /**
-   * Validate Twitch URL format
-   * @private
-   */
-  private validateTwitchUrl(url: string): boolean {
-    const twitchRegex = /^https?:\/\/(www\.)?twitch\.tv\/[a-zA-Z0-9_-]+\/?$/i;
-    return twitchRegex.test(url);
-  }
 }
 
 export const profileService = new ProfileService();
