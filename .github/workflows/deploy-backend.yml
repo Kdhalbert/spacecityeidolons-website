@@ -63,16 +63,20 @@ jobs:
         working-directory: ./api
         run: npm run build
 
+      - name: Create package structure
+        run: |
+          mkdir -p deploy-package
+          cp -r api/dist deploy-package/
+          cp -r api/node_modules deploy-package/
+          cp api/package.json deploy-package/
+          cp api/package-lock.json deploy-package/
+          cp -r api/prisma deploy-package/
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: |
-            api/dist/
-            api/node_modules/
-            api/package.json
-            api/package-lock.json
-            api/prisma/
+          path: deploy-package/
 
   deploy:
     name: Deploy to Azure App Service
@@ -84,7 +88,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-build
-          path: .
+          path: deploy-output
 
       - name: Azure Login
         uses: azure/login@v2
@@ -95,7 +99,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
-          package: ./api/
+          package: deploy-output/
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
