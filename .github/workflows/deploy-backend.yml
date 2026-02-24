@@ -67,15 +67,12 @@ jobs:
         run: |
           mkdir -p deploy-package
           cp -r api/dist deploy-package/
+          cp -r api/node_modules deploy-package/
           cp api/package.json deploy-package/
           cp api/package-lock.json deploy-package/
           cp api/web.config deploy-package/
           cp -r api/prisma deploy-package/
-          # Create .deployment file to trigger npm install on Azure
-          cat > deploy-package/.deployment << 'EOF'
-          [config]
-          command = npm install && npm run prisma:generate
-          EOF
+          ls -la deploy-package/dist/ | head -20
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -93,7 +90,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-build
-          path: .
+          path: app-content
+
+      - name: Verify structure
+        run: |
+          echo "Checking dist structure:"
+          ls -la app-content/ | head -20
+          echo "---"
+          ls -la app-content/dist/ 2>/dev/null | head -20 || echo "dist/ not found!"
 
       - name: Azure Login
         uses: azure/login@v2
@@ -104,7 +108,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
-          package: .
+          package: app-content/
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
