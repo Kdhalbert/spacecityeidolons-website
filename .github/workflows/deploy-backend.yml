@@ -113,7 +113,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Configure App Service for pre-built deployment
+      - name: Configure App Service for deployment
         run: |
           echo "Stopping app service to allow clean deployment..."
           az webapp stop \
@@ -122,15 +122,15 @@ jobs:
           echo "Waiting for app service to stop..."
           sleep 5
           
-          echo "Configuring Azure to skip build and use pre-built files..."
+          echo "Configuring Azure App Service..."
           az webapp config appsettings set \
             --name ${{ env.AZURE_APP_SERVICE_NAME }} \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
             --settings \
-              SCM_DO_BUILD_DURING_DEPLOYMENT=false \
-              ENABLE_ORYX_BUILD=false \
+              SCM_DO_BUILD_DURING_DEPLOYMENT=true \
+              ENABLE_ORYX_BUILD=true \
               WEBSITE_RUN_FROM_PACKAGE=0
-          echo "Settings configured"
+          echo "Settings configured - Kudu will install dependencies"
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v3
         with:
@@ -145,8 +145,11 @@ jobs:
           az webapp start \
             --name ${{ env.AZURE_APP_SERVICE_NAME }} \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
-          echo "Waiting for app to fully start..."
-          sleep 45
+          
+          echo "Waiting for dependencies to install (Kudu npm ci)..."
+          sleep 30
+          
+          echo "App should now be running with dependencies installed"
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
