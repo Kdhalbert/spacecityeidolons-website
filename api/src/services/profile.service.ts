@@ -20,9 +20,23 @@ export class ProfileService {
     viewerUserId?: string,
     viewerRole?: Role
   ): Promise<FilteredProfile | null> {
-    const profile = await prisma.profile.findUnique({
+    let profile = await prisma.profile.findUnique({
       where: { userId },
     });
+
+    // If profile doesn't exist and user is viewing their own profile, create it
+    if (!profile && userId === viewerUserId) {
+      profile = await prisma.profile.create({
+        data: {
+          userId,
+          displayName: '',
+          bio: '',
+          gamesPlayed: [],
+          privacyProfile: false,
+          privacyEvents: false,
+        },
+      });
+    }
 
     if (!profile) {
       return null;
