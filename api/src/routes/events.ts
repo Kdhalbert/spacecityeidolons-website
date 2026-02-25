@@ -1,16 +1,16 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { queryEventsSchema, createEventSchema, updateEventSchema } from '../schemas/event.schema';
-import * as eventService from '../services/event.service';
-import { roleGuard } from '../middleware/role.middleware';
+import { queryEventsSchema, createEventSchema, updateEventSchema } from '../schemas/event.schema.js';
+import * as eventService from '../services/event.service.js';
+import { authenticate } from '../middleware/auth.middleware.js';
 
-export async function eventRoutes(app: FastifyInstance) {
+export async function registerEventRoutes(fastify: FastifyInstance) {
   /**
    * GET /api/events
    * Get all visible events with optional filtering
    * Public endpoint - no authentication required
    * Visibility filtering is applied based on user role
    */
-  app.get('/api/events', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/api/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const filters = queryEventsSchema.parse(request.query);
 
@@ -47,7 +47,7 @@ export async function eventRoutes(app: FastifyInstance) {
    * Get a specific event with visibility checks
    * Public endpoint - no authentication required
    */
-  app.get('/api/events/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/api/events/:id', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { id } = request.params as { id: string };
 
@@ -76,37 +76,45 @@ export async function eventRoutes(app: FastifyInstance) {
    * Create a new event
    * Requires authentication (MEMBER role or higher)
    */
-  app.post('/api/events', { preHandler: app.authenticate }, async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const input = createEventSchema.parse(request.body);
-      const userId = (request.user as any).userId;
+  fastify.post(
+    '/api/events',
+    {
+      preHandler: authenticate,
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const input = createEventSchema.parse(request.body);
+        const userId = (request.user as any).userId;
 
-      const event = await eventService.createEvent(input, userId);
+        const event = await eventService.createEvent(input, userId);
 
-      return reply.code(201).send(event);
-    } catch (error: any) {
-      if (error.name === 'ZodError') {
-        return reply.code(400).send({
-          error: 'Invalid event data',
-          details: error.errors,
+        return reply.code(201).send(event);
+      } catch (error: any) {
+        if (error.name === 'ZodError') {
+          return reply.code(400).send({
+            error: 'Invalid event data',
+            details: error.errors,
+          });
+        }
+
+        console.error('Error creating event:', error);
+        return reply.code(500).send({
+          error: 'Failed to create event',
         });
       }
-
-      console.error('Error creating event:', error);
-      return reply.code(500).send({
-        error: 'Failed to create event',
-      });
     }
-  });
+  );
 
   /**
    * PUT /api/events/:id
    * Update an existing event
    * Requires authentication and creator authorization
    */
-  app.put(
+  fastify.put(
     '/api/events/:id',
-    { preHandler: app.authenticate },
+    {
+      preHandler: authenticate,
+    },
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const { id } = request.params as { id: string };
@@ -149,9 +157,11 @@ export async function eventRoutes(app: FastifyInstance) {
    * Delete an event
    * Requires authentication and creator authorization
    */
-  app.delete(
+  fastify.delete(
     '/api/events/:id',
-    { preHandler: app.authenticate },
+    {
+      preHandler: authenticate,
+    },
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const { id } = request.params as { id: string };
@@ -186,12 +196,21 @@ export async function eventRoutes(app: FastifyInstance) {
    * Get event statistics
    * Admin only
    */
-  app.get(
+  fastify.get(
     '/api/events/stats',
-    { preHandler: app.authenticate },
-    roleGuard('ADMIN'),
+    {
+      preHandler: authenticate,
+    },
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
+        const userRole = (request.user as any)?.role;
+
+        if (userRole !== 'ADMIN') {
+          return reply.code(403).send({
+            error: 'Forbidden - Admin access required',
+          });
+        }
+
         const stats = await eventService.getEventStats();
 
         return reply.code(200).send(stats);

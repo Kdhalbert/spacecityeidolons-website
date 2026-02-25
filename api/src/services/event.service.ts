@@ -1,13 +1,13 @@
-import prisma from '../lib/db';
+import prisma from '../lib/db.js';
 import { EventVisibility, User, Role } from '@prisma/client';
-import { CreateEventInput, UpdateEventInput, QueryEventsInput } from '../schemas/event.schema';
+import { CreateEventInput, UpdateEventInput, QueryEventsInput } from '../schemas/event.schema.js';
 
 /**
  * Filter events based on user role and visibility settings
  * 
  * Visibility Rules:
  * - PUBLIC: visible to everyone
- * - MEMBER: visible to members and admins
+ * - MEMBERS_ONLY: visible to members and admins
  * - PRIVATE: visible only to creator and admins
  * - ADMIN: visible only to admins
  * 
@@ -29,7 +29,7 @@ export function filterEventsByVisibility(events: any[], user: User | null | unde
       case EventVisibility.PUBLIC:
         return true;
 
-      case EventVisibility.MEMBER:
+      case EventVisibility.MEMBERS_ONLY:
         // Only members and above can see
         return user && (user.role === Role.MEMBER || user.role === Role.ADMIN);
 
@@ -86,9 +86,9 @@ export async function getVisibleEvents(
     // Guests and unauthenticated users only see PUBLIC events
     where.visibility = EventVisibility.PUBLIC;
   } else if (userRole === Role.MEMBER) {
-    // Members see PUBLIC and MEMBER events
+    // Members see PUBLIC and MEMBERS_ONLY events
     where.visibility = {
-      in: [EventVisibility.PUBLIC, EventVisibility.MEMBER],
+      in: [EventVisibility.PUBLIC, EventVisibility.MEMBERS_ONLY],
     };
   }
   // Admins see everything (no visibility filter)
@@ -265,7 +265,7 @@ export async function getEventStats(userId?: string, dateRange?: { start: Date; 
   const [totalEvents, publicEvents, memberEvents, privateEvents] = await Promise.all([
     prisma.event.count({ where }),
     prisma.event.count({ where: { ...where, visibility: EventVisibility.PUBLIC } }),
-    prisma.event.count({ where: { ...where, visibility: EventVisibility.MEMBER } }),
+    prisma.event.count({ where: { ...where, visibility: EventVisibility.MEMBERS_ONLY } }),
     prisma.event.count({ where: { ...where, visibility: EventVisibility.PRIVATE } }),
   ]);
 

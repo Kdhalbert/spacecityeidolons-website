@@ -68,7 +68,7 @@ describe('Event Visibility Filtering (US4)', () => {
           description: 'Members only',
           date: baseDate,
           time: '20:00',
-          visibility: EventVisibility.MEMBER,
+          visibility: EventVisibility.MEMBERS_ONLY,
           creatorId: creatorUser.id,
         },
       }),
@@ -111,20 +111,20 @@ describe('Event Visibility Filtering (US4)', () => {
       expect(visible[0].visibility).toBe(EventVisibility.PUBLIC);
     });
 
-    it('should not see MEMBER or PRIVATE events', async () => {
+    it('should not see MEMBERS_ONLY or PRIVATE events', async () => {
       const visible = filterEventsByVisibility(events, guestUser, false);
       const hasRestricted = visible.some((e) =>
-        [EventVisibility.MEMBER, EventVisibility.PRIVATE].includes(e.visibility)
+        [EventVisibility.MEMBERS_ONLY, EventVisibility.PRIVATE].includes(e.visibility)
       );
       expect(hasRestricted).toBe(false);
     });
   });
 
   describe('Member User', () => {
-    it('should see PUBLIC and MEMBER events', async () => {
+    it('should see PUBLIC and MEMBERS_ONLY events', async () => {
       const visible = filterEventsByVisibility(events, memberUser, false);
       expect(visible.length).toBe(2);
-      expect(visible.every((e) => [EventVisibility.PUBLIC, EventVisibility.MEMBER].includes(e.visibility))).toBe(true);
+      expect(visible.every((e) => [EventVisibility.PUBLIC, EventVisibility.MEMBERS_ONLY].includes(e.visibility))).toBe(true);
     });
 
     it('should not see PRIVATE events unless they are the creator', async () => {
@@ -146,7 +146,7 @@ describe('Event Visibility Filtering (US4)', () => {
       const visible = filterEventsByVisibility(events, adminUser, false);
       expect(visible.length).toBe(3); // All events
       expect(visible.map((e) => e.visibility).sort()).toEqual([
-        EventVisibility.MEMBER,
+        EventVisibility.MEMBERS_ONLY,
         EventVisibility.PRIVATE,
         EventVisibility.PUBLIC,
       ]);
@@ -160,7 +160,7 @@ describe('Event Visibility Filtering (US4)', () => {
   });
 
   describe('Event Creator', () => {
-    it('should see their own PUBLIC, MEMBER, and PRIVATE events', async () => {
+    it('should see their own PUBLIC, MEMBERS_ONLY, and PRIVATE events', async () => {
       const visible = filterEventsByVisibility(events, creatorUser, true);
       expect(visible.length).toBe(3); // All their events
     });
@@ -175,7 +175,7 @@ describe('Event Visibility Filtering (US4)', () => {
   describe('Mixed Visibility Scenarios', () => {
     it('should correctly filter when user is both member and non-creator', async () => {
       const filtered = filterEventsByVisibility(events, memberUser, false);
-      expect(filtered.length).toBe(2); // PUBLIC + MEMBER
+      expect(filtered.length).toBe(2); // PUBLIC + MEMBERS_ONLY
     });
 
     it('should correctly filter when user is admin', async () => {
