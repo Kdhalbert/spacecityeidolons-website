@@ -70,7 +70,7 @@ export async function registerHealthRoutes(fastify: FastifyInstance, prisma: Pri
         status: 'ready',
         timestamp: new Date().toISOString()
       });
-    } catch (error) {
+    } catch (_error) {
       return reply.code(503).send({
         status: 'not-ready',
         timestamp: new Date().toISOString(),

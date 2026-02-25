@@ -1,5 +1,5 @@
 import prisma from '../lib/db.js';
-import { EventVisibility, User, Role } from '@prisma/client';
+import { EventVisibility, User, Role, Event } from '@prisma/client';
 import { CreateEventInput, UpdateEventInput, QueryEventsInput } from '../schemas/event.schema.js';
 
 /**
@@ -16,7 +16,7 @@ import { CreateEventInput, UpdateEventInput, QueryEventsInput } from '../schemas
  * @param isCreator - Whether the user is the event creator
  * @returns Filtered array of events
  */
-export function filterEventsByVisibility(events: any[], user: User | null | undefined, isCreator: boolean): any[] {
+export function filterEventsByVisibility(events: Event[], user: User | null | undefined, isCreator: boolean): Event[] {
   return events.filter((event) => {
     // Creator can always see their own events
     if (isCreator) return true;
@@ -26,21 +26,23 @@ export function filterEventsByVisibility(events: any[], user: User | null | unde
       case EventVisibility.PUBLIC:
         return true;
 
-      case EventVisibility.MEMBERS_ONLY:
+      case EventVisibility.MEMBERS_ONLY: {
         // Only members and above can see
         if (!user) return false;
-        const memberRole = user.role as any;
+        const memberRole = user.role;
         return memberRole === 'MEMBER' || memberRole === 'ADMIN';
+      }
 
       case EventVisibility.PRIVATE:
         // Only creator and admin can see
         return false;
 
-      case EventVisibility.ADMIN:
+      case EventVisibility.ADMIN: {
         // Only admin can see
         if (!user) return false;
-        const adminRole = user.role as any;
+        const adminRole = user.role;
         return adminRole === 'ADMIN';
+      }
 
       default:
         return false;
@@ -57,7 +59,7 @@ export async function getVisibleEvents(
   userRole?: Role,
   filters?: QueryEventsInput
 ) {
-  const where: any = {};
+  const where: Record<string, unknown> = {};
 
   // Apply date range filters
   if (filters?.startDate && filters?.endDate) {
@@ -146,7 +148,8 @@ export async function getEventById(eventId: string, userId: string | null, userR
 
   // Check visibility
   const isCreator = event.creatorId === userId;
-  const canView = filterEventsByVisibility([event], { role: userRole } as any, isCreator)[0];
+  const user = userRole ? { role: userRole } as User : null;
+  const canView = filterEventsByVisibility([event], user, isCreator)[0];
 
   return canView || null;
 }
@@ -197,7 +200,7 @@ export async function updateEvent(eventId: string, input: UpdateEventInput, user
   if (!event) throw new Error('Event not found');
   if (event.creatorId !== userId) throw new Error('Unauthorized');
 
-  const updateData: any = {};
+  const updateData: Partial<Event> = {};
 
   if (input.title) updateData.title = input.title;
   if (input.description !== undefined) updateData.description = input.description;
@@ -250,7 +253,7 @@ export async function deleteEvent(eventId: string, userId: string) {
  * Get event statistics
  */
 export async function getEventStats(userId?: string, dateRange?: { start: Date; end: Date }) {
-  const where: any = {};
+  const where: Record<string, unknown> = {};
 
   if (dateRange) {
     where.date = {

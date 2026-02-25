@@ -112,7 +112,7 @@ export const eventService = {
     try {
       const response = await api.get(`/api/events/${id}`);
       return response.data;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   },
@@ -147,7 +147,7 @@ export const eventService = {
     try {
       const response = await api.get('/api/events/stats');
       return response.data;
-    } catch (error) {
+    } catch (_error) {
       return {
         totalEvents: 0,
         upcomingEvents: 0,
