@@ -21,9 +21,6 @@ export function filterEventsByVisibility(events: any[], user: User | null | unde
     // Creator can always see their own events
     if (isCreator) return true;
 
-    // Admin can see all events
-    if (user?.role === Role.ADMIN) return true;
-
     // Based on visibility level
     switch (event.visibility) {
       case EventVisibility.PUBLIC:
@@ -31,15 +28,19 @@ export function filterEventsByVisibility(events: any[], user: User | null | unde
 
       case EventVisibility.MEMBERS_ONLY:
         // Only members and above can see
-        return user && (user.role === Role.MEMBER || user.role === Role.ADMIN);
+        if (!user) return false;
+        const memberRole = user.role as any;
+        return memberRole === 'MEMBER' || memberRole === 'ADMIN';
 
       case EventVisibility.PRIVATE:
         // Only creator and admin can see
         return false;
 
-      case 'ADMIN' as any:
+      case EventVisibility.ADMIN:
         // Only admin can see
-        return user?.role === Role.ADMIN;
+        if (!user) return false;
+        const adminRole = user.role as any;
+        return adminRole === 'ADMIN';
 
       default:
         return false;
@@ -52,7 +53,7 @@ export function filterEventsByVisibility(events: any[], user: User | null | unde
  * Only returns events the user should be able to see
  */
 export async function getVisibleEvents(
-  userId: string | null,
+  _userId: string | null,
   userRole?: Role,
   filters?: QueryEventsInput
 ) {
