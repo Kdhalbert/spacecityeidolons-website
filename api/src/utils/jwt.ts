@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '../config/index.js';
 
 export interface JWTPayload {
@@ -19,14 +19,14 @@ export interface AuthTokens {
 export function generateTokens(payload: JWTPayload): AuthTokens {
   const accessToken = jwt.sign(payload, config.JWT_SECRET as string, {
     expiresIn: config.JWT_ACCESS_EXPIRES_IN,
-  } as any);
+  } as SignOptions);
 
   const refreshToken = jwt.sign(
     { userId: payload.userId },
     config.JWT_REFRESH_SECRET as string,
     {
       expiresIn: config.JWT_REFRESH_EXPIRES_IN,
-    } as any
+    } as SignOptions
   );
 
   return { accessToken, refreshToken };
@@ -39,7 +39,7 @@ export function verifyAccessToken(token: string): JWTPayload {
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET) as JWTPayload;
     return decoded;
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Invalid or expired access token');
   }
 }
@@ -53,7 +53,7 @@ export function verifyRefreshToken(token: string): { userId: string } {
       userId: string;
     };
     return decoded;
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Invalid or expired refresh token');
   }
 }

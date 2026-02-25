@@ -52,7 +52,7 @@ export const gameService = {
     try {
       const response = await api.get(`/api/games/${id}`);
       return response.data;
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   },
@@ -73,7 +73,7 @@ export const gameService = {
         })
       );
       return results.filter((g): g is Game => g !== null);
-    } catch (error) {
+    } catch (_error) {
       return [];
     }
   },
