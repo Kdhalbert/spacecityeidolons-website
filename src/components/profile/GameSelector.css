@@ -1,6 +1,7 @@
 /* GameSelector Component Styles */
 
 .game-selector {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;

@@ -32,6 +32,22 @@ export async function registerGameRoutes(fastify: FastifyInstance) {
         const limit = parseInt(request.query.limit || '50', 10);
         const offset = parseInt(request.query.offset || '0', 10);
 
+        if (Number.isNaN(limit) || limit < 1 || limit > 100) {
+          return reply.code(400).send({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Invalid "limit" parameter. It must be an integer between 1 and 100.',
+          });
+        }
+
+        if (Number.isNaN(offset) || offset < 0) {
+          return reply.code(400).send({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Invalid "offset" parameter. It must be a non-negative integer.',
+          });
+        }
+
         const result = await gamesService.getGames(category, limit, offset);
         return reply.send(result);
       } catch (error) {
@@ -40,37 +56,6 @@ export async function registerGameRoutes(fastify: FastifyInstance) {
           statusCode: 500,
           error: 'Internal Server Error',
           message: 'Failed to fetch games',
-        });
-      }
-    }
-  );
-
-  /**
-   * GET /api/games/:id
-   * Get a specific game by ID
-   */
-  fastify.get<{ Params: GameParams }>(
-    '/api/games/:id',
-    async (request: FastifyRequest<{ Params: GameParams }>, reply: FastifyReply) => {
-      try {
-        const { id } = request.params;
-        const game = await gamesService.getGameById(id);
-
-        if (!game) {
-          return reply.code(404).send({
-            statusCode: 404,
-            error: 'Not Found',
-            message: 'Game not found',
-          });
-        }
-
-        return reply.send(game);
-      } catch (error) {
-        fastify.log.error(error);
-        return reply.code(500).send({
-          statusCode: 500,
-          error: 'Internal Server Error',
-          message: 'Failed to fetch game',
         });
       }
     }
@@ -88,6 +73,14 @@ export async function registerGameRoutes(fastify: FastifyInstance) {
       try {
         const { query } = request.params;
         const limit = parseInt(request.query.limit || '20', 10);
+
+        if (Number.isNaN(limit) || limit < 1 || limit > 100) {
+          return reply.code(400).send({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Invalid "limit" parameter. It must be an integer between 1 and 100.',
+          });
+        }
 
         const games = await gamesService.searchGames(query, limit);
         return reply.send({ data: games, count: games.length });
@@ -161,6 +154,37 @@ export async function registerGameRoutes(fastify: FastifyInstance) {
           statusCode: 500,
           error: 'Internal Server Error',
           message: 'Failed to fetch games for selection',
+        });
+      }
+    }
+  );
+
+  /**
+   * GET /api/games/:id
+   * Get a specific game by ID
+   */
+  fastify.get<{ Params: GameParams }>(
+    '/api/games/:id',
+    async (request: FastifyRequest<{ Params: GameParams }>, reply: FastifyReply) => {
+      try {
+        const { id } = request.params;
+        const game = await gamesService.getGameById(id);
+
+        if (!game) {
+          return reply.code(404).send({
+            statusCode: 404,
+            error: 'Not Found',
+            message: 'Game not found',
+          });
+        }
+
+        return reply.send(game);
+      } catch (error) {
+        fastify.log.error(error);
+        return reply.code(500).send({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: 'Failed to fetch game',
         });
       }
     }

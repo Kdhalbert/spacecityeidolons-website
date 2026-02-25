@@ -33,13 +33,11 @@ export const gameService = {
    */
   async getGames(
     category?: string,
-    search?: string,
     limit: number = 50,
     offset: number = 0
   ): Promise<GamesResponse> {
     const params = new URLSearchParams();
     if (category) params.append('category', category);
-    if (search) params.append('search', search);
     params.append('limit', limit.toString());
     params.append('offset', offset.toString());
 
@@ -56,6 +54,27 @@ export const gameService = {
       return response.data;
     } catch (error) {
       return null;
+    }
+  },
+
+  /**
+   * Get multiple games by their IDs
+   */
+  async getGamesByIds(ids: string[]): Promise<Game[]> {
+    try {
+      const results = await Promise.all(
+        ids.map(async (id) => {
+          try {
+            const response = await api.get(`/api/games/${id}`);
+            return response.data as Game;
+          } catch {
+            return null;
+          }
+        })
+      );
+      return results.filter((g): g is Game => g !== null);
+    } catch (error) {
+      return [];
     }
   },
 
