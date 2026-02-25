@@ -27,10 +27,86 @@ export const GameSelector: React.FC<GameSelectorProps> = ({
   const [suggestions, setSuggestions] = useState<Game[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  // Cache of game names for display, independent of current suggestions
+  const [gameNames, setGameNames] = useState<Record<string, string>>({});
   const inputRef = useRef<HTMLInputElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const suggestionsRef = useRef<HTMLDivElement | null>(null);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Keep the cache updated with any games we see in the suggestions list
+  useEffect(() => {
+    if (!suggestions || suggestions.length === 0) {
+      return;
+    }
+
+    setGameNames((prev) => {
+      const updated = { ...prev };
+      suggestions.forEach((game) => {
+        if (!updated[game.id]) {
+          updated[game.id] = game.name;
+        }
+      });
+      return updated;
+    });
+  }, [suggestions]);
+
+  // Ensure we have names for all selected games, even when they were pre-selected
+  useEffect(() => {
+    const missingIds = selectedGames.filter((id) => !gameNames[id]);
+    if (missingIds.length === 0) {
+      return;
+    }
+
+    let canceled = false;
+
+    const fetchMissing = async () => {
+      try {
+        const games: Game[] = await gameService.getGamesByIds(missingIds);
+        if (canceled || !games) {
+          return;
+        }
+
+        setGameNames((prev) => {
+          const updated = { ...prev };
+          games.forEach((game) => {
+            if (game && game.id && game.name) {
+              updated[game.id] = game.name;
+            }
+          });
+          return updated;
+        });
+      } catch {
+        // Ignore errors; missing games will continue to display their IDs
+      }
+    };
+
+    fetchMissing();
+
+    return () => {
+      canceled = true;
+    };
+  }, [selectedGames, gameNames]);
+
+  // Scroll highlighted suggestion into view
+  useEffect(() => {
+    if (highlightedIndex < 0 || !suggestionsRef.current) {
+      return;
+    }
+    const highlighted = suggestionsRef.current.children[highlightedIndex] as HTMLElement | undefined;
+    if (highlighted) {
+      highlighted.scrollIntoView({ block: 'nearest' });
+    }
+  }, [highlightedIndex]);
 
   // Debounced search
   const handleSearch = useCallback(
@@ -125,16 +201,6 @@ export const GameSelector: React.FC<GameSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Get game names for display
-  const gameNames: Record<string, string> = {};
-  selectedGames.forEach((gameId) => {
-    // Try to get from suggestions first
-    const suggestion = suggestions.find((s) => s.id === gameId);
-    if (suggestion) {
-      gameNames[gameId] = suggestion.name;
-    }
-  });
-
   return (
     <div className="game-selector" ref={containerRef}>
       <div className="game-selector-input-wrapper">
@@ -151,7 +217,7 @@ export const GameSelector: React.FC<GameSelectorProps> = ({
               : `Maximum ${maxGames} games selected`
           }
           className="game-selector-input"
-          disabled={selectedGames.length >= maxGames && !searchQuery}
+          disabled={selectedGames.length >= maxGames}
           aria-label="Search games"
           aria-autocomplete="list"
           aria-expanded={isOpen && suggestions.length > 0}

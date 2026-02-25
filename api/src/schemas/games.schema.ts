@@ -9,7 +9,7 @@ export const gameSchema = z.object({
   slug: z.string().min(1).max(255),
   description: z.string().nullable().optional(),
   content: z.string().nullable().optional(),
-  imageUrl: z.string().url().nullable().optional(),
+  imageUrl: z.string().url().or(z.null()).optional(),
   category: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
   createdAt: z.date().optional(),

@@ -115,18 +115,16 @@ class GamesService {
    * Get all unique tags
    */
   async getTags(): Promise<string[]> {
-    const games = await prisma.game.findMany({
-      select: { tags: true },
-    });
+    const rows = await prisma.$queryRaw<{ tag: string | null }[]>`
+      SELECT DISTINCT UNNEST(tags) AS tag
+      FROM "Game"
+      WHERE tags IS NOT NULL
+    `;
 
-    const tagsSet = new Set<string>();
-    games.forEach((game: any) => {
-      if (game.tags && Array.isArray(game.tags)) {
-        game.tags.forEach((tag: string) => tagsSet.add(tag));
-      }
-    });
-
-    return Array.from(tagsSet).sort();
+    return rows
+      .map((row) => row.tag)
+      .filter((tag): tag is string => typeof tag === 'string' && tag.length > 0)
+      .sort();
   }
 
   /**
