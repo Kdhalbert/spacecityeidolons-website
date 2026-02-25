@@ -115,6 +115,13 @@ jobs:
 
       - name: Configure App Service for pre-built deployment
         run: |
+          echo "Stopping app service to allow clean deployment..."
+          az webapp stop \
+            --name ${{ env.AZURE_APP_SERVICE_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
+          echo "Waiting for app service to stop..."
+          sleep 15
+          
           echo "Configuring Azure to skip build and use pre-built files..."
           az webapp config appsettings set \
             --name ${{ env.AZURE_APP_SERVICE_NAME }} \
@@ -131,13 +138,17 @@ jobs:
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
           package: deploy.zip
-          restart: true
+          restart: false
           type: zip
 
-      - name: Wait for deployment to complete
+      - name: Start app service
         run: |
-          echo "Waiting for app to restart..."
-          sleep 30
+          echo "Starting app service..."
+          az webapp start \
+            --name ${{ env.AZURE_APP_SERVICE_NAME }} \
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
+          echo "Waiting for app to fully start..."
+          sleep 45
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
