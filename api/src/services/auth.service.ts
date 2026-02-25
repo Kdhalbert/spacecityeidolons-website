@@ -117,6 +117,16 @@ export class AuthService {
   }
 
   /**
+   * Get user by ID with profile included
+   */
+  async getUserWithProfile(userId: string) {
+    return await prisma.user.findUnique({
+      where: { id: userId },
+      include: { profile: true },
+    });
+  }
+
+  /**
    * Generate JWT access and refresh tokens for user
    */
   generateAuthTokens(userId: string, email: string | null, discordId: string, role: Role) {
