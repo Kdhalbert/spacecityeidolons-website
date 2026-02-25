@@ -12,7 +12,13 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
    */
   fastify.get('/api/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const filters = queryEventsSchema.parse(request.query);
+      // Convert query parameters to proper types
+      const query = {
+        ...request.query,
+        limit: request.query.limit ? parseInt(request.query.limit as string, 10) : undefined,
+        offset: request.query.offset ? parseInt(request.query.offset as string, 10) : undefined,
+      };
+      const filters = queryEventsSchema.parse(query);
 
       // Get user data if authenticated
       const userId = (request.user as any)?.userId || null;

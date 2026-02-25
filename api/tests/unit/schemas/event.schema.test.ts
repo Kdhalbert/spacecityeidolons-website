@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createEventSchema, updateEventSchema, queryEventsSchema } from '../../src/schemas/event.schema';
+import { createEventSchema, updateEventSchema, queryEventsSchema } from '../../src/schemas/event.schema.js';
 
 describe('Event Schemas (US4)', () => {
   describe('createEventSchema', () => {

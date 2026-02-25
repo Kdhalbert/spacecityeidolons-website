@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { FastifyInstance } from 'fastify';
-import { createTestApp } from '../helpers/test-app';
-import prisma from '../../src/lib/db';
+import { buildApp } from '../../src/app.js';
+import { prisma } from '../../src/lib/prisma.js';
+import { generateTokens } from '../../src/utils/jwt.js';
 import { Role } from '@prisma/client';
 
 describe('Events API (US4 - Calendar Discovery)', () => {
-  let app: FastifyInstance;
+  let app: Awaited<ReturnType<typeof buildApp>>;
   let testUserId: string;
   let adminUserId: string;
   let adminToken: string;
@@ -13,7 +13,7 @@ describe('Events API (US4 - Calendar Discovery)', () => {
   let eventId: string;
 
   beforeAll(async () => {
-    app = await createTestApp();
+    app = await buildApp();
 
     // Create test users
     const testUser = await prisma.user.create({
@@ -36,9 +36,22 @@ describe('Events API (US4 - Calendar Discovery)', () => {
     });
     adminUserId = adminUser.id;
 
-    // Generate tokens (mock tokens for testing)
-    userToken = `mock-token-${testUserId}`;
-    adminToken = `mock-token-${adminUserId}`;
+    // Generate real JWT tokens for testing
+    const userTokens = generateTokens({
+      userId: testUserId,
+      email: 'test@example.com',
+      discordId: '123456789',
+      role: Role.MEMBER,
+    });
+    userToken = userTokens.accessToken;
+
+    const adminTokens = generateTokens({
+      userId: adminUserId,
+      email: 'admin@example.com',
+      discordId: '987654321',
+      role: Role.ADMIN,
+    });
+    adminToken = adminTokens.accessToken;
   });
 
   afterAll(async () => {
@@ -201,15 +214,13 @@ describe('Events API (US4 - Calendar Discovery)', () => {
         },
       });
 
+      // Without authentication, should return 404 for PRIVATE events
       const response = await app.inject({
         method: 'GET',
         url: `/api/events/${privateEvent.id}`,
-        headers: {
-          authorization: `Bearer ${userToken}`,
-        },
       });
 
-      expect([200, 401]).toContain(response.statusCode); // 401 if token validation not implemented yet
+      expect(response.statusCode).toBe(404);
     });
   });
 

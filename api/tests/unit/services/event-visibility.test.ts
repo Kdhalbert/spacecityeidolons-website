@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import prisma from '../../src/lib/db';
+import { prisma } from '../../src/lib/prisma.js';
 import { Role, EventVisibility } from '@prisma/client';
-import { filterEventsByVisibility } from '../../src/services/event.service';
+import { filterEventsByVisibility } from '../../src/services/event.service.js';
 
 describe('Event Visibility Filtering (US4)', () => {
   let events: any[] = [];
