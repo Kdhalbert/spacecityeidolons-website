@@ -3,7 +3,7 @@ import {
   createInviteRequestSchema,
   updateInviteRequestSchema,
   inviteRequestResponseSchema,
-} from '../inviteRequest.schema';
+} from '../inviteRequest.schema.js';
 import { Platform, InviteStatus } from '../../types';
 
 describe('InviteRequest Schema Validation', () => {

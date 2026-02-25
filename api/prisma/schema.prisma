@@ -100,19 +100,22 @@ enum InviteStatus {
 
 // Event entity - community events (game sessions, meetings)
 model Event {
-  id          String          @id @default(uuid())
-  title       String
-  description String?
-  date        DateTime        // Event date
-  time        String          // Event time (e.g., "19:00")
-  duration    Int?            // Duration in minutes
-  location    String?         // Virtual/physical location
-  visibility  EventVisibility @default(PUBLIC)
-  maxAttendees Int?           // Optional max attendees
-  tags        String[]        // Event tags (e.g., ["RPG", "Beginner-friendly"])
-  creatorId   String
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id                String          @id @default(uuid())
+  title             String
+  description       String?
+  date              DateTime        // Event date (YYYY-MM-DD)
+  time              String          // Event time (e.g., "19:00")
+  endTime           String?         // End time (e.g., "22:00")
+  location          String?         // Virtual/physical location
+  visibility        EventVisibility @default(PUBLIC)
+  maxAttendees      Int?            // Optional max attendees
+  games             String[]        // Associated game names/IDs
+  recurring         Boolean         @default(false)
+  recurringPattern  String?         // DAILY, WEEKLY, MONTHLY, YEARLY
+  recurringEndDate  DateTime?       // When recurring stops
+  creatorId         String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   // Relations
   creator User @relation("EventCreator", fields: [creatorId], references: [id], onDelete: Cascade)
@@ -127,6 +130,7 @@ enum EventVisibility {
   PUBLIC
   MEMBERS_ONLY
   PRIVATE
+  ADMIN
 }
 
 // Game entity - game information pages
