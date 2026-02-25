@@ -121,6 +121,7 @@ jobs:
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
           echo "Waiting for app service to stop..."
           sleep 15
+          5
           
           echo "Configuring Azure to skip build and use pre-built files..."
           az webapp config appsettings set \
@@ -130,9 +131,7 @@ jobs:
               SCM_DO_BUILD_DURING_DEPLOYMENT=false \
               ENABLE_ORYX_BUILD=false \
               WEBSITE_RUN_FROM_PACKAGE=0
-          echo "Waiting for settings to take effect..."
-          sleep 10
-
+          echo "Settings configured"
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v3
         with:
