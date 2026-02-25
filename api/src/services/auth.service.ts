@@ -47,6 +47,11 @@ export class AuthService {
       redirect_uri: config.DISCORD_REDIRECT_URI,
     });
 
+    console.log('Exchanging Discord code for token with config:', {
+      client_id: config.DISCORD_CLIENT_ID,
+      redirect_uri: config.DISCORD_REDIRECT_URI,
+    });
+
     const response = await fetch('https://discord.com/api/oauth2/token', {
       method: 'POST',
       headers: {
@@ -57,6 +62,11 @@ export class AuthService {
 
     if (!response.ok) {
       const error = await response.text();
+      console.error('Discord token exchange failed:', {
+        status: response.status,
+        error,
+        redirect_uri: config.DISCORD_REDIRECT_URI,
+      });
       throw new Error(`Failed to exchange code for token: ${error}`);
     }
 
