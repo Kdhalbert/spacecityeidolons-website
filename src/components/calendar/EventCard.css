@@ -1,0 +1,250 @@
+/* EventCard Component Styles */
+
+.event-card {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+  border-color: rgba(255, 107, 107, 0.6);
+}
+
+.event-card.past {
+  opacity: 0.6;
+  border-color: rgba(100, 100, 100, 0.3);
+}
+
+.event-card.past:hover {
+  transform: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.event-card-header > div:first-child {
+  flex: 1;
+}
+
+.event-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  word-break: break-word;
+}
+
+.visibility-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.visibility-public {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.visibility-members_only {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  border: 1px solid #2196f3;
+}
+
+.visibility-private {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid #f44336;
+}
+
+.visibility-admin {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+.event-card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.action-btn.delete:hover {
+  background-color: rgba(244, 67, 54, 0.2);
+}
+
+.event-card-body {
+  margin-bottom: 1rem;
+}
+
+.event-datetime {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.event-date,
+.event-time,
+.event-end-time {
+  color: #ccc;
+}
+
+.event-location {
+  color: #aaa;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.event-description {
+  color: #ccc;
+  margin: 0.75rem 0;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.event-games {
+  margin: 0.75rem 0;
+}
+
+.event-games strong {
+  display: block;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.games-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.game-tag {
+  display: inline-block;
+  background-color: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 107, 107, 0.5);
+}
+
+.event-info-row {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.event-attendees,
+.event-recurring {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.event-creator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.creator-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.creator-avatar-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.creator-name {
+  color: #fff;
+  font-weight: 500;
+}
+
+.event-card-footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .event-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .event-card-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .event-card-actions {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  .event-title {
+    font-size: 1.1rem;
+  }
+
+  .event-datetime {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .event-info-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

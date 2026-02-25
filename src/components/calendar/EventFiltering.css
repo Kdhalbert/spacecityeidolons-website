@@ -1,0 +1,209 @@
+/* EventFiltering Component Styles */
+
+.event-filtering {
+  margin-bottom: 2rem;
+}
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0.05) 100%);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.filter-toggle:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.25) 0%, rgba(255, 107, 107, 0.1) 100%);
+  border-color: rgba(255, 107, 107, 0.6);
+}
+
+.filter-toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.filter-icon {
+  font-size: 1.2rem;
+}
+
+.filter-badge {
+  display: inline-block;
+  background-color: #ff6b6b;
+  color: #1a1a2e;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+.filter-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.event-filtering.expanded .filter-arrow.down {
+  transform: rotate(-180deg);
+}
+
+.filter-panel {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 12px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  color: #ccc;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.filter-input,
+.filter-select {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  color: #fff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.filter-input::placeholder {
+  color: #666;
+}
+
+.filter-input:hover,
+.filter-select:hover {
+  border-color: rgba(255, 107, 107, 0.4);
+  background-color: rgba(255, 107, 107, 0.05);
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: rgba(255, 107, 107, 0.6);
+  background-color: rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+}
+
+.filter-input:disabled,
+.filter-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.filter-btn.reset {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+}
+
+.filter-btn.reset:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.filter-btn.apply {
+  background-color: rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.4);
+}
+
+.filter-btn.apply:hover:not(:disabled) {
+  background-color: rgba(255, 107, 107, 0.4);
+  border-color: rgba(255, 107, 107, 0.6);
+  transform: scale(1.02);
+}
+
+.filter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-panel {
+    padding: 1rem;
+  }
+
+  .filter-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .filter-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .filter-toggle {
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
+}
