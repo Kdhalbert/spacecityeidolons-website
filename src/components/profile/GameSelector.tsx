@@ -49,15 +49,17 @@ export const GameSelector: React.FC<GameSelectorProps> = ({
       return;
     }
 
-    setGameNames((prev) => {
-      const updated = { ...prev };
+    if (suggestions.length > 0) {
+      const gameNames: Record<string, string> = {};
       suggestions.forEach((game) => {
-        if (!updated[game.id]) {
-          updated[game.id] = game.name;
-        }
+/* eslint-disable react-hooks/set-state-in-effect */
+        gameNames[game.id] = game.name;
       });
-      return updated;
-    });
+      setGameNames((prev) => ({
+        ...prev,
+        ...gameNames,
+      }));
+    }
   }, [suggestions]);
 
   // Ensure we have names for all selected games, even when they were pre-selected

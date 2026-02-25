@@ -111,11 +111,19 @@ export const profileService = {
     gamesPlayed: { [key: string]: number };
   }> {
     try {
-      const response = await apiGet<any>('/profiles/stats');
+      const response = await apiGet<{
+        totalProfiles: number;
+        profilesWithBio: number;
+        gamesPlayed: { [key: string]: number };
+      }>('/profiles/stats');
       if (response.error) {
         throw new Error(response.error.message);
       }
-      return response.data || {};
+      return response.data || {
+        totalProfiles: 0,
+        profilesWithBio: 0,
+        gamesPlayed: {},
+      };
     } catch (error) {
       console.error('Error fetching profile stats:', error);
       throw error;

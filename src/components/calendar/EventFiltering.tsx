@@ -30,14 +30,14 @@ export const EventFiltering: React.FC<EventFilteringProps> = ({
     setFilters(updated);
 
     // Convert undefined values to undefined to avoid sending them to API
-    const cleanedFilters: EventFilters = {};
+    const cleanedFilters: Partial<typeof filters> = {};
     Object.entries(updated).forEach(([key, value]) => {
       if (value !== undefined && value !== '' && value !== null) {
-        cleanedFilters[key as keyof EventFilters] = value as any;
+        (cleanedFilters as EventFilters)[key as keyof EventFilters] = value as never;
       }
     });
 
-    onFilterChange(cleanedFilters);
+    onFilterChange(cleanedFilters as EventFilters);
   };
 
   const handleReset = () => {

@@ -1,8 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from '../../../src/config/queryClient';
+import { describe, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Mock component paths - will be created during implementation

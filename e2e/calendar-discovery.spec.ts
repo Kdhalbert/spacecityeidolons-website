@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 const BASE_URL = 'http://localhost:5173';
 const API_URL = 'http://localhost:3000/api';

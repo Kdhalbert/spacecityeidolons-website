@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { buildApp } from '../../src/app.js';
 import { prisma } from '../../src/lib/prisma.js';
 import { generateTokens } from '../../src/utils/jwt.js';

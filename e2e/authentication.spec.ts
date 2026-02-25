@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 test.describe('Discord Authentication Flow', () => {
   test.beforeEach(async ({ page }) => {

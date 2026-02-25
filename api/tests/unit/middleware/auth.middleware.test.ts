@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { authenticate, requireAdmin } from '../../../src/middleware/auth.middleware.js';
 import { generateTokens } from '../../../src/utils/jwt.js';
 import { Role } from '@prisma/client';

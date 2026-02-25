@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { useProfile } from '../hooks/useProfile';
 import { ProfileCard } from '../components/profile/ProfileCard';
 import { PageHero, PageSection, DarkCard } from '../components/ui';

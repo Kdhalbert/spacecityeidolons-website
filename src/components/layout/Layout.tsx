@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout, isLoading } = useAuth();

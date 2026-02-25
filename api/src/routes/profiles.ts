@@ -3,6 +3,7 @@ import { profileService } from '../services/profile.service.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import { profileUpdateSchema } from '../schemas/profile.schema.js';
 import type { Role } from '@prisma/client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface GetProfileParams {
   userId: string;

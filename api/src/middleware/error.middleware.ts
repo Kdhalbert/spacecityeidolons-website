@@ -1,6 +1,7 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function errorHandler(
   error: FastifyError,
   request: FastifyRequest,
