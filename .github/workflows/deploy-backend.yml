@@ -120,8 +120,7 @@ jobs:
             --name ${{ env.AZURE_APP_SERVICE_NAME }} \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
           echo "Waiting for app service to stop..."
-          sleep 15
-          5
+          sleep 5
           
           echo "Configuring Azure to skip build and use pre-built files..."
           az webapp config appsettings set \
