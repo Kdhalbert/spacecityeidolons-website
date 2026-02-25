@@ -21,7 +21,7 @@ const profileUpdateSchema = z.object({
 interface ProfileEditorProps {
   profile: Profile | null;
   isLoading?: boolean;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: Record<string, unknown>) => Promise<void>;
 }
 
 /**
@@ -78,7 +78,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
     setSelectedGames(selectedGames.filter((g) => g !== game));
   };
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: Record<string, unknown>) => {
     try {
       await onSubmit({
         ...data,

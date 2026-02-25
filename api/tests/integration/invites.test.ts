@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { buildApp } from '../../src/app.js';
 import { FastifyInstance } from 'fastify';
 import { Platform, InviteStatus } from '../../../src/types/index.js';

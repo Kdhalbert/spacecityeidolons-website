@@ -1,10 +1,9 @@
-import { createBrowserRouter, type RouteObject, Navigate } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import App from '../App';
-import { useAuth } from '../context/AuthContext';
+import { ProtectedRoute, PublicRoute } from './routeComponents';
 
 // Lazy load pages for code splitting
-import { lazy, Suspense } from 'react';
-import { Loading } from '../components/Loading';
+import { lazy } from 'react';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const GamesPage = lazy(() => import('../pages/GamesPage'));
@@ -17,36 +16,10 @@ const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 
 // ============================================================================
-// PROTECTED ROUTE WRAPPER
-// ============================================================================
-
-interface ProtectedRouteProps {
-  element: React.ReactNode;
-}
-
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <Suspense fallback={<Loading />}>{element}</Suspense>;
-};
-
-const PublicRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  return <Suspense fallback={<Loading />}>{element}</Suspense>;
-};
-
-// ============================================================================
 // ROUTER CONFIGURATION
 // ============================================================================
 
-export const routes: RouteObject[] = [
+const createRoutes = (): RouteObject[] => [
   {
     path: '/',
     element: <App />,
@@ -96,4 +69,5 @@ export const routes: RouteObject[] = [
   },
 ];
 
+export const routes = createRoutes();
 export const router = createBrowserRouter(routes);

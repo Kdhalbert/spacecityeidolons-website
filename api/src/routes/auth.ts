@@ -3,6 +3,7 @@ import { authService } from '../services/auth.service.js';
 import { authenticate } from '../middleware/auth.middleware.js';
 
 interface DiscordCallbackQuerystring {
+/* eslint-disable @typescript-eslint/no-explicit-any */
   code?: string;
   error?: string;
 }

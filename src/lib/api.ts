@@ -121,7 +121,7 @@ export function isTokenExpired(): boolean {
 
 export async function apiGet<T>(
   url: string,
-  config?: any
+  config?: Record<string, unknown>
 ): Promise<ApiResponse<T>> {
   try {
     const response = await apiClient.get<ApiResponse<T>>(url, config);
@@ -146,8 +146,8 @@ export async function apiGet<T>(
 
 export async function apiPost<T>(
   url: string,
-  data?: any,
-  config?: any
+  data?: Record<string, unknown>,
+  config?: Record<string, unknown>
 ): Promise<ApiResponse<T>> {
   try {
     const response = await apiClient.post<ApiResponse<T>>(url, data, config);
@@ -173,8 +173,8 @@ export async function apiPost<T>(
 
 export async function apiPut<T>(
   url: string,
-  data?: any,
-  config?: any
+  data?: Record<string, unknown>,
+  config?: Record<string, unknown>
 ): Promise<ApiResponse<T>> {
   try {
     const response = await apiClient.put<ApiResponse<T>>(url, data, config);
@@ -200,8 +200,8 @@ export async function apiPut<T>(
 
 export async function apiPatch<T>(
   url: string,
-  data?: any,
-  config?: any
+  data?: Record<string, unknown>,
+  config?: Record<string, unknown>
 ): Promise<ApiResponse<T>> {
   try {
     const response = await apiClient.patch<ApiResponse<T>>(url, data, config);
@@ -227,7 +227,7 @@ export async function apiPatch<T>(
 
 export async function apiDelete<T>(
   url: string,
-  config?: any
+  config?: Record<string, unknown>
 ): Promise<ApiResponse<T>> {
   try {
     const response = await apiClient.delete<ApiResponse<T>>(url, config);

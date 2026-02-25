@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { useProfile, useUpdateProfile } from '../hooks/useProfile';
 import { ProfileEditor } from '../components/profile/ProfileEditor';
 import { PageHero } from '../components/ui';
@@ -25,7 +25,7 @@ export const ProfileEditPage: React.FC = () => {
   const { data: profile, isLoading: profileIsLoading } = useProfile(userId);
   const updateProfileMutation = useUpdateProfile();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     if (!userId) return;
 
     try {
@@ -41,12 +41,17 @@ export const ProfileEditPage: React.FC = () => {
       setTimeout(() => {
         navigate(`/profile/${userId}`);
       }, 1500);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Profile update failed:', error);
-      setErrorMessage(
-        error?.response?.data?.message ||
-          'Failed to update profile. Please try again.'
-      );
+      let errorMessage = 'Failed to update profile. Please try again.';
+      if (error && typeof error === 'object' && 'response' in error) {
+        const response = error.response as Record<string, unknown>;
+        const data = response.data as Record<string, unknown> | undefined;
+        if (data && typeof data.message === 'string') {
+          errorMessage = data.message;
+        }
+      }
+      setErrorMessage(errorMessage);
     }
   };
 

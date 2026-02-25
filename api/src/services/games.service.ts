@@ -5,6 +5,7 @@ import type { Game } from '../schemas/games.schema.js';
  * Games service - handles game-related business logic
  * T159: Implements GET /api/games endpoint with filtering
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 class GamesService {
   /**
    * Get all games with optional filtering

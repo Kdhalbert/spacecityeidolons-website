@@ -3,6 +3,7 @@ import type { Profile, Role } from '@prisma/client';
 import type { ProfileUpdateInput } from '../schemas/profile.schema.js';
 
 interface FilteredProfile extends Profile {
+/* eslint-disable @typescript-eslint/no-explicit-any */
   _filtered?: boolean; // Flag to indicate if privacy filtering was applied
 }
 

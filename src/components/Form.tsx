@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormProvider, type UseFormReturn } from 'react-hook-form';
 
-interface FormProps<T extends Record<string, any>>
+interface FormProps<T extends Record<string, unknown>>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   methods: UseFormReturn<T>;
   onSubmit: (data: T) => Promise<void> | void;
@@ -10,7 +10,7 @@ interface FormProps<T extends Record<string, any>>
 
 export const Form = React.forwardRef<
   HTMLFormElement,
-  FormProps<any>
+  FormProps<Record<string, unknown>>
 >(({ methods, onSubmit, children, ...props }, ref) => {
   const handleSubmit = methods.handleSubmit(onSubmit);
 

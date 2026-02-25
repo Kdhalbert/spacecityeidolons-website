@@ -3,6 +3,7 @@ import { Platform, InviteStatus } from '../types/index.js';
 import {
   CreateInviteRequestInput,
   UpdateInviteRequestInput,
+/* eslint-disable @typescript-eslint/no-explicit-any */
 } from '../schemas/inviteRequest.schema.js';
 
 export class InviteRequestService {

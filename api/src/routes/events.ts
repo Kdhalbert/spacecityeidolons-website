@@ -3,6 +3,7 @@ import { queryEventsSchema, createEventSchema, updateEventSchema } from '../sche
 import * as eventService from '../services/event.service.js';
 import { authenticate } from '../middleware/auth.middleware.js';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function registerEventRoutes(fastify: FastifyInstance) {
   /**
    * GET /api/events

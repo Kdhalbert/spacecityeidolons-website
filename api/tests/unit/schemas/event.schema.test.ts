@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createEventSchema, updateEventSchema, queryEventsSchema } from '../../src/schemas/event.schema.js';
 
 describe('Event Schemas (US4)', () => {

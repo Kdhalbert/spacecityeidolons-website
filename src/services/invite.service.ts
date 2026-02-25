@@ -14,7 +14,10 @@ export interface CreateInviteRequestData {
 export async function createInviteRequest(
   data: CreateInviteRequestData
 ): Promise<InviteRequest> {
-  const response = await apiPost<InviteRequest>('/invites', data);
+  const response = await apiPost<InviteRequest>(
+    '/invites',
+    data as unknown as Record<string, unknown>
+  );
   
   if (response.error) {
     throw new Error(response.error.message || 'Failed to create invite request');

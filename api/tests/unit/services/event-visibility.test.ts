@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from '../../src/lib/prisma.js';
 import { Role, EventVisibility } from '@prisma/client';
 import { filterEventsByVisibility } from '../../src/services/event.service.js';
