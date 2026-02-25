@@ -2,6 +2,33 @@
 
 Thank you for your interest in contributing to Space City Eidolons! This document provides guidelines and instructions for contributing to the project.
 
+## 📚 Before You Start - Read These First!
+
+**All contributors MUST review these files before making changes:**
+
+1. **[`.specify/spec.md`](.specify/spec.md)** - Complete feature specifications and user stories
+2. **[`.specify/plan.md`](.specify/plan.md)** - Technical implementation plan and architecture decisions
+3. **[`.specify/tasks.md`](.specify/tasks.md)** - Current sprint tasks, progress, and priorities
+
+These files contain the source of truth for:
+- What features we're building and why
+- How they should be implemented
+- Current progress and what's next
+- Technical constraints and decisions
+
+## ⚠️ Critical Rule: All Code Via Pull Requests
+
+**NEVER commit directly to `master` or `main`.** All code changes must go through pull requests, regardless of size or urgency.
+
+This includes:
+- New features
+- Bug fixes
+- Documentation updates
+- Configuration changes
+- Dependency updates
+
+**Why?** PRs ensure code review, maintain quality, and keep the team in sync.
+
 ## Development Workflow
 
 ### Branch Strategy
@@ -155,10 +182,12 @@ Closes #issue-number (if applicable)
 
 ## Getting Help
 
-- Check existing documentation in `/docs`
+- **Start with `.specify/`**: Check [`.specify/spec.md`](.specify/spec.md), [`.specify/plan.md`](.specify/plan.md), and [`.specify/tasks.md`](.specify/tasks.md)
+- **Design questions**: See [`.specify/design-language.md`](.specify/design-language.md)
+- **Deployment issues**: Check [`DEPLOY_TO_VM.md`](DEPLOY_TO_VM.md) or [`.specify/AZURE_DEPLOYMENT_GUIDE.md`](.specify/AZURE_DEPLOYMENT_GUIDE.md)
+- Review existing documentation in `/docs`
 - Review `README.md` for setup instructions
-- Check `.specify/tasks.md` for project structure
-- Ask questions in pull request comments
+- Ask questions in pull request comments or Discord
 
 ## License
 
