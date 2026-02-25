@@ -13,10 +13,11 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
   fastify.get('/api/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Convert query parameters to proper types
+      const queryParams = request.query as Record<string, any>;
       const query = {
-        ...request.query,
-        limit: request.query.limit ? parseInt(request.query.limit as string, 10) : undefined,
-        offset: request.query.offset ? parseInt(request.query.offset as string, 10) : undefined,
+        ...queryParams,
+        limit: queryParams.limit ? parseInt(queryParams.limit as string, 10) : undefined,
+        offset: queryParams.offset ? parseInt(queryParams.offset as string, 10) : undefined,
       };
       const filters = queryEventsSchema.parse(query);
 
