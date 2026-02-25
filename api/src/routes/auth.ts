@@ -128,7 +128,7 @@ export async function registerAuthRoutes(fastify: FastifyInstance) {
 
   /**
    * GET /api/auth/me
-   * Get current authenticated user
+   * Get current authenticated user with profile
    */
   fastify.get(
     '/api/auth/me',
@@ -136,10 +136,32 @@ export async function registerAuthRoutes(fastify: FastifyInstance) {
       preHandler: authenticate,
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      // User is attached to request by authenticate middleware
-      return reply.code(200).send({
-        user: request.user,
-      });
+      try {
+        // User JWT payload is attached to request by authenticate middleware
+        const jwtUser = request.user as any;
+        
+        // Fetch full user data from database including profile
+        const user = await authService.getUserWithProfile(jwtUser.userId);
+        
+        if (!user) {
+          return reply.code(404).send({
+            statusCode: 404,
+            error: 'Not Found',
+            message: 'User not found',
+          });
+        }
+
+        return reply.code(200).send({
+          user,
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        return reply.code(500).send({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: 'Failed to retrieve user data',
+        });
+      }
     }
   );
 }
