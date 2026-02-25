@@ -185,15 +185,6 @@ export class ProfileService {
 
     return profiles.map((profile) => this.applyPrivacyFilter(profile, false, 'GUEST' as any));
   }
-
-  /**
-   * Validate Twitch URL format
-   * @private
-   */
-  private validateTwitchUrl(url: string): boolean {
-    const twitchRegex = /^https?:\/\/(www\.)?twitch\.tv\/[a-zA-Z0-9_-]+\/?$/i;
-    return twitchRegex.test(url);
-  }
 }
 
 export const profileService = new ProfileService();

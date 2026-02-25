@@ -21,8 +21,9 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
         const { userId } = request.params;
 
         // Get viewer info
-        const viewerUserId = request.user?.userId;
-        const viewerRole = request.user?.role as Role | undefined;
+        const user = request.user as any;
+        const viewerUserId = user?.userId;
+        const viewerRole = user?.role as Role | undefined;
 
         const profile = await profileService.getProfileByUserId(
           userId,
@@ -61,8 +62,9 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
     async (request: FastifyRequest<{ Params: GetProfileParams; Body: any }>, reply: FastifyReply) => {
       try {
         const { userId } = request.params;
-        const viewerUserId = request.user?.userId;
-        const viewerRole = request.user?.role as Role;
+        const user = request.user as any;
+        const viewerUserId = user?.userId;
+        const viewerRole = user?.role as Role;
 
         // Authorization check: user can only edit own profile, admins can edit any
         if (viewerUserId !== userId && viewerRole !== 'ADMIN') {
@@ -113,9 +115,11 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
     '/api/profiles',
     async (request: FastifyRequest<{ Querystring: any }>, reply: FastifyReply) => {
       try {
-        const { game, search } = request.query;
-        const viewerUserId = request.user?.userId;
-        const viewerRole = request.user?.role as Role | undefined;
+        const query = request.query as any;
+        const { game, search } = query;
+        const user = request.user as any;
+        const viewerUserId = user?.userId;
+        const viewerRole = user?.role as Role | undefined;
 
         let profiles;
 
