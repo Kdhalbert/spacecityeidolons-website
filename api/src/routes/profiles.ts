@@ -40,7 +40,10 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
           });
         }
 
-        return profile;
+        return reply.code(200).send({
+          data: profile,
+          _filtered: viewerUserId !== userId,
+        });
       } catch (error) {
         console.error('Error fetching profile:', error);
         return reply.code(500).send({

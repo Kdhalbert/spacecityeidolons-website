@@ -127,7 +127,7 @@ export class ProfileService {
     // For guests and members, apply privacy rules
     const filteredProfile: FilteredProfile = { ...profile, _filtered: true };
 
-    // If profile is set to private, hide non-essential fields
+    // If profile is set to private, hide privacy-controlled fields
     if (profile.privacyProfile) {
       filteredProfile.bio = null;
       filteredProfile.twitchUrl = null;
@@ -139,10 +139,6 @@ export class ProfileService {
     if (profile.privacyEvents) {
       // Note: gamesPlayed can still be visible, but event visibility will be controlled elsewhere
     }
-
-    // Always hide sensitive fields for non-owners
-    filteredProfile.location = null;
-    filteredProfile.timezone = null;
 
     return filteredProfile;
   }
