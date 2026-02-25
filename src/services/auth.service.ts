@@ -16,8 +16,15 @@ class AuthService {
    */
   async handleOAuthCallback(code: string): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/discord/callback?code=${code}`);
-      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      const response = await fetch(`${API_BASE_URL}/api/auth/discord/callback?code=${code}`, {
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to authenticate');
@@ -77,11 +84,17 @@ class AuthService {
    */
   async getCurrentUser(): Promise<AuthResponse['user'] | null> {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('app_access_token')}`,
         },
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         return null;
