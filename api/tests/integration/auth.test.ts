@@ -1,7 +1,6 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { buildApp } from '../../src/app.js';
 import { config } from '../../src/config/index.js';
-import { prisma } from '../../src/lib/prisma.js';
 
 describe('Auth Endpoints', () => {
   let app: Awaited<ReturnType<typeof buildApp>>;

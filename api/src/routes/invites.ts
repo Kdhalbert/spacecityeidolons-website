@@ -152,7 +152,7 @@ export async function registerInviteRoutes(fastify: FastifyInstance) {
       try {
         await inviteRequestService.delete(request.params.id);
         return reply.code(204).send();
-      } catch (error) {
+      } catch {
         return reply.code(404).send({
           statusCode: 404,
           error: 'Not Found',

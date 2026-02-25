@@ -45,7 +45,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
  * Must be used after authenticate middleware
  */
 export async function requireAdmin(request: FastifyRequest, reply: FastifyReply) {
-  const user = request.user as any;
+  const user = (request.user as unknown) as { role: string } | undefined;
   
   if (!user || user.role !== Role.ADMIN) {
     return reply.status(403).send({

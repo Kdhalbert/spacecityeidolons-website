@@ -173,7 +173,7 @@ export class AuthService {
           role: user.role,
         },
       };
-    } catch (error) {
+    } catch {
       throw new Error('Invalid refresh token');
     }
   }

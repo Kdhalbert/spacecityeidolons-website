@@ -39,7 +39,7 @@ export function verifyAccessToken(token: string): JWTPayload {
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET) as JWTPayload;
     return decoded;
-  } catch (_error) {
+  } catch {
     throw new Error('Invalid or expired access token');
   }
 }
@@ -53,7 +53,7 @@ export function verifyRefreshToken(token: string): { userId: string } {
       userId: string;
     };
     return decoded;
-  } catch (_error) {
+  } catch {
     throw new Error('Invalid or expired refresh token');
   }
 }
