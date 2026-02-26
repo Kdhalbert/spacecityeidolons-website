@@ -113,16 +113,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Configure App Service for deployment
+      - name: Configure App Service for Kudu builds
         run: |
-          echo "Stopping app service to allow clean deployment..."
-          az webapp stop \
-            --name ${{ env.AZURE_APP_SERVICE_NAME }} \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
-          echo "Waiting for app service to stop..."
-          sleep 5
-          
-          echo "Configuring Azure App Service..."
+          echo "Configuring Azure App Service to build and install dependencies..."
           az webapp config appsettings set \
             --name ${{ env.AZURE_APP_SERVICE_NAME }} \
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
@@ -130,26 +123,21 @@ jobs:
               SCM_DO_BUILD_DURING_DEPLOYMENT=true \
               ENABLE_ORYX_BUILD=true \
               WEBSITE_RUN_FROM_PACKAGE=0
-          echo "Settings configured - Kudu will install dependencies"
+          echo "Settings configured - Kudu will install npm dependencies during deployment"
+
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
           package: deploy.zip
-          restart: false
+          restart: true
           type: zip
 
-      - name: Start app service
+      - name: Wait for app to start
         run: |
-          echo "Starting app service..."
-          az webapp start \
-            --name ${{ env.AZURE_APP_SERVICE_NAME }} \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
-          
-          echo "Waiting for dependencies to install (Kudu npm ci)..."
-          sleep 30
-          
-          echo "App should now be running with dependencies installed"
+          echo "Waiting for app service to start and build..."
+          sleep 45
+          echo "Deployment complete"
 
       - name: Run database migrations
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_migrations == 'true'
