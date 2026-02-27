@@ -20,21 +20,21 @@ export const profileService = {
    */
   async getProfile(userId: string): Promise<Profile> {
     try {
-      const response = await apiGet<GetProfileResponse>(`/profiles/${userId}`);
+      const response = await apiGet<Profile>(`/profiles/${userId}`);
       console.log('getProfile response:', {
         hasError: !!response.error,
         errorMessage: response.error?.message,
-        responseData: response.data,
-        extractedProfile: response.data?.data,
+        profile: response.data,
       });
       if (response.error) {
         throw new Error(response.error.message);
       }
-      if (!response.data?.data) {
-        console.error('No profile data in response:', response.data);
-        throw new Error('Profile data missing from response');
+      if (!response.data) {
+        console.error('No profile in response');
+        throw new Error('Profile missing from response');
       }
-      return response.data.data;
+      console.log('Returning profile:', response.data);
+      return response.data;
     } catch (error) {
       console.error(`Error fetching profile for user ${userId}:`, error);
       throw error;
