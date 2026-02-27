@@ -14,15 +14,28 @@ export const ProfileEditPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  console.log('ProfileEditPage rendered, user:', user);
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!user) {
+      console.log('No user, redirecting to login');
       navigate('/login');
     }
   }, [user, navigate]);
 
   const userId = user?.id;
-  const { data: profile, isLoading: profileIsLoading } = useProfile(userId);
+  console.log('ProfileEditPage userId:', userId);
+  
+  const { data: profile, isLoading: profileIsLoading, error: profileError } = useProfile(userId);
+  
+  console.log('ProfileEditPage profile state:', {
+    userId,
+    profile,
+    isLoading: profileIsLoading,
+    error: profileError,
+  });
+  
   const updateProfileMutation = useUpdateProfile();
 
   const handleSubmit = async (data: Record<string, unknown>) => {
@@ -57,6 +70,34 @@ export const ProfileEditPage: React.FC = () => {
 
   if (!user) {
     return null;
+  }
+
+  if (profileError) {
+    return (
+      <>
+        <PageHero title="Error Loading Profile" />
+        <div style={{
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          color: '#ef4444',
+          padding: '12px 16px',
+          borderRadius: '8px',
+          marginBottom: '16px',
+          marginLeft: '32px',
+          marginRight: '32px',
+          fontFamily: 'sans-serif',
+        }}>
+          <p>Failed to load profile: {profileError instanceof Error ? profileError.message : String(profileError)}</p>
+          <button
+            onClick={() => navigate('/')}
+            className="invite-btn"
+            style={{ marginTop: '12px' }}
+          >
+            Go Back Home
+          </button>
+        </div>
+      </>
+    );
   }
 
   return (
