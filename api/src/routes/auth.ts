@@ -144,6 +144,22 @@ export async function registerAuthRoutes(fastify: FastifyInstance) {
         // Fetch full user data from database including profile
         const user = await authService.getUserWithProfile(jwtUser.userId);
         
+        console.log('GET /api/auth/me:', {
+          userId: jwtUser.userId,
+          userExists: !!user,
+          userData: user ? {
+            id: user.id,
+            discordUsername: user.discordUsername,
+            role: user.role,
+            profileExists: !!user.profile,
+            profileData: user.profile ? {
+              id: user.profile.id,
+              userId: user.profile.userId,
+              displayName: user.profile.displayName,
+            } : null,
+          } : 'NO USER',
+        });
+        
         if (!user) {
           return reply.code(404).send({
             statusCode: 404,

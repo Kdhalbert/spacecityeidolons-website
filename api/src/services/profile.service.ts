@@ -24,8 +24,23 @@ export class ProfileService {
       where: { userId },
     });
 
+    console.log('getProfileByUserId:', {
+      userId,
+      viewerUserId,
+      isOwnProfile: userId === viewerUserId,
+      profileExists: !!profile,
+      profileData: profile ? {
+        id: profile.id,
+        userId: profile.userId,
+        displayName: profile.displayName,
+        bio: profile.bio,
+        gamesPlayed: profile.gamesPlayed,
+      } : 'NO PROFILE',
+    });
+
     // If profile doesn't exist and user is viewing their own profile, create it
     if (!profile && userId === viewerUserId) {
+      console.log('Creating new profile for user:', userId);
       profile = await prisma.profile.create({
         data: {
           userId,
@@ -36,9 +51,11 @@ export class ProfileService {
           privacyEvents: false,
         },
       });
+      console.log('Created profile:', { id: profile.id, userId: profile.userId });
     }
 
     if (!profile) {
+      console.log('Profile not found for user:', userId);
       return null;
     }
 

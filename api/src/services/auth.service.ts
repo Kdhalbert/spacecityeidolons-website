@@ -106,8 +106,22 @@ export class AuthService {
       include: { profile: true },
     });
 
+    console.log('findOrCreateUser - lookup result:', {
+      discordId: discordUser.id,
+      discordUsername: discordUser.username,
+      userExists: !!user,
+      profileExists: user?.profile ? true : false,
+    });
+
     if (!user) {
       // Create new user with Discord data
+      console.log('Creating new user with profile:', {
+        discordId: discordUser.id,
+        discordUsername: discordUser.username,
+        avatarUrl: discordUser.avatar
+          ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+          : null,
+      });
       user = await prisma.user.create({
         data: {
           discordId: discordUser.id,
@@ -125,6 +139,11 @@ export class AuthService {
           },
         },
         include: { profile: true },
+      });
+      console.log('Created user with profile:', {
+        userId: user.id,
+        profileId: user.profile?.id,
+        profileUserId: user.profile?.userId,
       });
     }
 
