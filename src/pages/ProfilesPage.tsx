@@ -137,15 +137,15 @@ const ProfilesPage: React.FC = () => {
             backgroundColor: 'rgba(13, 27, 42, 0.8)',
             borderRadius: '12px',
             padding: '32px',
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+            display: 'flex',
+            flexDirection: 'column',
             gap: '24px' 
           }}>
             {profiles.map((profile) => (
               <div
                 key={profile.userId}
                 onClick={() => navigate(`/profile/${profile.userId}`)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', marginLeft: '12px', marginRight: '12px' }}
               >
                 <ProfileCard profile={profile} />
               </div>
