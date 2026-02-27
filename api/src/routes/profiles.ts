@@ -96,7 +96,9 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
           validationResult.data
         );
 
-        return reply.code(200).send(updatedProfile);
+        return reply.code(200).send({
+          data: updatedProfile,
+        });
       } catch (error) {
         console.error('Error updating profile:', error);
         return reply.code(500).send({
