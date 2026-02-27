@@ -129,7 +129,7 @@
 }
 
 .dark-card {
-  background: var(--primary-purple);
+  background: var(--bg-dark);
   border: 1px solid var(--purple-lighter);
   border-radius: 12px;
   padding: 28px 32px;
