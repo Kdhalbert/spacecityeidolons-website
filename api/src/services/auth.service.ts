@@ -47,9 +47,11 @@ export class AuthService {
       redirect_uri: config.DISCORD_REDIRECT_URI,
     });
 
-    console.log('Exchanging Discord code for token with config:', {
+    console.log('Exchanging Discord code for token:', {
       client_id: config.DISCORD_CLIENT_ID,
+      code: code.substring(0, 10) + '...', // Log first 10 chars of code
       redirect_uri: config.DISCORD_REDIRECT_URI,
+      grantType: 'authorization_code',
     });
 
     const response = await fetch('https://discord.com/api/oauth2/token', {
@@ -64,13 +66,16 @@ export class AuthService {
       const error = await response.text();
       console.error('Discord token exchange failed:', {
         status: response.status,
-        error,
-        redirect_uri: config.DISCORD_REDIRECT_URI,
+        error: error.substring(0, 200), // Limit error length
+        sentRedirectUri: config.DISCORD_REDIRECT_URI,
+        sentCode: code.substring(0, 10) + '...',
       });
       throw new Error(`Failed to exchange code for token: ${error}`);
     }
 
-    return response.json() as Promise<DiscordTokenResponse>;
+    const data = await response.json();
+    console.log('Successfully exchanged code for token');
+    return data as DiscordTokenResponse;
   }
 
   /**
