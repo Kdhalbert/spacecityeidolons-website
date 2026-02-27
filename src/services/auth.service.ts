@@ -1,14 +1,14 @@
 import { apiPost, setTokens, clearTokens } from '../lib/api';
 import type { AuthResponse, RefreshTokenResponse } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 class AuthService {
   /**
    * Get the Discord OAuth authorization URL
    */
   getDiscordAuthUrl(): string {
-    return `${API_BASE_URL}/api/auth/discord`;
+    return `${API_BASE_URL}/auth/discord`;
   }
 
   /**
@@ -19,7 +19,7 @@ class AuthService {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/discord/callback?code=${code}`, {
+      const response = await fetch(`${API_BASE_URL}/auth/discord/callback?code=${code}`, {
         signal: controller.signal,
       });
 
@@ -87,7 +87,7 @@ class AuthService {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('app_access_token')}`,
         },

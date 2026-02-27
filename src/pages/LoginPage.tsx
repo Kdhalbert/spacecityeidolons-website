@@ -1,10 +1,10 @@
 import React from 'react';
 import { PageHero, DarkCard } from '../components/ui';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 const LoginPage: React.FC = () => {
-  const discordAuthUrl = `${API_BASE_URL}/api/auth/discord`;
+  const discordAuthUrl = `${API_BASE_URL}/auth/discord`;
 
   return (
     <>
