@@ -45,7 +45,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
  * If token is present and valid, attaches user to request
  * If token is missing or invalid, continues without error
  */
-export async function optionalAuthenticate(request: FastifyRequest, reply: FastifyReply) {
+export async function optionalAuthenticate(request: FastifyRequest) {
   try {
     const authHeader = request.headers.authorization;
     
