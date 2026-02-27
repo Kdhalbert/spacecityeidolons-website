@@ -7,15 +7,26 @@ export const PROFILE_QUERY_KEY = 'profiles';
  * Fetch a single profile by user ID
  */
 export const useProfile = (userId?: string) => {
-  return useQuery({
+  const query = useQuery({
     queryKey: [PROFILE_QUERY_KEY, userId],
     queryFn: () => {
       if (!userId) throw new Error('User ID is required');
+      console.log('useProfile: Fetching profile for userId:', userId);
       return profileService.getProfile(userId);
     },
     enabled: !!userId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  console.log('useProfile state:', {
+    userId,
+    isLoading: query.isLoading,
+    error: query.error,
+    data: query.data,
+    status: query.status,
+  });
+
+  return query;
 };
 
 /**
