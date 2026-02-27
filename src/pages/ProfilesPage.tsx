@@ -133,7 +133,14 @@ const ProfilesPage: React.FC = () => {
             </div>
           </DarkCard>
         ) : profiles.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+          <div style={{ 
+            backgroundColor: 'rgba(13, 27, 42, 0.8)',
+            borderRadius: '12px',
+            padding: '32px',
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+            gap: '24px' 
+          }}>
             {profiles.map((profile) => (
               <div
                 key={profile.userId}

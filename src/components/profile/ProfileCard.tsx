@@ -31,7 +31,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       <DarkCard>
         <div style={{ padding: '32px' }}>
           {/* Header with Avatar and Name */}
-          <div style={{ display: 'flex', gap: '24px', marginBottom: '32px', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', gap: '24px', marginBottom: '24px', alignItems: 'flex-start' }}>
             {getDiscordAvatarUrl() && (
               <img
                 src={getDiscordAvatarUrl()}
@@ -41,6 +41,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                   height: '100px',
                   borderRadius: '50%',
                   border: '3px solid var(--purple-lighter)',
+                  flexShrink: 0,
                 }}
               />
             )}
@@ -59,16 +60,19 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 </p>
               )}
             </div>
-            {(isOwnProfile || isAdmin) && onEdit && (
+          </div>
+
+          {/* Edit Button */}
+          {(isOwnProfile || isAdmin) && onEdit && (
+            <div style={{ marginBottom: '24px' }}>
               <button
                 onClick={onEdit}
                 className="invite-btn"
-                style={{ marginRight: '0' }}
               >
                 Edit Profile
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Games Section */}
           {profile.gamesPlayed && profile.gamesPlayed.length > 0 && (
