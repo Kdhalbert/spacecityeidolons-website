@@ -1,16 +1,6 @@
 import { apiGet, apiPut } from '../lib/api';
 import type { Profile } from '../types';
 
-export interface GetProfileResponse {
-  data: Profile;
-  _filtered?: boolean;
-}
-
-export interface ListProfilesResponse {
-  data: Profile[];
-  count: number;
-}
-
 /**
  * Frontend profile service - handles API calls for profile operations
  */
@@ -56,11 +46,20 @@ export const profileService = {
       if (query?.search) params.append('search', query.search);
 
       const queryString = params.toString() ? `?${params.toString()}` : '';
-      const response = await apiGet<ListProfilesResponse>(`/profiles${queryString}`);
+      const response = await apiGet<Profile[]>(`/profiles${queryString}`);
+      console.log('getProfiles response:', {
+        hasError: !!response.error,
+        profiles: response.data,
+        count: Array.isArray(response.data) ? response.data.length : 0,
+      });
       if (response.error) {
         throw new Error(response.error.message);
       }
-      return response.data!.data;
+      if (!Array.isArray(response.data)) {
+        console.error('No profiles array in response');
+        return [];
+      }
+      return response.data;
     } catch (error) {
       console.error('Error fetching profiles:', error);
       throw error;
@@ -98,14 +97,17 @@ export const profileService = {
     }
   ): Promise<Profile> {
     try {
-      const response = await apiPut<GetProfileResponse>(
+      const response = await apiPut<Profile>(
         `/profiles/${userId}`,
         data
       );
       if (response.error) {
         throw new Error(response.error.message);
       }
-      return response.data!.data;
+      if (!response.data) {
+        throw new Error('No profile returned from update');
+      }
+      return response.data;
     } catch (error) {
       console.error(`Error updating profile for user ${userId}:`, error);
       throw error;
