@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useAuth } from '../hooks/useAuth';
@@ -10,9 +10,15 @@ const AuthCallback: React.FC = () => {
   const { refreshUser } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasProcessedCode = useRef(false);
 
   useEffect(() => {
     const handleCallback = async () => {
+      // Prevent duplicate processing of the same code
+      if (hasProcessedCode.current) {
+        return;
+      }
+      hasProcessedCode.current = true;
       try {
         // Check for error parameter (user denied authorization)
         const errorParam = searchParams.get('error');
