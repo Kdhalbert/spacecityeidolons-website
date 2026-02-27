@@ -71,9 +71,7 @@ jobs:
           cp api/package.json deploy-package/
           cp api/web.config deploy-package/
           cp -r api/prisma deploy-package/
-          # Create .oryx-build-skip to completely disable Oryx build
-          touch deploy-package/.oryx-build-skip
-          echo "Package structure created (pre-built, no Azure build):"
+          echo "Package structure created (pre-built, no Azure build via app settings):"
           ls -lh deploy-package/ | head -20
           echo "Dist contents:"
           ls -la deploy-package/dist/ | head -20
