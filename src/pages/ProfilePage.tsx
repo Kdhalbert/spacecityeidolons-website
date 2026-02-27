@@ -72,7 +72,7 @@ const ProfilePage: React.FC = () => {
               profile={profile}
               isOwnProfile={isOwnProfile}
               isAdmin={isAdmin}
-              onEdit={() => navigate(`/profile/${userId}/edit`)}
+              onEdit={() => navigate('/profile/edit')}
             />
 
             {/* Additional sections could go here */}
