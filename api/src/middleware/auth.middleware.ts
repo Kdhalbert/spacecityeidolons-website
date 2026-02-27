@@ -41,6 +41,37 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
 }
 
 /**
+ * Middleware to optionally verify JWT token
+ * If token is present and valid, attaches user to request
+ * If token is missing or invalid, continues without error
+ */
+export async function optionalAuthenticate(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const authHeader = request.headers.authorization;
+    
+    if (!authHeader) {
+      // No auth header, continue without authentication
+      return;
+    }
+
+    const parts = authHeader.split(' ');
+    if (parts.length !== 2 || parts[0] !== 'Bearer') {
+      // Invalid format, continue without authentication
+      return;
+    }
+
+    const token = parts[1];
+    const payload = verifyAccessToken(token);
+    
+    // Attach user info to request
+    request.user = payload;
+  } catch (error) {
+    // Token verification failed, continue without authentication
+    // Don't throw error for optional auth
+  }
+}
+
+/**
  * Middleware to verify user has admin role
  * Must be used after authenticate middleware
  */

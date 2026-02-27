@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { profileService } from '../services/profile.service.js';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
+import { authenticate, requireAdmin, optionalAuthenticate } from '../middleware/auth.middleware.js';
 import { profileUpdateSchema } from '../schemas/profile.schema.js';
 import type { Role } from '@prisma/client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -17,6 +17,7 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
    */
   fastify.get<{ Params: GetProfileParams }>(
     '/api/profiles/:userId',
+    { preHandler: optionalAuthenticate },
     async (request: FastifyRequest<{ Params: GetProfileParams }>, reply: FastifyReply) => {
       try {
         const { userId } = request.params;
@@ -117,6 +118,7 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
    */
   fastify.get<{ Querystring: any }>(
     '/api/profiles',
+    { preHandler: optionalAuthenticate },
     async (request: FastifyRequest<{ Querystring: any }>, reply: FastifyReply) => {
       try {
         const query = request.query as any;
