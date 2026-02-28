@@ -101,15 +101,16 @@ const ProfilesPage: React.FC = () => {
           <div style={{ padding: '0 24px 24px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             <button
               onClick={() => handleGameFilter('')}
-              className={selectedGame === '' ? 'invite-btn' : 'invite-btn'}
               style={{
-                backgroundColor: selectedGame === '' ? 'var(--purple)' : 'rgba(88, 101, 242, 0.2)',
-                border: 'none',
-                color: selectedGame === '' ? 'white' : 'var(--purple-lighter)',
+                backgroundColor: 'var(--primary-purple)',
+                border: selectedGame === '' ? '1px solid var(--gold)' : '1px solid var(--purple-lighter)',
+                color: 'white',
                 padding: '6px 12px',
                 borderRadius: '16px',
                 cursor: 'pointer',
                 fontFamily: 'sans-serif',
+                fontSize: '0.9rem',
+                transition: 'all 0.2s ease',
               }}
             >
               All Games
@@ -118,15 +119,16 @@ const ProfilesPage: React.FC = () => {
               <button
                 key={game}
                 onClick={() => handleGameFilter(game)}
-                className={selectedGame === game ? 'invite-btn' : ''}
                 style={{
-                  backgroundColor: selectedGame === game ? 'var(--purple)' : 'rgba(88, 101, 242, 0.2)',
-                  border: 'none',
-                  color: selectedGame === game ? 'white' : 'var(--purple-lighter)',
+                  backgroundColor: 'var(--primary-purple)',
+                  border: selectedGame === game ? '1px solid var(--gold)' : '1px solid var(--purple-lighter)',
+                  color: 'white',
                   padding: '6px 12px',
                   borderRadius: '16px',
                   cursor: 'pointer',
                   fontFamily: 'sans-serif',
+                  fontSize: '0.9rem',
+                  transition: 'all 0.2s ease',
                 }}
               >
                 {game}

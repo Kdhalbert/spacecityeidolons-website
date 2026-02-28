@@ -159,8 +159,9 @@ const ProfilePage: React.FC = () => {
                     <span
                       key={game}
                       style={{
-                        backgroundColor: 'rgba(88, 101, 242, 0.2)',
-                        color: 'var(--purple-lighter)',
+                        backgroundColor: 'var(--primary-purple)',
+                        border: '1px solid var(--purple-lighter)',
+                        color: 'white',
                         padding: '8px 16px',
                         borderRadius: '16px',
                         fontFamily: 'sans-serif',
