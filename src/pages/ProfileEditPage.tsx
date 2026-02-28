@@ -85,7 +85,7 @@ export const ProfileEditPage: React.FC = () => {
           marginBottom: '16px',
           marginLeft: '32px',
           marginRight: '32px',
-          fontFamily: 'sans-serif',
+          fontFamily: 'Cinzel',
         }}>
           <p>Failed to load profile: {profileError instanceof Error ? profileError.message : String(profileError)}</p>
           <button
@@ -117,7 +117,7 @@ export const ProfileEditPage: React.FC = () => {
           marginBottom: '16px',
           marginLeft: '32px',
           marginRight: '32px',
-          fontFamily: 'sans-serif',
+          fontFamily: 'Cinzel',
         }}>
           {successMessage}
         </div>
@@ -133,7 +133,7 @@ export const ProfileEditPage: React.FC = () => {
           marginBottom: '16px',
           marginLeft: '32px',
           marginRight: '32px',
-          fontFamily: 'sans-serif',
+          fontFamily: 'Cinzel',
         }}>
           {errorMessage}
         </div>

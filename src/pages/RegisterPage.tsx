@@ -7,7 +7,7 @@ const RegisterPage: React.FC = () => (
     <div className="content-section" style={{ maxWidth: '480px' }}>
       <DarkCard>
         {/* TODO: Add registration form */}
-        <p style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', textAlign: 'center', padding: '24px 0' }}>
+        <p style={{ color: 'var(--text-muted)', fontFamily: 'Cinzel', textAlign: 'center', padding: '24px 0' }}>
           Registration form coming soon.
         </p>
       </DarkCard>

@@ -91,7 +91,7 @@ const ProfilesPage: React.FC = () => {
                 border: '1px solid rgba(139, 92, 246, 0.3)',
                 borderRadius: '8px',
                 color: 'var(--text-primary)',
-                fontFamily: 'sans-serif',
+                fontFamily: 'Cinzel',
                 fontSize: '1rem',
               }}
             />
@@ -108,7 +108,7 @@ const ProfilesPage: React.FC = () => {
                 padding: '6px 12px',
                 borderRadius: '16px',
                 cursor: 'pointer',
-                fontFamily: 'sans-serif',
+                fontFamily: 'Cinzel',
                 fontSize: '0.9rem',
                 transition: 'all 0.2s ease',
               }}
@@ -126,7 +126,7 @@ const ProfilesPage: React.FC = () => {
                   padding: '6px 12px',
                   borderRadius: '16px',
                   cursor: 'pointer',
-                  fontFamily: 'sans-serif',
+                  fontFamily: 'Cinzel',
                   fontSize: '0.9rem',
                   transition: 'all 0.2s ease',
                 }}
@@ -141,7 +141,7 @@ const ProfilesPage: React.FC = () => {
       <PageSection>
         {isLoading ? (
           <DarkCard>
-            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'Cinzel' }}>
               Loading profiles...
             </div>
           </DarkCard>
@@ -166,7 +166,7 @@ const ProfilesPage: React.FC = () => {
           </div>
         ) : (
           <DarkCard>
-            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'Cinzel' }}>
               <p>No profiles found. Try a different search or game filter.</p>
             </div>
           </DarkCard>

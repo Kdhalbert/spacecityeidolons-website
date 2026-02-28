@@ -83,7 +83,7 @@ const AuthCallback: React.FC = () => {
               />
               <p style={{ 
                 color: 'var(--text-primary)', 
-                fontFamily: 'sans-serif',
+                fontFamily: 'Cinzel',
                 fontSize: '16px',
                 margin: 0,
               }}>
@@ -135,7 +135,7 @@ const AuthCallback: React.FC = () => {
               
               <h3 style={{
                 color: 'var(--text-primary)',
-                fontFamily: 'sans-serif',
+                fontFamily: 'Cinzel',
                 fontSize: '20px',
                 fontWeight: '600',
                 marginBottom: '12px',
@@ -145,7 +145,7 @@ const AuthCallback: React.FC = () => {
               
               <p style={{
                 color: 'var(--text-muted)',
-                fontFamily: 'sans-serif',
+                fontFamily: 'Cinzel',
                 fontSize: '14px',
                 marginBottom: '32px',
                 lineHeight: '1.6',
@@ -162,7 +162,7 @@ const AuthCallback: React.FC = () => {
                     color: 'white',
                     textDecoration: 'none',
                     borderRadius: '6px',
-                    fontFamily: 'sans-serif',
+                    fontFamily: 'Cinzel',
                     fontWeight: '600',
                     fontSize: '14px',
                   }}
@@ -178,7 +178,7 @@ const AuthCallback: React.FC = () => {
                     color: 'var(--text-primary)',
                     textDecoration: 'none',
                     borderRadius: '6px',
-                    fontFamily: 'sans-serif',
+                    fontFamily: 'Cinzel',
                     fontWeight: '600',
                     fontSize: '14px',
                     border: '1px solid var(--border-color)',

@@ -24,7 +24,7 @@ const ProfilePage: React.FC = () => {
         <PageHero title="Profile" />
         <PageSection>
           <DarkCard>
-            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'Cinzel' }}>
               Loading profile...
             </div>
           </DarkCard>
@@ -39,7 +39,7 @@ const ProfilePage: React.FC = () => {
         <PageHero title="Profile Not Found" />
         <PageSection>
           <DarkCard>
-            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'Cinzel' }}>
               <p style={{ marginBottom: '16px' }}>We couldn't find that profile.</p>
               <button
                 onClick={() => navigate('/profiles')}
@@ -121,7 +121,7 @@ const ProfilePage: React.FC = () => {
                 <h3 style={{ marginBottom: '12px', fontSize: '1.2rem', color: 'var(--gold)' }}>About</h3>
                 <p style={{ 
                   whiteSpace: 'pre-wrap', 
-                  fontFamily: 'sans-serif',
+                  fontFamily: 'Cinzel',
                   color: 'var(--text-light)',
                   lineHeight: '1.7'
                 }}>
@@ -134,7 +134,7 @@ const ProfilePage: React.FC = () => {
             {profile.location && (
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ marginBottom: '12px', fontSize: '1.2rem', color: 'var(--gold)' }}>Location</h3>
-                <p style={{ fontFamily: 'sans-serif', color: 'var(--text-light)' }}>
+                <p style={{ fontFamily: 'Cinzel', color: 'var(--text-light)' }}>
                   📍 {profile.location}
                 </p>
               </div>
@@ -144,7 +144,7 @@ const ProfilePage: React.FC = () => {
             {profile.timezone && (
               <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ marginBottom: '12px', fontSize: '1.2rem', color: 'var(--gold)' }}>Timezone</h3>
-                <p style={{ fontFamily: 'sans-serif', color: 'var(--text-light)' }}>
+                <p style={{ fontFamily: 'Cinzel', color: 'var(--text-light)' }}>
                   🕐 {profile.timezone}
                 </p>
               </div>
@@ -164,7 +164,7 @@ const ProfilePage: React.FC = () => {
                         color: 'white',
                         padding: '8px 16px',
                         borderRadius: '16px',
-                        fontFamily: 'sans-serif',
+                        fontFamily: 'Cinzel',
                         fontSize: '0.9rem',
                       }}
                     >
@@ -186,7 +186,7 @@ const ProfilePage: React.FC = () => {
                   style={{
                     color: 'var(--purple-lighter)',
                     textDecoration: 'none',
-                    fontFamily: 'sans-serif',
+                    fontFamily: 'Cinzel',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
@@ -200,7 +200,7 @@ const ProfilePage: React.FC = () => {
             {/* Privacy Info (visible for own profile or admins) */}
             {(isOwnProfile || isAdmin) && (
               <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontFamily: 'sans-serif' }}>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontFamily: 'Cinzel' }}>
                   {profile.privacyProfile ? '🔒 Profile is private' : '🌍 Profile is public'}
                   {' • '}
                   Joined {new Date(profile.createdAt).toLocaleDateString()}
@@ -214,7 +214,7 @@ const ProfilePage: React.FC = () => {
                 style={{
                   fontSize: '0.85rem',
                   color: 'var(--text-muted)',
-                  fontFamily: 'sans-serif',
+                  fontFamily: 'Cinzel',
                   marginTop: '24px',
                   paddingTop: '24px',
                   borderTop: '1px solid rgba(139, 92, 246, 0.2)',

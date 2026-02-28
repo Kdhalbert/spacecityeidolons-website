@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
           <div style={{ padding: '32px', textAlign: 'center' }}>
             <p style={{ 
               color: 'var(--text-muted)', 
-              fontFamily: 'sans-serif', 
+              fontFamily: 'Cinzel', 
               marginBottom: '24px',
               fontSize: '16px'
             }}>
@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
                 color: 'white',
                 textDecoration: 'none',
                 borderRadius: '8px',
-                fontFamily: 'sans-serif',
+                fontFamily: 'Cinzel',
                 fontWeight: '600',
                 fontSize: '16px',
                 transition: 'background-color 0.2s',
@@ -56,7 +56,7 @@ const LoginPage: React.FC = () => {
             
             <p style={{ 
               color: 'var(--text-muted)', 
-              fontFamily: 'sans-serif', 
+              fontFamily: 'Cinzel', 
               marginTop: '24px',
               fontSize: '14px'
             }}>
