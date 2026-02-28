@@ -130,10 +130,10 @@
 
 .dark-card {
   background: var(--bg-dark);
-  border: 1px solid var(--purple-lighter);
+  border: 1px solid var(--gold);
   border-radius: 12px;
   padding: 28px 32px;
-  box-shadow: 0 0 30px rgba(50, 29, 60, 0.6);
+  box-shadow: 0 0 20px var(--gold-glow);
 }
 
 .dark-card h2,
