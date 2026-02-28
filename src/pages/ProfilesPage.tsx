@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfiles, useSearchProfiles, useProfilesByGame } from '../hooks/useProfile';
 import { ProfileCard } from '../components/profile/ProfileCard';
@@ -50,13 +50,24 @@ const ProfilesPage: React.FC = () => {
     }
   };
 
-  const commonGames = [
-    'D&D 5e',
-    'Pathfinder 2e',
-    'Call of Cthulhu',
-    'Vampire: The Masquerade',
-    'World of Darkness',
-  ];
+  // Dynamically extract all unique games from all profiles
+  const availableGames = useMemo(() => {
+    if (!allProfilesQuery.data) return [];
+    
+    const gamesSet = new Set<string>();
+    allProfilesQuery.data.forEach((profile) => {
+      if (profile.gamesPlayed && Array.isArray(profile.gamesPlayed)) {
+        profile.gamesPlayed.forEach((game) => {
+          if (game && game.trim()) {
+            gamesSet.add(game.trim());
+          }
+        });
+      }
+    });
+    
+    // Convert to array and sort alphabetically
+    return Array.from(gamesSet).sort((a, b) => a.localeCompare(b));
+  }, [allProfilesQuery.data]);
 
   return (
     <>
@@ -103,7 +114,7 @@ const ProfilesPage: React.FC = () => {
             >
               All Games
             </button>
-            {commonGames.map((game) => (
+            {availableGames.map((game) => (
               <button
                 key={game}
                 onClick={() => handleGameFilter(game)}
