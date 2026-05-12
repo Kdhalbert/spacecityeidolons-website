@@ -50,7 +50,7 @@ Given that feature description, do this:
 
    d. Run the script `.specify/scripts/bash/create-new-feature.sh --json "${input:arguments}"` with the calculated number and short-name:
       - Pass `--number N+1` and `--short-name "your-short-name"` along with the feature description
-      - Bash example: `.specify/scripts/bash/create-new-feature.sh --json "${input:arguments}" --json --number 5 --short-name "user-auth" "Add user authentication"`
+      - Bash example: `.specify/scripts/bash/create-new-feature.sh --json "${input:arguments}" --number 5 --short-name "user-auth" "Add user authentication"`
       - PowerShell example: `.specify/scripts/bash/create-new-feature.sh --json "${input:arguments}" -Json -Number 5 -ShortName "user-auth" "Add user authentication"`
 
    **IMPORTANT**:
