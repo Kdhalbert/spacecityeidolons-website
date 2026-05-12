@@ -12,7 +12,7 @@ A full-featured community website for Space City Eidolons gaming community with 
 
 **Latest Update**: Phase 1 foundational work complete. Shared types, validation, components, API client, and routing ready. User story development can begin.
 
-**See [PHASE_1_COMPLETE.md](PHASE_1_COMPLETE.md) for detailed completion report.**
+**See [PHASE_1_COMPLETE.md](docs/archive/PHASE_1_COMPLETE.md) for detailed completion report.**
 
 ---
 
@@ -267,7 +267,7 @@ Configure these in your repository (Settings → Secrets and variables → Actio
 - Backend and frontend tests
 - Deployment to Azure services
 
-**For more details, see [DEPLOYMENT_WARNINGS.md](DEPLOYMENT_WARNINGS.md#standard-pr-workflow-for-future-deployments)**
+**For more details, see [DEPLOYMENT_WARNINGS.md](docs/deployment/DEPLOYMENT_WARNINGS.md#standard-pr-workflow-for-future-deployments)**
 
 ### Automated Deployment (Recommended)
 

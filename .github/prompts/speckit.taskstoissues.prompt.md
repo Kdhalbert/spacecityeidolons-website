@@ -1,13 +1,15 @@
 ---
 description: Convert existing tasks into actionable, dependency-ordered GitHub issues for the feature based on available design artifacts.
+agent: "agent"
+argument-hint: "Optional: filtering or labeling instructions"
 tools: ['github/github-mcp-server/issue_write']
 ---
 
+> **TODO**: The `.specify/scripts/` bash scripts referenced below must be created separately before this prompt is fully operational.
+
 ## User Input
 
-```text
-$ARGUMENTS
-```
+${input:arguments}
 
 You **MUST** consider the user input before proceeding (if not empty).
 

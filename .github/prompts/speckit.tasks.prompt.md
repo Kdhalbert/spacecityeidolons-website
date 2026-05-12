@@ -1,21 +1,14 @@
 ---
 description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
-handoffs: 
-  - label: Analyze For Consistency
-    agent: speckit.analyze
-    prompt: Run a project analysis for consistency
-    send: true
-  - label: Implement Project
-    agent: speckit.implement
-    prompt: Start the implementation in phases
-    send: true
+agent: "agent"
+argument-hint: "Optional: task generation constraints"
 ---
+
+> **TODO**: The `.specify/scripts/` bash scripts referenced below must be created separately before this prompt is fully operational.
 
 ## User Input
 
-```text
-$ARGUMENTS
-```
+${input:arguments}
 
 You **MUST** consider the user input before proceeding (if not empty).
 
@@ -60,7 +53,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Suggested MVP scope (typically just User Story 1)
    - Format validation: Confirm ALL tasks follow the checklist format (checkbox, ID, labels, file paths)
 
-Context for task generation: $ARGUMENTS
+Context for task generation: ${input:arguments}
 
 The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.
 
