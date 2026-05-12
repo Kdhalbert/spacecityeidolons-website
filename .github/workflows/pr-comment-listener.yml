@@ -1,0 +1,289 @@
+name: PR Comment Listener
+
+on:
+  issue_comment:
+    types: [created, edited]
+  pull_request_review_comment:
+    types: [created, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: pr-comment-listener-${{ github.repository }}-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  address-pr-comments:
+    name: Address PR Comments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Process command comments
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const isIssueComment = context.eventName === 'issue_comment';
+            const isReviewComment = context.eventName === 'pull_request_review_comment';
+
+            if (!isIssueComment && !isReviewComment) {
+              core.notice('Unsupported event type.');
+              return;
+            }
+
+            const payloadComment = context.payload.comment;
+            const commentBody = (payloadComment?.body || '').trim();
+            const lowerBody = commentBody.toLowerCase();
+
+            // Command gate: only act when explicitly requested.
+            const shouldAddress = lowerBody.startsWith('/address');
+            if (!shouldAddress) {
+              core.notice('No /address command found. Skipping.');
+              return;
+            }
+
+            const commandParts = lowerBody.split(/\s+/);
+            const subcommand = commandParts[1] || 'summary';
+
+            // Restrict command execution to trusted repository actors.
+            const association = payloadComment?.author_association || 'NONE';
+            const allowedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+            if (!allowedAssociations.has(association)) {
+              core.notice(`Skipping untrusted actor association: ${association}`);
+              return;
+            }
+
+            let prNumber;
+            if (isIssueComment) {
+              const issue = context.payload.issue;
+              if (!issue?.pull_request) {
+                core.notice('Comment is not on a pull request. Skipping.');
+                return;
+              }
+              prNumber = issue.number;
+            } else {
+              prNumber = context.payload.pull_request.number;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Add an acknowledgement reaction to the triggering comment.
+            try {
+              if (isIssueComment) {
+                await github.rest.reactions.createForIssueComment({
+                  owner,
+                  repo,
+                  comment_id: payloadComment.id,
+                  content: 'eyes',
+                });
+              } else {
+                await github.rest.reactions.createForPullRequestReviewComment({
+                  owner,
+                  repo,
+                  comment_id: payloadComment.id,
+                  content: 'eyes',
+                });
+              }
+            } catch (error) {
+              core.notice(`Reaction could not be added: ${error.message}`);
+            }
+
+            const reviewComments = await github.paginate(github.rest.pulls.listReviewComments, {
+              owner,
+              repo,
+              pull_number: prNumber,
+              per_page: 100,
+            });
+
+            const actionableComments = reviewComments
+              .filter((c) => !c.pull_request_review_id || c.user?.type !== 'Bot')
+              .slice(-20)
+              .map((c) => ({
+                id: c.id,
+                author: c.user?.login || 'unknown',
+                path: c.path || '(unknown file)',
+                line: c.line || c.original_line || '?',
+                body: (c.body || '').replace(/\s+/g, ' ').trim(),
+                url: c.html_url,
+              }));
+
+            if (subcommand === 'help') {
+              const helpBody = [
+                'Supported commands:',
+                '',
+                '- `/address` -> summarize recent review comments',
+                '- `/address open` -> summarize only unresolved review threads',
+                '- `/address assign @username` -> assign PR to one or more users',
+                '- `/address create-issues` -> create GitHub issues from recent review comments',
+              ].join('\n');
+
+              await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body: helpBody });
+              core.notice(`Posted /address help for PR #${prNumber}.`);
+              return;
+            }
+
+            if (subcommand === 'assign') {
+              const assignees = commentBody
+                .split(/\s+/)
+                .slice(2)
+                .map((s) => s.replace(/^@/, '').trim())
+                .filter(Boolean);
+
+              if (assignees.length === 0) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: 'No assignees found. Usage: `/address assign @username`',
+                });
+                core.notice('No assignees provided.');
+                return;
+              }
+
+              try {
+                await github.rest.issues.addAssignees({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  assignees,
+                });
+
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: `Assigned PR to: ${assignees.map((a) => `@${a}`).join(', ')}`,
+                });
+
+                core.notice(`Assigned PR #${prNumber} to ${assignees.join(', ')}`);
+              } catch (error) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: `Could not assign requested users. Error: ${error.message}`,
+                });
+                core.notice(`Assignment failed: ${error.message}`);
+              }
+              return;
+            }
+
+            if (subcommand === 'create-issues') {
+              const source = actionableComments.slice(0, 10);
+
+              if (source.length === 0) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: 'No recent review comments found to convert into issues.',
+                });
+                core.notice('No comments found for issue creation.');
+                return;
+              }
+
+              const created = [];
+              for (const c of source) {
+                const issue = await github.rest.issues.create({
+                  owner,
+                  repo,
+                  title: `Address PR review comment in ${c.path}:${c.line}`,
+                  body: [
+                    `Source PR: #${prNumber}`,
+                    `Source comment: ${c.url}`,
+                    `Reviewer: @${c.author}`,
+                    '',
+                    'Requested change:',
+                    c.body || '(no body provided)',
+                  ].join('\n'),
+                  labels: ['enhancement'],
+                });
+                created.push(issue.data.html_url);
+              }
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body: [
+                  `Created ${created.length} issue(s) from recent review comments:`,
+                  '',
+                  ...created.map((u) => `- ${u}`),
+                ].join('\n'),
+              });
+
+              core.notice(`Created ${created.length} issue(s) for PR #${prNumber}.`);
+              return;
+            }
+
+            if (subcommand === 'open') {
+              const threads = await github.paginate(github.rest.pulls.listReviewThreads, {
+                owner,
+                repo,
+                pull_number: prNumber,
+                per_page: 100,
+              });
+
+              const unresolved = threads
+                .filter((t) => !t.resolved)
+                .slice(-20)
+                .map((t) => {
+                  const latest = t.comments[t.comments.length - 1] || {};
+                  return {
+                    author: latest.user?.login || 'unknown',
+                    path: latest.path || '(unknown file)',
+                    line: latest.line || latest.original_line || '?',
+                    body: (latest.body || '').replace(/\s+/g, ' ').trim(),
+                    url: latest.html_url || t.comments[0]?.html_url,
+                  };
+                });
+
+              const body = unresolved.length === 0
+                ? [
+                    'Acknowledged `/address open`.',
+                    '',
+                    'No unresolved review threads found right now.',
+                  ].join('\n')
+                : [
+                    'Acknowledged `/address open`.',
+                    '',
+                    `Found ${unresolved.length} unresolved thread(s):`,
+                    '',
+                    ...unresolved.map((c) => `- [ ] ${c.author} on ${c.path}:${c.line} - ${c.body.slice(0, 180)} ([view](${c.url}))`),
+                  ].join('\n');
+
+              await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body });
+              core.notice(`Posted unresolved thread summary for PR #${prNumber}.`);
+              return;
+            }
+
+            // Default: /address summary of recent comments.
+            const summaryBody = actionableComments.length === 0
+              ? [
+                  'Acknowledged `/address`.',
+                  '',
+                  'I did not find any review comments to summarize right now.',
+                  '',
+                  '_Tip: use `/address` again after new review comments land._',
+                ].join('\n')
+              : [
+                  'Acknowledged `/address`.',
+                  '',
+                  `I found ${actionableComments.length} recent review comment(s). Suggested checklist:`,
+                  '',
+                  ...actionableComments.map((c) => `- [ ] ${c.author} on ${c.path}:${c.line} - ${c.body.slice(0, 180)} ([view](${c.url}))`),
+                  '',
+                  '_Automation note: this is a helper summary. Apply fixes in commits and resolve threads in the PR UI._',
+                ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: summaryBody,
+            });
+
+            core.notice(`Posted /address summary to PR #${prNumber}.`);

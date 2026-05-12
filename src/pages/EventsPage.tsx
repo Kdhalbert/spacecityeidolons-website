@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { PageHero, PageSection, SectionTitle } from '../components/ui';
 import { EventList } from '../components/calendar/EventList';
 import { EventCalendar } from '../components/calendar/EventCalendar';
@@ -9,6 +10,7 @@ import './EventsPage.css';
 
 const EventsPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [filters, setFilters] = useState<EventFilters>({});
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -33,9 +35,7 @@ const EventsPage: React.FC = () => {
   };
 
   const getCurrentUserId = () => {
-    // This would normally come from auth context
-    // For now, returning null to show all events as non-owned
-    return null;
+    return user?.id ?? null;
   };
 
   const isEventOwner = (creatorId: string) => {
@@ -56,6 +56,15 @@ const EventsPage: React.FC = () => {
               <SectionTitle subtitle="Find your next adventure.">
                 Upcoming Events
               </SectionTitle>
+              {user && (
+                <button
+                  className="create-event-btn"
+                  onClick={() => navigate('/events/new')}
+                  aria-label="Create new event"
+                >
+                  + Create Event
+                </button>
+              )}
             </div>
 
             <EventFiltering
@@ -72,7 +81,7 @@ const EventsPage: React.FC = () => {
 
             {selectedDate && (
               <div className="selected-date-badge">
-                📅 Events on {selectedDate.toLocaleDateString('en-US', {
+                Events on {selectedDate.toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric',
@@ -85,7 +94,7 @@ const EventsPage: React.FC = () => {
                   }}
                   aria-label="Clear date selection"
                 >
-                  ✕
+                  x
                 </button>
               </div>
             )}

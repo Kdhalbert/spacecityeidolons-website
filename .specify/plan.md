@@ -6,6 +6,49 @@
 
 Build a full-featured community hub website for Space City Eidolons gaming community with user authentication, profiles, event calendar, game pages, and admin management. The implementation will preserve the existing React-based site while incrementally adding backend services and complex frontend features, deployed to Azure with CI/CD automation.
 
+## Verification Audit (2026-05-12)
+
+This plan and the execution task lists were re-verified against the current repository.
+
+### Verified Complete (evidence in repository)
+
+- Phase 0 and Phase 1 foundational structure are present (`api/`, Prisma schema + migrations, router/auth/profile/event modules, shared frontend/backend service layers).
+- US2 implementation is largely complete, including Discord OAuth flow and corresponding E2E test file at `e2e/authentication.spec.ts`.
+- US3 backend/frontend core exists (`profiles` routes/service/schema + `ProfileEditor`/`PrivacyToggle` components).
+- US4 core implementation exists (`api/src/routes/events.ts`, `api/src/services/event.service.ts`, `src/hooks/useEvents.ts`, `src/services/events.service.ts`, `src/components/calendar/*`, `e2e/calendar-discovery.spec.ts`).
+
+### Verified Gaps / Drift
+
+- Task tracking has drift: multiple items marked incomplete are already implemented; several task paths/commands are outdated.
+- Naming drift exists between plan text and code:
+  - `CalendarPage` vs implemented `EventsPage`
+  - `event.service.ts` (singular) vs implemented `events.service.ts` (frontend)
+  - `api/src/index.ts` references where route wiring is actually in `api/src/app.ts`
+- Some task IDs are duplicated across phases (e.g., `T146`, `T148`, `T218`, `T219`, `T220`, `T222`), which creates execution ambiguity.
+- End-to-end validation evidence is incomplete in current environment because npm/node execution was not available in the bash shell used for this audit.
+
+## Updated Execution Plan (Fix-First)
+
+1. **Planning Hygiene Pass (priority P0)**
+   - Remove task-path drift and normalize command references in `.specify/tasks.md`.
+   - Resolve duplicated task IDs by assigning unique IDs per phase.
+   - Explicitly mark "implemented but unverified" vs "implemented and validated".
+
+2. **US3 Validation Closure (priority P1)**
+   - Add missing profile tests (`api/tests/integration/profiles.test.ts`, schema/service unit tests, component tests).
+   - Execute US3 acceptance scenarios and record pass/fail evidence.
+   - Confirm role-based profile visibility end-to-end (guest/member/admin).
+
+3. **US4 Validation Closure (priority P1)**
+   - Run event schema, visibility, integration, and E2E tests in a Node-enabled shell.
+   - Decide on canonical route/page naming (`/events` only, or add `/calendar` alias) and align tasks/docs.
+   - Complete manual acceptance checks for visibility and event-details behavior.
+
+4. **US5+ Re-baselining (priority P2)**
+   - Re-scope US5/US6 work based on features already present in event/game modules.
+   - Convert stale TODOs into concrete deltas against current implementation.
+   - Gate each phase with explicit "tests green + acceptance scenarios verified" checkpoint before advancing.
+
 ## Technical Context
 
 ### Frontend Stack

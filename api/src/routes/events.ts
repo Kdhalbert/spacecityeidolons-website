@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { queryEventsSchema, createEventSchema, updateEventSchema } from '../schemas/event.schema.js';
 import * as eventService from '../services/event.service.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { authenticate, optionalAuthenticate } from '../middleware/auth.middleware.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function registerEventRoutes(fastify: FastifyInstance) {
@@ -11,7 +11,7 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
    * Public endpoint - no authentication required
    * Visibility filtering is applied based on user role
    */
-  fastify.get('/api/events', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/api/events', { preHandler: optionalAuthenticate }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Convert query parameters to proper types
       const queryParams = request.query as Record<string, any>;
@@ -55,7 +55,7 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
    * Get a specific event with visibility checks
    * Public endpoint - no authentication required
    */
-  fastify.get('/api/events/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/api/events/:id', { preHandler: optionalAuthenticate }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { id } = request.params as { id: string };
 

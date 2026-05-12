@@ -35,7 +35,7 @@ export function filterEventsByVisibility(events: Event[], user: User | null | un
 
       case EventVisibility.PRIVATE:
         // Only creator and admin can see
-        return false;
+        return user?.role === Role.ADMIN;
 
       case EventVisibility.ADMIN: {
         // Only admin can see
@@ -55,7 +55,7 @@ export function filterEventsByVisibility(events: Event[], user: User | null | un
  * Only returns events the user should be able to see
  */
 export async function getVisibleEvents(
-  _userId: string | null,
+  userId: string | null,
   userRole?: Role,
   filters?: QueryEventsInput
 ) {
@@ -89,10 +89,12 @@ export async function getVisibleEvents(
     // Guests and unauthenticated users only see PUBLIC events
     where.visibility = EventVisibility.PUBLIC;
   } else if (userRole === Role.MEMBER) {
-    // Members see PUBLIC and MEMBERS_ONLY events
-    where.visibility = {
-      in: [EventVisibility.PUBLIC, EventVisibility.MEMBERS_ONLY],
-    };
+    // Members see PUBLIC and MEMBERS_ONLY events, plus all events they created.
+    // This keeps list behavior aligned with the "creator can always see own events" rule.
+    where.OR = [
+      { visibility: { in: [EventVisibility.PUBLIC, EventVisibility.MEMBERS_ONLY] } },
+      ...(userId ? [{ creatorId: userId }] : []),
+    ];
   }
   // Admins see everything (no visibility filter)
 

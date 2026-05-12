@@ -2,6 +2,12 @@
 
 ## PR Review Guidelines
 
+## Repository Workflow Policy
+
+- All code and documentation changes must be delivered through pull requests.
+- Do not commit directly to `master` or `main`.
+- If a direct commit is discovered, treat it as a process violation and require follow-up via PR.
+
 ### Issue Categorization
 
 When reviewing pull requests, categorize findings into two distinct groups:
@@ -43,6 +49,7 @@ These issues exist in the codebase but are unrelated to this PR's changes. The t
 - **Note but don't block on legacy issues**: Flag pre-existing problems without making them PR blockers
 - **Provide context**: Always note whether an issue is introduced by these changes or pre-existed
 - **Constructive suggestions**: Offer brief fix suggestions for legacy issues to help future work
+- **Enforce story scope**: Confirm the PR completes exactly one user story; flag multi-story PRs as out of scope and request split PRs unless the PR is explicitly marked as maintainer-approved administrative/recovery work
 
 ### Examples
 
