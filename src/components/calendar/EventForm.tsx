@@ -88,8 +88,10 @@ export const EventForm: React.FC<EventFormProps> = ({
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Event title"
           disabled={isLoading}
+          aria-invalid={!!errors.title}
+          aria-describedby={errors.title ? 'event-title-error' : undefined}
         />
-        {errors.title && <span>{errors.title}</span>}
+        {errors.title && <span id="event-title-error" role="alert">{errors.title}</span>}
       </div>
 
       <div>
@@ -100,8 +102,10 @@ export const EventForm: React.FC<EventFormProps> = ({
           value={date}
           onChange={(e) => setDate(e.target.value)}
           disabled={isLoading}
+          aria-invalid={!!errors.date}
+          aria-describedby={errors.date ? 'event-date-error' : undefined}
         />
-        {errors.date && <span>{errors.date}</span>}
+        {errors.date && <span id="event-date-error" role="alert">{errors.date}</span>}
       </div>
 
       <div>
@@ -112,8 +116,10 @@ export const EventForm: React.FC<EventFormProps> = ({
           value={time}
           onChange={(e) => setTime(e.target.value)}
           disabled={isLoading}
+          aria-invalid={!!errors.time}
+          aria-describedby={errors.time ? 'event-time-error' : undefined}
         />
-        {errors.time && <span>{errors.time}</span>}
+        {errors.time && <span id="event-time-error" role="alert">{errors.time}</span>}
       </div>
 
       <div>
