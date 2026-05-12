@@ -48,7 +48,7 @@ const AdminInvitesPage: React.FC = () => {
   };
 
   const invites = data?.data ?? [];
-  const meta = data?.meta;
+  const meta = data?.meta ?? undefined;
 
   return (
     <>
@@ -93,8 +93,9 @@ const AdminInvitesPage: React.FC = () => {
                 </p>
               )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {invites.map((invite) => (
+              {invites.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {invites.map((invite) => (
                   <div
                     key={invite.id}
                     style={{
@@ -175,8 +176,9 @@ const AdminInvitesPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
               {/* Pagination */}
               {meta && meta.totalPages > 1 && (

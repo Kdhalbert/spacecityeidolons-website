@@ -37,9 +37,28 @@ export async function registerAdminRoutes(fastify: FastifyInstance) {
     async (request: FastifyRequest<{ Querystring: ListUsersQuerystring }>, reply: FastifyReply) => {
       const { page, limit, role, status, search } = request.query;
 
+      // Validate pagination inputs
+      const parsedPage = page ? parseInt(page, 10) : 1;
+      const parsedLimit = limit ? parseInt(limit, 10) : 20;
+      
+      if (!Number.isInteger(parsedPage) || parsedPage < 1) {
+        return reply.code(400).send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: 'page must be a positive integer',
+        });
+      }
+      if (!Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
+        return reply.code(400).send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: 'limit must be a positive integer between 1 and 100',
+        });
+      }
+
       const result = await userService.list({
-        page: page ? parseInt(page, 10) : undefined,
-        limit: limit ? parseInt(limit, 10) : undefined,
+        page: parsedPage,
+        limit: parsedLimit,
         role,
         status,
         search,

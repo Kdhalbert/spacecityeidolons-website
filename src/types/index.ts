@@ -251,7 +251,7 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// Matches the backend admin paginated response shape (meta.limit vs pagination.pageSize)
+// Matches the backend admin/paginated response shape
 export interface AdminPaginatedResponse<T> {
   data: T[];
   meta: {
@@ -261,6 +261,8 @@ export interface AdminPaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+export type PaginatedMeta = AdminPaginatedResponse<never>['meta'];
 
 // ============================================================================
 // ADMIN TYPES

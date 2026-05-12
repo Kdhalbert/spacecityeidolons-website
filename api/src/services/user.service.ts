@@ -12,8 +12,9 @@ export class UserService {
     status?: UserStatus;
     search?: string;
   } = {}) {
-    const page = options.page ?? 1;
-    const limit = options.limit ?? 20;
+    // Normalize and validate pagination inputs
+    const page = Math.max(1, Math.floor(options.page ?? 1));
+    const limit = Math.max(1, Math.min(100, Math.floor(options.limit ?? 20)));
     const skip = (page - 1) * limit;
 
     const where: Record<string, unknown> = {};

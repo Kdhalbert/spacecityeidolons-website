@@ -64,6 +64,7 @@ export const adminService = {
     if (params.status) query.set('status', params.status);
 
     const qs = query.toString();
+    // Invites endpoint now returns meta (matching admin user endpoints)
     const response = await api.get<AdminPaginatedResponse<InviteRequest>>(
       `/invites${qs ? `?${qs}` : ''}`
     );
