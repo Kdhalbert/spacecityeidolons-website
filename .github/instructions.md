@@ -2,6 +2,12 @@
 
 ## PR Review Guidelines
 
+## Repository Workflow Policy
+
+- All code and documentation changes must be delivered through pull requests.
+- Do not commit directly to `master` or `main`.
+- If a direct commit is discovered, treat it as a process violation and require follow-up via PR.
+
 ### Issue Categorization
 
 When reviewing pull requests, categorize findings into two distinct groups:
