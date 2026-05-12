@@ -101,7 +101,7 @@ export const eventService = {
       if (filters.offset) params.append('offset', filters.offset.toString());
     }
 
-    const response = await api.get(`/api/events?${params.toString()}`);
+    const response = await api.get(`/events?${params.toString()}`);
     return response.data;
   },
 
@@ -110,7 +110,7 @@ export const eventService = {
    */
   async getEventById(id: string): Promise<EventResponse | null> {
     try {
-      const response = await api.get(`/api/events/${id}`);
+      const response = await api.get(`/events/${id}`);
       return response.data;
     } catch {
       return null;
@@ -121,7 +121,7 @@ export const eventService = {
    * Create a new event (requires authentication)
    */
   async createEvent(input: CreateEventInput): Promise<EventResponse> {
-    const response = await api.post('/api/events', input);
+    const response = await api.post('/events', input);
     return response.data;
   },
 
@@ -129,7 +129,7 @@ export const eventService = {
    * Update an existing event (requires authentication and ownership)
    */
   async updateEvent(id: string, input: UpdateEventInput): Promise<EventResponse> {
-    const response = await api.put(`/api/events/${id}`, input);
+    const response = await api.put(`/events/${id}`, input);
     return response.data;
   },
 
@@ -137,7 +137,7 @@ export const eventService = {
    * Delete an event (requires authentication and ownership)
    */
   async deleteEvent(id: string): Promise<void> {
-    await api.delete(`/api/events/${id}`);
+    await api.delete(`/events/${id}`);
   },
 
   /**
@@ -145,7 +145,7 @@ export const eventService = {
    */
   async getEventStats(): Promise<EventStats> {
     try {
-      const response = await api.get('/api/events/stats');
+      const response = await api.get('/events/stats');
       return response.data;
     } catch {
       return {
