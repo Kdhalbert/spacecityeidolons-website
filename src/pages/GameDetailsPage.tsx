@@ -24,7 +24,25 @@ const GameDetailsPage: React.FC = () => {
     );
   }
 
-  if (error || !game) {
+  if (error) {
+    return (
+      <>
+        <PageHero title="Error" />
+        <PageSection>
+          <DarkCard>
+            <div style={{ padding: '32px', textAlign: 'center', fontFamily: 'Cinzel' }}>
+              <p style={{ marginBottom: '16px' }}>Something went wrong loading this game. Please try again.</p>
+              <button className="invite-btn" onClick={() => navigate('/games')}>
+                Browse All Games
+              </button>
+            </div>
+          </DarkCard>
+        </PageSection>
+      </>
+    );
+  }
+
+  if (!game) {
     return (
       <>
         <PageHero title="Game Not Found" />
@@ -53,10 +71,9 @@ const GameDetailsPage: React.FC = () => {
         <DarkCard>
           <div style={{ padding: '32px' }}>
             {game.content && (
-              <div
-                style={{ whiteSpace: 'pre-wrap', lineHeight: '1.7' }}
-                dangerouslySetInnerHTML={{ __html: game.content }}
-              />
+              <p style={{ whiteSpace: 'pre-wrap', lineHeight: '1.7' }}>
+                {game.content}
+              </p>
             )}
             {game.tags && game.tags.length > 0 && (
               <div style={{ marginTop: '24px' }}>

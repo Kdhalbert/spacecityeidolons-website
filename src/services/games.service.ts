@@ -46,14 +46,16 @@ export const gameService = {
   },
 
   /**
-   * Get game by ID
+   * Get game by ID. Returns null for 404; throws for other errors.
    */
   async getGameById(id: string): Promise<Game | null> {
     try {
       const response = await api.get(`/api/games/${id}`);
       return response.data;
-    } catch {
-      return null;
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 404) return null;
+      throw err;
     }
   },
 
