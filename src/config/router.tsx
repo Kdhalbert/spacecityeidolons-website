@@ -17,6 +17,7 @@ const ProfileEditPage = lazy(() => import('../pages/ProfileEditPage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
+const RoadmapPage = lazy(() => import('../pages/RoadmapPage'));
 
 // ============================================================================
 // ROUTER CONFIGURATION
@@ -75,6 +76,10 @@ const createRoutes = (): RouteObject[] => [
       {
         path: 'auth/callback',
         element: <PublicRoute element={<AuthCallback />} />,
+      },
+      {
+        path: 'roadmap',
+        element: <PublicRoute element={<RoadmapPage />} />,
       },
       {
         path: '*',

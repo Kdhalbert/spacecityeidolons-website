@@ -107,6 +107,7 @@ export const Footer: React.FC = () => {
               <li style={{ marginBottom: '8px' }}><a href="#">Discord</a></li>
               <li style={{ marginBottom: '8px' }}><a href="#">Forums</a></li>
               <li style={{ marginBottom: '8px' }}><a href="#">Events</a></li>
+              <li style={{ marginBottom: '8px' }}><a href="/roadmap">Roadmap</a></li>
             </ul>
           </div>
           <div>
