@@ -606,6 +606,33 @@
 
 ---
 
+## Phase 9.5: Roadmap Page (Priority: P3)
+
+**Goal**: Visitors can view a public roadmap page that reflects the current build progress, showing which user stories are complete, in progress, and planned — keeping the community informed as the site is built.
+
+**Independent Test**: Visit /roadmap as unauthenticated user, see all user stories grouped by status (completed/in-progress/planned), each with title, description, and PR/phase reference
+
+### Frontend Implementation
+
+- [x] T410 [P] [USR] Create roadmap data file `src/data/roadmap.ts` with all user stories (US1–US8) and statuses — update this file each time a story merges
+- [x] T411 [P] [USR] Create `RoadmapPage` in `src/pages/RoadmapPage.tsx` — groups stories by status (Completed / In Progress / Planned), shows story title, description, and linked PR number
+- [x] T412 [USR] Add public `/roadmap` route to `src/config/router.tsx`
+- [x] T413 [USR] Add "Roadmap" link to footer Community section in `src/components/layout/Layout.tsx` pointing to `/roadmap`
+- [x] T414 [P] [USR] Write component test for `RoadmapPage` in `src/pages/__tests__/RoadmapPage.test.tsx` — renders completed/in-progress/planned stories, shows correct counts
+
+### Acceptance Scenarios
+
+1. Unauthenticated visitor can access /roadmap without login
+2. Completed stories show with a "Complete" badge and PR reference
+3. In-progress story shows with an "In Progress" badge
+4. Planned stories are listed without a PR reference
+5. Footer "Roadmap" link navigates to /roadmap from any page
+6. Page title and description are informative (useful for SEO)
+
+**Checkpoint**: Roadmap page live — community can track development progress in real time
+
+---
+
 ## Phase 10: Polish & Cross-Cutting Concerns
 
 **Purpose**: Performance optimization, accessibility, security hardening across all user stories
