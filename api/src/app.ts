@@ -11,6 +11,7 @@ import { registerInviteRoutes } from './routes/invites.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerProfileRoutes } from './routes/profiles.js';
 import { registerGameRoutes } from './routes/games.js';
+import { registerGameRequestRoutes } from './routes/game-requests.js';
 import { registerEventRoutes } from './routes/events.js';
 
 // Build Fastify application with all plugins and routes
@@ -71,6 +72,7 @@ export async function buildApp() {
   await app.register(registerInviteRoutes);
   await app.register(registerProfileRoutes);
   await app.register(registerGameRoutes);
+  await app.register(registerGameRequestRoutes);
   await app.register(registerEventRoutes);
   // TODO: Import and register other route modules here
   // await app.register(userRoutes, { prefix: '/api/users' });

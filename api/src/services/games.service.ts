@@ -1,5 +1,7 @@
+import { GameRequestStatus } from '@prisma/client';
 import prisma from '../lib/db.js';
 import type { Game } from '../schemas/games.schema.js';
+import type { CreateGamePageRequestInput, GamePageRequest } from '../schemas/game-request.schema.js';
 
 /**
  * Games service - handles game-related business logic
@@ -133,6 +135,79 @@ class GamesService {
    */
   async getGameCount(): Promise<number> {
     return prisma.game.count();
+  }
+
+  /**
+   * Check for duplicate game names across existing games and pending requests.
+   */
+  async hasExistingGameOrPendingRequest(gameName: string): Promise<{ hasDuplicate: boolean; reason?: string }> {
+    const normalizedName = gameName.trim();
+
+    const existingGame = await prisma.game.findFirst({
+      where: {
+        name: {
+          equals: normalizedName,
+          mode: 'insensitive',
+        },
+      },
+      select: { id: true },
+    });
+
+    if (existingGame) {
+      return {
+        hasDuplicate: true,
+        reason: 'A game with this name already exists',
+      };
+    }
+
+    const pendingRequest = await prisma.gamePageRequest.findFirst({
+      where: {
+        gameName: {
+          equals: normalizedName,
+          mode: 'insensitive',
+        },
+        status: GameRequestStatus.PENDING,
+      },
+      select: { id: true },
+    });
+
+    if (pendingRequest) {
+      return {
+        hasDuplicate: true,
+        reason: 'A pending request already exists for this game',
+      };
+    }
+
+    return { hasDuplicate: false };
+  }
+
+  /**
+   * Create a member game page request.
+   */
+  async createGameRequest(requesterId: string, input: CreateGamePageRequestInput): Promise<GamePageRequest> {
+    const request = await prisma.gamePageRequest.create({
+      data: {
+        requesterId,
+        gameName: input.gameName.trim(),
+        description: input.description?.trim() || null,
+        reason: input.reason.trim(),
+        status: GameRequestStatus.PENDING,
+      },
+    });
+
+    return request as GamePageRequest;
+  }
+
+  /**
+   * Return game page requests created by a specific user.
+   */
+  async getGameRequestsByRequester(requesterId: string): Promise<GamePageRequest[]> {
+    const requests = await prisma.gamePageRequest.findMany({
+      where: { requesterId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return requests as GamePageRequest[];
   }
 
   /**

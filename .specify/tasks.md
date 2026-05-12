@@ -445,44 +445,44 @@
 
 ### Tests for User Story 6 (Write FIRST, ensure they FAIL)
 
-- [ ] T249 [P] [US6] Write integration test for POST /api/game-requests in `api/tests/integration/game-requests.test.ts`
-- [ ] T250 [P] [US6] Write integration test for GET /api/game-requests (user's requests) in `api/tests/integration/game-requests.test.ts`
-- [ ] T251 [P] [US6] Write integration test for GET /api/games in `api/tests/integration/games.test.ts`
-- [ ] T252 [P] [US6] Write unit test for duplicate detection in `api/tests/unit/services/game.service.test.ts`
-- [ ] T253 [P] [US6] Write React component test for GameRequestForm in `src/components/games/__tests__/GameRequestForm.test.tsx`
+- [x] T249 [P] [US6] Write integration test for POST /api/game-requests in `api/tests/integration/game-requests.test.ts`
+- [x] T250 [P] [US6] Write integration test for GET /api/game-requests (user's requests) in `api/tests/integration/game-requests.test.ts`
+- [x] T251 [P] [US6] Write integration test for GET /api/games in `api/tests/integration/games.test.ts`
+- [x] T252 [P] [US6] Write unit test for duplicate detection in `api/tests/unit/services/game.service.test.ts`
+- [x] T253 [P] [US6] Write React component test for GameRequestForm in `src/components/games/__tests__/GameRequestForm.test.tsx` — 7 tests passing
 - [ ] T254 [P] [US6] Write E2E test for game request submission in `e2e/tests/game-request.spec.ts`
 
 ### Backend Implementation for User Story 6
 
 - [ ] T255 [P] [US6] Create Game Zod schema in `api/src/schemas/game.schema.ts`
-- [ ] T256 [P] [US6] Create GamePageRequest Zod schema in `api/src/schemas/game-request.schema.ts`
+- [x] T256 [P] [US6] Create GamePageRequest Zod schema in `api/src/schemas/game-request.schema.ts`
 - [ ] T257 [US6] Implement GameService in `api/src/services/game.service.ts` with CRUD methods
 - [ ] T258 [US6] Implement POST /api/games endpoint in `api/src/routes/games.ts` (admin only - will implement in Phase 8)
 - [ ] T259 [US6] Implement GET /api/games/:id endpoint in `api/src/routes/games.ts`
-- [ ] T260 [US6] Implement POST /api/game-requests endpoint in `api/src/routes/game-requests.ts` for creating requests
-- [ ] T261 [US6] Implement GET /api/game-requests endpoint in `api/src/routes/game-requests.ts` (user's own requests)
+- [x] T260 [US6] Implement POST /api/game-requests endpoint in `api/src/routes/game-requests.ts` for creating requests
+- [x] T261 [US6] Implement GET /api/game-requests endpoint in `api/src/routes/game-requests.ts` (user's own requests)
 - [ ] T262 [P] [US6] Create game page template structure in GameService
-- [ ] T263 [P] [US6] Add duplicate game detection logic (check for existing game or pending request)
-- [ ] T264 [P] [US6] Add validation for game request fields
+- [x] T263 [P] [US6] Add duplicate game detection logic (check for existing game or pending request)
+- [x] T264 [P] [US6] Add validation for game request fields
 
 ### Frontend Implementation for User Story 6
 
-- [ ] T265 [P] [US6] Create GamesPage in `src/pages/GamesPage.tsx` to list all game pages
-- [ ] T266 [P] [US6] Create GameDetailsPage in `src/pages/GameDetailsPage.tsx` for individual games
-- [ ] T267 [P] [US6] Create GameRequestPage in `src/pages/GameRequestPage.tsx`
+- [x] T265 [P] [US6] Create GamesPage in `src/pages/GamesPage.tsx` to list all game pages — live data with useGames hook, request button for authenticated users
+- [x] T266 [P] [US6] Create GameDetailsPage in `src/pages/GameDetailsPage.tsx` for individual games — implemented
+- [x] T267 [P] [US6] Create GameRequestPage in `src/pages/GameRequestPage.tsx` — implemented with success/conflict states
 - [ ] T268 [P] [US6] Create GameCard component in `src/components/games/GameCard.tsx`
-- [ ] T269 [P] [US6] Create GameRequestForm component in `src/components/games/GameRequestForm.tsx`
-- [ ] T270 [US6] Create game service functions in `src/services/game.service.ts` for API calls
-- [ ] T271 [US6] Create useGames hook in `src/hooks/useGames.ts` with React Query
-- [ ] T272 [P] [US6] Add "Request New Game" button to GamesPage
-- [ ] T273 [P] [US6] Display request status for user's submitted requests
-- [ ] T274 [P] [US6] Show duplicate detection message when game already exists or has pending request
-- [ ] T275 [US6] Add routes for /games, /games/:id, /games/request in App.tsx
+- [x] T269 [P] [US6] Create GameRequestForm component in `src/components/games/GameRequestForm.tsx` — implemented with validation + a11y
+- [x] T270 [US6] Create game service functions in `src/services/game-request.service.ts` for API calls — createGameRequest, getMyGameRequests
+- [x] T271 [US6] Create useGames hook in `src/hooks/useGames.ts` with React Query — useGames, useGame, useGameCategories, useMyGameRequests, useCreateGameRequest
+- [x] T272 [P] [US6] Add "Request New Game" button to GamesPage — visible to authenticated users only
+- [x] T273 [P] [US6] Display request status for user's submitted requests — shown on GameRequestPage success screen
+- [x] T274 [P] [US6] Show duplicate detection message when game already exists or has pending request — conflictMessage prop on GameRequestForm
+- [x] T275 [US6] Add routes for /games, /games/:id, /games/request in App.tsx — wired in router.tsx
 - [ ] T276 [US6] Add games link to Header navigation
 
 ### Validation & Testing
 
-- [ ] T277 [US6] Run all US6 tests - verify they now PASS
+- [x] T277 [US6] Run all US6 tests - verify they now PASS (targeted backend suite: 8/8 passing for game requests/games/duplicate detection)
 - [ ] T278 [US6] Manual test: Submit game page request, verify stored
 - [ ] T279 [US6] Manual test: View request status as requester
 - [ ] T280 [US6] Manual test: Try duplicate request, verify blocked with message
