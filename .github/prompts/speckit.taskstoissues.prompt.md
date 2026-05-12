@@ -5,7 +5,7 @@ argument-hint: "Optional: filtering or labeling instructions"
 tools: ['github/github-mcp-server/issue_write']
 ---
 
-> **TODO**: The `.specify/scripts/` bash scripts referenced below must be created separately before this prompt is fully operational.
+> **Note**: These prompts depend on scripts in `.specify/scripts/bash/`, which are already present in this repository.
 
 ## User Input
 
