@@ -7,6 +7,8 @@ import { lazy } from 'react';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const GamesPage = lazy(() => import('../pages/GamesPage'));
+const GameDetailsPage = lazy(() => import('../pages/GameDetailsPage'));
+const GameRequestPage = lazy(() => import('../pages/GameRequestPage'));
 const EventsPage = lazy(() => import('../pages/EventsPage'));
 const EventCreatePage = lazy(() => import('../pages/EventCreatePage'));
 const ProfilesPage = lazy(() => import('../pages/ProfilesPage'));
@@ -32,6 +34,14 @@ const createRoutes = (): RouteObject[] => [
       {
         path: 'games',
         element: <PublicRoute element={<GamesPage />} />,
+      },
+      {
+        path: 'games/request',
+        element: <ProtectedRoute element={<GameRequestPage />} />,
+      },
+      {
+        path: 'games/:id',
+        element: <PublicRoute element={<GameDetailsPage />} />,
       },
       {
         path: 'events',
