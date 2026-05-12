@@ -85,7 +85,9 @@ export const gameService = {
    */
   async searchGames(query: string, limit: number = 20): Promise<Game[]> {
     try {
-      const response = await api.get(`/games/search/${query}?limit=${limit}`);
+      const response = await api.get(
+        `/games/search/${encodeURIComponent(query)}?limit=${limit}`
+      );
       return response.data.data || [];
     } catch (error) {
       console.error('Error searching games:', error);
@@ -98,7 +100,11 @@ export const gameService = {
    */
   async getGamesByCategory(category: string, limit: number = 50): Promise<Game[]> {
     try {
-      const response = await api.get(`/games?category=${category}&limit=${limit}`);
+      const params = new URLSearchParams();
+      params.append('category', category);
+      params.append('limit', limit.toString());
+
+      const response = await api.get(`/games?${params.toString()}`);
       return response.data.data || [];
     } catch (error) {
       console.error('Error fetching games by category:', error);
