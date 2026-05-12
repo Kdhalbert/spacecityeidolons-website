@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageHero, PageSection, DarkCard } from '../components/ui';
-import { ROADMAP_REPO_URL, roadmapStories, type RoadmapStatus } from '../data/roadmap';
+import { roadmapStories, type RoadmapStatus } from '../data/roadmap';
 
 const STATUS_LABEL: Record<RoadmapStatus, string> = {
   completed: 'Complete',
@@ -14,7 +14,7 @@ const STATUS_COLOR: Record<RoadmapStatus, string> = {
   planned: 'var(--text-muted)',
 };
 
-const SECTION_ORDER: RoadmapStatus[] = ['completed', 'in-progress', 'planned'];
+const SECTION_ORDER: RoadmapStatus[] = ['in-progress', 'planned'];
 
 const SECTION_TITLE: Record<RoadmapStatus, string> = {
   completed: 'Completed',
@@ -106,26 +106,6 @@ const RoadmapPage: React.FC = () => {
                           {story.title}
                         </h3>
                         <Badge status={story.status} />
-                        {story.pr && (
-                          <a
-                            href={`${ROADMAP_REPO_URL}/pull/${story.pr}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              marginLeft: '10px',
-                              fontFamily: 'sans-serif',
-                              fontSize: '0.75rem',
-                              color: 'var(--text-muted)',
-                              textDecoration: 'none',
-                              border: '1px solid var(--purple-lighter)',
-                              borderRadius: '4px',
-                              padding: '1px 6px',
-                            }}
-                            aria-label={`Pull request #${story.pr}`}
-                          >
-                            PR #{story.pr}
-                          </a>
-                        )}
                       </div>
                       <p
                         style={{
