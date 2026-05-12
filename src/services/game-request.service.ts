@@ -13,7 +13,7 @@ export const gameRequestService = {
    * Submit a new game page request (authenticated)
    */
   async createGameRequest(input: GamePageRequestInput): Promise<GamePageRequest> {
-    const response = await api.post('/api/game-requests', input);
+    const response = await api.post('/game-requests', input);
     return response.data.data as GamePageRequest;
   },
 
@@ -21,7 +21,7 @@ export const gameRequestService = {
    * Get the current user's game page requests (authenticated)
    */
   async getMyGameRequests(): Promise<GamePageRequest[]> {
-    const response = await api.get('/api/game-requests');
+    const response = await api.get('/game-requests');
     return (response.data as GamePageRequestListResponse).data;
   },
 };

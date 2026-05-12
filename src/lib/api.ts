@@ -5,7 +5,14 @@ import type { ApiResponse, AuthTokens } from '../types';
 // API CLIENT CONFIGURATION
 // ============================================================================
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+function normalizeApiBaseUrl(baseUrl: string): string {
+  const trimmedBaseUrl = baseUrl.replace(/\/+$/, '');
+  return trimmedBaseUrl.endsWith('/api') ? trimmedBaseUrl : `${trimmedBaseUrl}/api`;
+}
+
+export const API_BASE_URL = normalizeApiBaseUrl(
+  import.meta.env.VITE_API_URL || 'http://localhost:3000'
+);
 const TOKEN_KEY = 'app_access_token';
 const REFRESH_TOKEN_KEY = 'app_refresh_token';
 
