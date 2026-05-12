@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageHero, PageSection, DarkCard } from '../components/ui';
-import { roadmapStories, type RoadmapStatus } from '../data/roadmap';
+import { ROADMAP_REPO_URL, roadmapStories, type RoadmapStatus } from '../data/roadmap';
 
 const STATUS_LABEL: Record<RoadmapStatus, string> = {
   completed: 'Complete',
@@ -108,7 +108,7 @@ const RoadmapPage: React.FC = () => {
                         <Badge status={story.status} />
                         {story.pr && (
                           <a
-                            href={`https://github.com/Kdhalbert/spacecityeidolons-website/pull/${story.pr}`}
+                            href={`${ROADMAP_REPO_URL}/pull/${story.pr}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{

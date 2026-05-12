@@ -614,11 +614,11 @@
 
 ### Frontend Implementation
 
-- [ ] T410 [P] [USR] Create roadmap data file `src/data/roadmap.ts` with all user stories (US1–US8) and statuses — update this file each time a story merges
-- [ ] T411 [P] [USR] Create `RoadmapPage` in `src/pages/RoadmapPage.tsx` — groups stories by status (Completed / In Progress / Planned), shows story title, description, and linked PR number
-- [ ] T412 [USR] Add public `/roadmap` route to `src/config/router.tsx`
-- [ ] T413 [USR] Add "Roadmap" link to footer Community section in `src/components/layout/Layout.tsx` pointing to `/roadmap`
-- [ ] T414 [P] [USR] Write component test for `RoadmapPage` in `src/pages/__tests__/RoadmapPage.test.tsx` — renders completed/in-progress/planned stories, shows correct counts
+- [x] T410 [P] [USR] Create roadmap data file `src/data/roadmap.ts` with all user stories (US1–US8) and statuses — update this file each time a story merges
+- [x] T411 [P] [USR] Create `RoadmapPage` in `src/pages/RoadmapPage.tsx` — groups stories by status (Completed / In Progress / Planned), shows story title, description, and linked PR number
+- [x] T412 [USR] Add public `/roadmap` route to `src/config/router.tsx`
+- [x] T413 [USR] Add "Roadmap" link to footer Community section in `src/components/layout/Layout.tsx` pointing to `/roadmap`
+- [x] T414 [P] [USR] Write component test for `RoadmapPage` in `src/pages/__tests__/RoadmapPage.test.tsx` — renders completed/in-progress/planned stories, shows correct counts
 
 ### Acceptance Scenarios
 

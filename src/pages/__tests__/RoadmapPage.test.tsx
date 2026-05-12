@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import RoadmapPage from '../RoadmapPage';
 import { roadmapStories } from '../../data/roadmap';
@@ -52,17 +52,26 @@ describe('RoadmapPage', () => {
 
   it('renders PR links for completed stories that have a PR', () => {
     renderPage();
-    const storiesWithPR = roadmapStories.filter((s) => s.pr !== undefined);
-    for (const story of storiesWithPR) {
+    const completedStoriesWithPR = roadmapStories.filter(
+      (s) => s.status === 'completed' && s.pr !== undefined,
+    );
+    const links = screen.getAllByRole('link', { name: /Pull request #/ });
+
+    expect(links).toHaveLength(completedStoriesWithPR.length);
+
+    for (const story of completedStoriesWithPR) {
       expect(screen.getByRole('link', { name: `Pull request #${story.pr}` })).toBeInTheDocument();
     }
   });
 
-  it('does not render a PR link for planned stories', () => {
+  it('does not render PR links inside planned stories', () => {
     renderPage();
     const planned = roadmapStories.filter((s) => s.status === 'planned');
     for (const story of planned) {
-      expect(story.pr).toBeUndefined();
+      const title = screen.getByText(story.title);
+      const card = title.closest('div')?.parentElement;
+      expect(card).toBeTruthy();
+      expect(within(card as HTMLElement).queryByRole('link', { name: /Pull request #/ })).toBeNull();
     }
   });
 });
