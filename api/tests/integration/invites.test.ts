@@ -272,7 +272,11 @@ describe('Invite Requests API', () => {
       const body = JSON.parse(response.body);
       expect(Array.isArray(body.data)).toBe(true);
       expect(body.data.length).toBeGreaterThan(0);
-      expect(body.pagination).toBeDefined();
+      expect(body.meta).toBeDefined();
+      expect(body.meta.page).toBeDefined();
+      expect(body.meta.limit).toBeDefined();
+      expect(body.meta.total).toBeDefined();
+      expect(body.meta.totalPages).toBeDefined();
     });
 
     it('returns paginated results', async () => {
@@ -287,8 +291,8 @@ describe('Invite Requests API', () => {
       expect(response.statusCode).toBe(200);
       const body = JSON.parse(response.body);
       expect(body.data.length).toBeLessThanOrEqual(5);
-      expect(body.pagination.page).toBe(1);
-      expect(body.pagination.limit).toBe(5);
+      expect(body.meta.page).toBe(1);
+      expect(body.meta.limit).toBe(5);
     });
 
     it('filters by status', async () => {

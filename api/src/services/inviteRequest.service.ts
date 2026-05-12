@@ -69,7 +69,7 @@ export class InviteRequestService {
 
     return {
       data,
-      pagination: {
+      meta: {
         page,
         limit,
         total,

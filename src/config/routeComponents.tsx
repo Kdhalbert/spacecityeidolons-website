@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Loading } from '../components/Loading';
+import { Role } from '../types';
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
@@ -16,6 +17,24 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  return <Suspense fallback={<Loading />}>{element}</Suspense>;
+};
+
+export const AdminRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== Role.ADMIN) {
+    return <Navigate to="/" replace />;
   }
 
   return <Suspense fallback={<Loading />}>{element}</Suspense>;

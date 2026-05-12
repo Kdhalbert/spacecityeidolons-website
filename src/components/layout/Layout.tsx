@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { Role } from '../../types';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
@@ -35,6 +36,9 @@ export const Header: React.FC = () => {
           <Link to="/events">Events</Link>
           <Link to="/profiles">Profiles</Link>
           {isAuthenticated && user && <Link to={`/profile/${user.id}`}>My Profile</Link>}
+          {isAuthenticated && user?.role === Role.ADMIN && (
+            <Link to="/admin/users" style={{ color: 'var(--purple-lighter)' }}>Admin</Link>
+          )}
           
           {!isLoading && (
             <>
