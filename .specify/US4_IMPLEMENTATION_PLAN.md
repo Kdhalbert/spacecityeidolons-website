@@ -85,15 +85,28 @@ US4 - Calendar Discovery Implementation Plan
   - DELETE /api/events/:id - Delete event (requires creator auth)
   - GET /api/events/stats - Statistics (admin only)
 
-## Next Steps
+## Verification Status (2026-05-12)
 
-1. Verify Prisma schema has Event model and EventVisibility enum
-2. Run Prisma migration to apply schema
-3. Wire event routes into app/src/index.ts
-4. Run backend tests to verify implementation
-5. Create frontend components (EventCalendar, EventList, etc.)
-6. Run E2E tests against deployed backend
-7. Fix any failing tests
+1. ✅ Prisma schema has `Event` model and `EventVisibility` enum
+2. ✅ Migration exists: `api/prisma/migrations/20260225185746_update_event_model/migration.sql`
+3. ✅ Event routes are wired in `api/src/app.ts` via `registerEventRoutes(app)`
+4. ⚠️ Backend test execution could not be verified in this environment (bash shell cannot access npm/node)
+5. ✅ Frontend event discovery components exist (`EventCalendar`, `EventList`, `EventFiltering`, `EventCard`) and are used in `src/pages/EventsPage.tsx`
+6. ⚠️ E2E execution is not yet verified against a running environment
+7. 🔄 Remaining work is now primarily validation, naming cleanup, and acceptance-proof completion
+
+## Updated Next Steps (Fix Plan)
+
+1. Normalize naming and routing in tasks/docs:
+  - Decide whether `EventsPage` is the canonical calendar page, or create `CalendarPage` and route alias `/calendar`
+  - Align task references for `events.service.ts` (plural) and app bootstrap file (`api/src/app.ts`)
+2. Execute validation suite in a Node-enabled shell:
+  - `cd api && npm test -- tests/unit/schemas/event.schema.test.ts tests/unit/services/event-visibility.test.ts tests/integration/events.test.ts`
+  - `cd .. && npm test -- src/components/calendar/calendar.test.ts`
+  - `npm run e2e -- e2e/calendar-discovery.spec.ts`
+3. Complete manual acceptance checks for guest/member/admin visibility and event details flow
+4. Update `.specify/tasks.md` for any remaining status drift (especially path and script command mismatches)
+5. Close US4 only after acceptance scenarios are explicitly checked with evidence
 
 ## Test Count Summary
 - Total test scenarios: 150+ across integration, unit, component, and E2E
