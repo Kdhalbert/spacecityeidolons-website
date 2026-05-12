@@ -82,7 +82,11 @@ describe('RoadmapPage', () => {
     const planned = roadmapStories.filter((s) => s.status === 'planned').length;
 
     expect(screen.queryByText('Complete')).toBeNull();
-    expect(screen.getAllByText('In Progress', { selector: 'span' })).toHaveLength(inProgress);
+    if (inProgress > 0) {
+      expect(screen.getAllByText('In Progress', { selector: 'span' })).toHaveLength(inProgress);
+    } else {
+      expect(screen.queryByText('In Progress', { selector: 'span' })).toBeNull();
+    }
     expect(screen.getAllByText('Planned', { selector: 'span' })).toHaveLength(planned);
   });
 

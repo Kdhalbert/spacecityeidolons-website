@@ -77,7 +77,7 @@ export const roadmapStories: RoadmapStory[] = [
     description:
       'A public roadmap so the community can track development progress in real time.',
     priority: 'P3',
-    status: 'in-progress',
+    status: 'completed',
     phase: 9.5,
   },
   {
