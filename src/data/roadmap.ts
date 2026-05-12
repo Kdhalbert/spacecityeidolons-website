@@ -98,4 +98,22 @@ export const roadmapStories: RoadmapStory[] = [
     status: 'planned',
     phase: 9,
   },
+  {
+    id: 'US9',
+    title: 'Persistent Login Sessions',
+    description:
+      'Members remain logged in across browser restarts using secure HttpOnly refresh tokens, eliminating unnecessary re-authentication.',
+    priority: 'P3',
+    status: 'planned',
+    phase: 10,
+  },
+  {
+    id: 'US10',
+    title: 'Silent Token Refresh',
+    description:
+      'Access tokens are automatically renewed in the background during active sessions so members are never unexpectedly logged out mid-use.',
+    priority: 'P3',
+    status: 'planned',
+    phase: 11,
+  },
 ];
