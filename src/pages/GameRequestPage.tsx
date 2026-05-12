@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageHero, PageSection } from '../components/ui';
+import { DarkCard, PageHero, PageSection } from '../components/ui';
 import { GameRequestForm } from '../components/games/GameRequestForm';
 import { useCreateGameRequest, useMyGameRequests } from '../hooks/useGames';
 import type { GamePageRequestInput } from '../types';
@@ -64,14 +64,14 @@ const GameRequestPage: React.FC = () => {
         description="Can't find a game our community plays? Submit a request and we'll review it."
       />
       <PageSection>
-        <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+        <DarkCard className="game-request-card" style={{ maxWidth: '760px', margin: '0 auto' }}>
           <GameRequestForm
             onSubmit={handleSubmit}
             onCancel={() => navigate('/games')}
             isLoading={createMutation.isPending}
             conflictMessage={conflictMessage}
           />
-        </div>
+        </DarkCard>
       </PageSection>
     </>
   );

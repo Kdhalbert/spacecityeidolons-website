@@ -437,3 +437,55 @@ h1 {
   font-weight: 400;
 }
 
+/* =====================================================
+   GAME REQUEST FORM
+   ===================================================== */
+
+.game-request-card {
+  padding: 32px 36px;
+}
+
+.game-request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.game-request-alert {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(204, 68, 68, 0.7);
+  background: rgba(204, 68, 68, 0.12);
+  color: #ffb3b3;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.game-request-textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.game-request-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .game-request-card {
+    padding: 24px 20px;
+  }
+
+  .game-request-actions {
+    justify-content: stretch;
+  }
+
+  .game-request-actions > .btn {
+    width: 100%;
+  }
+}
+
