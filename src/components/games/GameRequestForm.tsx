@@ -64,9 +64,9 @@ export const GameRequestForm: React.FC<GameRequestFormProps> = ({
           aria-describedby={errors.gameName ? 'game-name-error' : undefined}
         />
         {errors.gameName && (
-          <span id="game-name-error" role="alert" className="input-error-text">
+          <p id="game-name-error" role="alert" className="input-error-text">
             {errors.gameName.message}
-          </span>
+          </p>
         )}
       </div>
 
@@ -78,10 +78,17 @@ export const GameRequestForm: React.FC<GameRequestFormProps> = ({
           id="game-description"
           {...register('description')}
           placeholder="Brief description of the game"
-          className="input-dark game-request-textarea"
+          className={`input-dark game-request-textarea ${errors.description ? 'input-dark-error' : ''}`.trim()}
           disabled={isLoading}
           rows={4}
+          aria-invalid={!!errors.description}
+          aria-describedby={errors.description ? 'game-description-error' : undefined}
         />
+        {errors.description && (
+          <p id="game-description-error" role="alert" className="input-error-text">
+            {errors.description.message}
+          </p>
+        )}
       </div>
 
       <div className="input-field-wrapper">
@@ -99,9 +106,9 @@ export const GameRequestForm: React.FC<GameRequestFormProps> = ({
           aria-describedby={errors.reason ? 'game-reason-error' : undefined}
         />
         {errors.reason && (
-          <span id="game-reason-error" role="alert" className="input-error-text">
+          <p id="game-reason-error" role="alert" className="input-error-text">
             {errors.reason.message}
-          </span>
+          </p>
         )}
       </div>
 
