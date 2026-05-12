@@ -251,6 +251,33 @@ export interface PaginatedResponse<T> {
   };
 }
 
+// Matches the backend admin paginated response shape (meta.limit vs pagination.pageSize)
+export interface AdminPaginatedResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+// ============================================================================
+// ADMIN TYPES
+// ============================================================================
+
+export interface AdminUserListItem extends User {
+  profile: Profile | null;
+}
+
+export interface UpdateUserRoleInput {
+  role: Role;
+}
+
+export interface UpdateUserStatusInput {
+  status: UserStatus;
+}
+
 // ============================================================================
 // PRIVACY & FILTERING
 // ============================================================================

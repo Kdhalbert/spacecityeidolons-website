@@ -1,6 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import App from '../App';
-import { ProtectedRoute, PublicRoute } from './routeComponents';
+import { ProtectedRoute, PublicRoute, AdminRoute } from './routeComponents';
 
 // Lazy load pages for code splitting
 import { lazy } from 'react';
@@ -18,6 +18,8 @@ const LoginPage = lazy(() => import('../pages/LoginPage'));
 const AuthCallback = lazy(() => import('../pages/AuthCallback'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const RoadmapPage = lazy(() => import('../pages/RoadmapPage'));
+const AdminUsersPage = lazy(() => import('../pages/AdminUsersPage'));
+const AdminInvitesPage = lazy(() => import('../pages/AdminInvitesPage'));
 
 // ============================================================================
 // ROUTER CONFIGURATION
@@ -80,6 +82,19 @@ const createRoutes = (): RouteObject[] => [
       {
         path: 'roadmap',
         element: <PublicRoute element={<RoadmapPage />} />,
+      },
+      {
+        path: 'admin',
+        children: [
+          {
+            path: 'users',
+            element: <AdminRoute element={<AdminUsersPage />} />,
+          },
+          {
+            path: 'invites',
+            element: <AdminRoute element={<AdminInvitesPage />} />,
+          },
+        ],
       },
       {
         path: '*',
