@@ -117,4 +117,13 @@ export const roadmapStories: RoadmapStory[] = [
     status: 'planned',
     phase: 11,
   },
+  {
+    id: 'US11',
+    title: 'Admin Delegation Safeguards',
+    description:
+      'Admins can promote other admins with explicit audit logging, confirmation controls, and protections against accidental lockout.',
+    priority: 'P4',
+    status: 'planned',
+    phase: 12,
+  },
 ];
