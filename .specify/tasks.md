@@ -72,11 +72,11 @@
 ### Monitoring & Alerting
 
 - [x] T034 [P] Create heartbeat/health check endpoint in `api/src/routes/health.ts` that validates database connectivity
-- [x] T035 [P] Configure Azure Application Insights availability test (ping monitor) for backend health endpoint at `/health` — SEE MONITORING.md setup instructions
-- [x] T036 [P] Create Azure Action Group in portal for sending alerts (webhook, email, SMS) — SEE MONITORING.md setup instructions
-- [x] T037 Configure Azure Monitor alert rule: trigger when health check fails for >2 consecutive attempts (5-minute evaluation) — SEE MONITORING.md setup instructions
-- [x] T038 [P] Setup notification integration (Slack, PagerDuty, or email) for alarm events — SEE MONITORING.md integration guide
-- [x] T039 [P] Document monitoring dashboard and alert response procedures in `MONITORING.md`
+- [x] T035 [P] Configure Azure Application Insights availability test (ping monitor) for backend health endpoint at `/health` — SEE docs/deployment/MONITORING.md setup instructions
+- [x] T036 [P] Create Azure Action Group in portal for sending alerts (webhook, email, SMS) — SEE docs/deployment/MONITORING.md setup instructions
+- [x] T037 Configure Azure Monitor alert rule: trigger when health check fails for >2 consecutive attempts (5-minute evaluation) — SEE docs/deployment/MONITORING.md setup instructions
+- [x] T038 [P] Setup notification integration (Slack, PagerDuty, or email) for alarm events — SEE docs/deployment/MONITORING.md integration guide
+- [x] T039 [P] Document monitoring dashboard and alert response procedures in `docs/deployment/MONITORING.md`
 - [x] T040 [P] Add heartbeat check response validation tests in `api/tests/integration/health.test.ts` — 11/11 tests passing
 - [x] T041 [P] Create frontend health check endpoint (simple status.json) in `public/status.json` that verifies Static Web App is responsive
 

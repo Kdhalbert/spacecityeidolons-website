@@ -1,12 +1,14 @@
 ---
 description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.
+agent: "agent"
+argument-hint: "Optional: additional instructions"
 ---
+
+> **Note**: These prompts depend on scripts in `.specify/scripts/bash/`, which are already present in this repository.
 
 ## User Input
 
-```text
-$ARGUMENTS
-```
+${input:arguments}
 
 You **MUST** consider the user input before proceeding (if not empty).
 
@@ -181,4 +183,4 @@ Ask the user: "Would you like me to suggest concrete remediation edits for the t
 
 ## Context
 
-$ARGUMENTS
+${input:arguments}

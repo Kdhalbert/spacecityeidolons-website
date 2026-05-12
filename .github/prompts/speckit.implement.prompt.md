@@ -1,12 +1,14 @@
 ---
 description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
+agent: "agent"
+argument-hint: "Optional: implementation constraints or focus"
 ---
+
+> **Note**: These prompts depend on scripts in `.specify/scripts/bash/`, which are already present in this repository.
 
 ## User Input
 
-```text
-$ARGUMENTS
-```
+${input:arguments}
 
 You **MUST** consider the user input before proceeding (if not empty).
 

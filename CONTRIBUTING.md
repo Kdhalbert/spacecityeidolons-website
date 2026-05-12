@@ -184,7 +184,7 @@ Closes #issue-number (if applicable)
 
 - **Start with `.specify/`**: Check [`.specify/spec.md`](.specify/spec.md), [`.specify/plan.md`](.specify/plan.md), and [`.specify/tasks.md`](.specify/tasks.md)
 - **Design questions**: See [`.specify/design-language.md`](.specify/design-language.md)
-- **Deployment issues**: Check [`DEPLOY_TO_VM.md`](DEPLOY_TO_VM.md) or [`.specify/AZURE_DEPLOYMENT_GUIDE.md`](.specify/AZURE_DEPLOYMENT_GUIDE.md)
+- **Deployment issues**: Check [`DEPLOY_TO_VM.md`](docs/deployment/DEPLOY_TO_VM.md) or [`.specify/AZURE_DEPLOYMENT_GUIDE.md`](.specify/AZURE_DEPLOYMENT_GUIDE.md)
 - Review existing documentation in `/docs`
 - Review `README.md` for setup instructions
 - Ask questions in pull request comments or Discord

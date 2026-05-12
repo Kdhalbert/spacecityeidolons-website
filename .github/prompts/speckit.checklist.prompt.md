@@ -1,6 +1,10 @@
 ---
 description: Generate a custom checklist for the current feature based on user requirements.
+agent: "agent"
+argument-hint: "Checklist domain or focus area (e.g., security, ux)"
 ---
+
+> **Note**: These prompts depend on scripts in `.specify/scripts/bash/`, which are already present in this repository.
 
 ## Checklist Purpose: "Unit Tests for English"
 
@@ -25,9 +29,7 @@ description: Generate a custom checklist for the current feature based on user r
 
 ## User Input
 
-```text
-$ARGUMENTS
-```
+${input:arguments}
 
 You **MUST** consider the user input before proceeding (if not empty).
 
@@ -40,7 +42,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 2. **Clarify intent (dynamic)**: Derive up to THREE initial contextual clarifying questions (no pre-baked catalog). They MUST:
    - Be generated from the user's phrasing + extracted signals from spec/plan/tasks
    - Only ask about information that materially changes checklist content
-   - Be skipped individually if already unambiguous in `$ARGUMENTS`
+   - Be skipped individually if already unambiguous in `${input:arguments}`
    - Prefer precision over breadth
 
    Generation algorithm:
@@ -69,7 +71,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
    Output the questions (label Q1/Q2/Q3). After answers: if ≥2 scenario classes (Alternate / Exception / Recovery / Non-Functional domain) remain unclear, you MAY ask up to TWO more targeted follow‑ups (Q4/Q5) with a one-line justification each (e.g., "Unresolved recovery path risk"). Do not exceed five total questions. Skip escalation if user explicitly declines more.
 
-3. **Understand user request**: Combine `$ARGUMENTS` + clarifying answers:
+3. **Understand user request**: Combine `${input:arguments}` + clarifying answers:
    - Derive checklist theme (e.g., security, review, deploy, ux)
    - Consolidate explicit must-have items mentioned by user
    - Map focus selections to category scaffolding
