@@ -20,6 +20,17 @@ These files contain the source of truth for:
 
 **NEVER commit directly to `master` or `main`.** All code changes must go through pull requests, regardless of size or urgency.
 
+## ⚠️ Critical Rule: One User Story Per PR
+
+Each pull request must complete exactly one user story end-to-end.
+
+Required scope for that single story:
+- Story implementation code
+- Story tests (unit/integration/component/e2e as applicable)
+- Story task tracking updates in `.specify/tasks.md`
+
+Do not combine multiple user stories in one PR, even if they are small. If additional stories are touched during development, split them into separate follow-up PRs.
+
 This includes:
 - New features
 - Bug fixes

@@ -206,7 +206,7 @@
 - [x] T103 [P] [US2] Write test for auth middleware in `api/tests/unit/middleware/auth.middleware.test.ts` — 11 authentication middleware tests created and passing
 - [x] T104 [P] [US2] Write React component tests for LoginPage in `src/pages/__tests__/LoginPage.test.tsx` — LoginPage.test.tsx created
 - [x] T105 [P] [US2] Write React component tests for AuthCallback in `src/pages/__tests__/AuthCallback.test.tsx` — AuthCallback.test.tsx created
-- [ ] T106 [P] [US2] Write E2E test for complete Discord OAuth flow in `e2e/tests/authentication.spec.ts`
+- [x] T106 [P] [US2] Write E2E test for complete Discord OAuth flow in `e2e/authentication.spec.ts` — Test file exists; execution still needs environment-backed run validation
 
 ### Backend Implementation for User Story 2
 
@@ -271,14 +271,14 @@
 
 ### Tests for User Story 3 (Write FIRST, ensure they FAIL)
 
-- [ ] T146 [P] [US3] Write integration test for GET /api/profiles/:userId in `api/tests/integration/profiles.test.ts`
-- [ ] T147 [P] [US3] Write integration test for PUT /api/profiles/:userId in `api/tests/integration/profiles.test.ts`
-- [ ] T148 [P] [US3] Write integration test for GET /api/profiles with privacy filtering in `api/tests/integration/profiles.test.ts`
-- [ ] T149 [P] [US3] Write unit test for privacy filtering logic in `api/tests/unit/services/profile.service.test.ts`
-- [ ] T150 [P] [US3] Write unit test for Twitch URL validation in `api/tests/unit/schemas/profile.schema.test.ts`
-- [ ] T151 [P] [US3] Write React component test for ProfileEditor in `src/components/profile/__tests__/ProfileEditor.test.tsx`
-- [ ] T152 [P] [US3] Write React component test for PrivacyToggle in `src/components/profile/__tests__/PrivacyToggle.test.tsx`
-- [ ] T153 [P] [US3] Write E2E test for profile management in `e2e/tests/profile.spec.ts`
+- [x] T146 [P] [US3] Write integration test for GET /api/profiles/:userId in `api/tests/integration/profiles.test.ts` — Added
+- [x] T147 [P] [US3] Write integration test for PUT /api/profiles/:userId in `api/tests/integration/profiles.test.ts` — Added
+- [x] T148 [P] [US3] Write integration test for GET /api/profiles with privacy filtering in `api/tests/integration/profiles.test.ts` — Added
+- [x] T149 [P] [US3] Write unit test for privacy filtering logic in `api/tests/unit/services/profile.service.test.ts` — Added
+- [x] T150 [P] [US3] Write unit test for Twitch URL validation in `api/tests/unit/schemas/profile.schema.test.ts` — Added
+- [x] T151 [P] [US3] Write React component test for ProfileEditor in `src/components/profile/__tests__/ProfileEditor.test.tsx` — Added
+- [x] T152 [P] [US3] Write React component test for PrivacyToggle in `src/components/profile/__tests__/PrivacyToggle.test.tsx` — Added
+- [x] T153 [P] [US3] Write E2E test for profile management in `e2e/profile.spec.ts` — Added scaffold with guest/access-control coverage; auth-fixture scenarios intentionally skipped
 
 ### Backend Implementation for User Story 3
 
@@ -287,7 +287,7 @@
 - [x] T156 [US3] Create GET /api/profiles/:userId endpoint in `api/src/routes/profiles.ts` with privacy enforcement — endpoint created
 - [x] T157 [US3] Create PUT /api/profiles/:userId endpoint in `api/src/routes/profiles.ts` with ownership check — endpoint created with auth checks
 - [x] T158 [US3] Create GET /api/profiles endpoint in `api/src/routes/profiles.ts` to list all profiles with privacy filtering — endpoint created
-- [ ] T159 [P] [US3] Create GET /api/games endpoint in `api/src/routes/games.ts` for game tag selection
+- [x] T159 [P] [US3] Create GET /api/games endpoint in `api/src/routes/games.ts` for game tag selection — Route implemented (includes list/search/categories/tags/selection endpoints)
 - [x] T160 [P] [US3] Add Twitch URL format validation regex — regex added to profile schema
 - [x] T161 [P] [US3] Implement privacy filtering logic: public fields for guests, all fields for admins — privacy filtering implemented in profile service
 - [x] T162 [P] [US3] Add middleware to enforce users can only edit own profiles (admins can edit any) — ownership check in profile routes
@@ -299,11 +299,11 @@
 - [x] T165 [P] [US3] Create ProfileCard component in `src/components/profile/ProfileCard.tsx` for display — ProfileCard created
 - [x] T166 [P] [US3] Create ProfileEditor component in `src/components/profile/ProfileEditor.tsx` with sections — ProfileEditor created with sections and validation
 - [x] T167 [P] [US3] Create PrivacyToggle component in `src/components/profile/PrivacyToggle.tsx` for per-field visibility — PrivacyToggle created
-- [ ] T168 [US3] Create game tag selector component (multi-select or autocomplete)
+- [x] T168 [US3] Create game tag selector component (multi-select or autocomplete) — Implemented in `src/components/profile/GameSelector.tsx`
 - [x] T169 [US3] Create profile service functions in `src/services/profile.service.ts` for API calls — profile service created
 - [x] T170 [US3] Create useProfile hook in `src/hooks/useProfile.ts` with React Query — hooks created
 - [x] T171 [P] [US3] Add Twitch URL validation in ProfileEditor — Twitch URL validation added in ProfileEditor
-- [ ] T172 [P] [US3] Implement different role-based views: guest sees public only, admin sees all
+- [x] T172 [P] [US3] Implement different role-based views: guest sees public only, admin sees all — Enforced by backend privacy filtering + authenticated/admin view logic in profile pages
 - [x] T173 [US3] Add profile link to Header navigation when logged in — header links added
 - [x] T174 [US3] Add routes for /profile/:userId and /profile/edit in App.tsx — routes added in router config
 - [x] T175 [P] [US3] Add loading states for profile data fetching — loading states added
@@ -311,7 +311,7 @@
 
 ### Validation & Testing
 
-- [ ] T177 [US3] Run all US3 tests - verify they now PASS
+- [x] T177 [US3] Run all US3 tests - verify they now PASS — 20 backend + 8 frontend tests passing
 - [ ] T178 [US3] Manual test: Edit profile bio, verify saved
 - [ ] T179 [US3] Manual test: Add Twitch URL, verify validation
 - [ ] T180 [US3] Manual test: Set field to private, verify guest cannot see it
@@ -350,35 +350,35 @@
 
 ### Frontend Implementation for User Story 4
 
-- [ ] T197 [P] [US4] Create CalendarPage in `src/pages/CalendarPage.tsx`
-- [ ] T198 [P] [US4] Create Calendar component in `src/components/calendar/Calendar.tsx` using date-fns
-- [ ] T199 [P] [US4] Create EventCard component in `src/components/calendar/EventCard.tsx` for event display
-- [ ] T200 [P] [US4] Create EventDetails component in `src/components/calendar/EventDetails.tsx` (modal or page)
-- [ ] T201 [US4] Create event service functions in `src/services/event.service.ts` for API calls
-- [ ] T202 [US4] Create useEvents hook in `src/hooks/useEvents.ts` with React Query
-- [ ] T203 [P] [US4] Implement month/week/day calendar views
-- [ ] T204 [P] [US4] Add date range picker for filtering
-- [ ] T205 [P] [US4] Add game filter dropdown
-- [ ] T206 [US4] Implement role-based event visibility in UI
-- [ ] T207 [US4] Add calendar link to Header navigation
-- [ ] T208 [US4] Add route for /calendar in App.tsx
-- [ ] T209 [P] [US4] Add loading states for calendar data
-- [ ] T210 [P] [US4] Handle empty state when no events in range
+- [x] T197 [P] [US4] Create CalendarPage in `src/pages/CalendarPage.tsx` — Implemented as `EventsPage.tsx` with /events route
+- [x] T198 [P] [US4] Create Calendar component in `src/components/calendar/Calendar.tsx` using date-fns — Implemented as `EventCalendar.tsx`
+- [x] T199 [P] [US4] Create EventCard component in `src/components/calendar/EventCard.tsx` for event display — Implemented
+- [ ] T200 [P] [US4] Create EventDetails component in `src/components/calendar/EventDetails.tsx` (modal or page) — Not a separate component; EventCard shows info inline
+- [x] T201 [US4] Create event service functions in `src/services/events.service.ts` for API calls — Implemented (plural file name)
+- [x] T202 [US4] Create useEvents hook in `src/hooks/useEvents.ts` with React Query — Implemented
+- [ ] T203 [P] [US4] Implement month/week/day calendar views — Only month view implemented in EventCalendar
+- [x] T204 [P] [US4] Add date range picker for filtering — Implemented in EventFiltering.tsx (startDate/endDate inputs)
+- [x] T205 [P] [US4] Add game filter dropdown — Implemented in EventFiltering.tsx
+- [x] T206 [US4] Implement role-based event visibility in UI — EventCard/EventList filters by auth state
+- [x] T207 [US4] Add calendar link to Header navigation — /events link present in Layout/Header
+- [x] T208 [US4] Add route for /calendar in App.tsx — /events route wired in router.tsx (naming differs from spec)
+- [x] T209 [P] [US4] Add loading states for calendar data — Loading component used in EventList.tsx
+- [x] T210 [P] [US4] Handle empty state when no events in range — Empty state in EventList.tsx
 
 ### Validation & Testing
 
-- [ ] T211 [US4] Wire event routes into app in `api/src/index.ts`  
-- [ ] T212 [US4] Run schema validation tests: `npm run test api/tests/unit/schemas/event.schema.test.ts` and fix validation issues
-- [ ] T213 [US4] Verify Prisma Event model exists and migration is applied
-- [ ] T214 [US4] Run visibility filtering unit tests: `npm run test api/tests/unit/services/event-visibility.test.ts`
-- [ ] T215 [US4] Run integration tests: `npm run test api/tests/integration/events.test.ts` and fix endpoint failures
+- [x] T211 [US4] Wire event routes into app in `api/src/app.ts` — `registerEventRoutes` is registered in app bootstrap
+- [x] T212 [US4] Run schema validation tests: `npm run test api/tests/unit/schemas/event.schema.test.ts` and fix validation issues - 24/24 passing
+- [x] T213 [US4] Verify Prisma Event model exists and migration is applied — `Event` model + `EventVisibility` enum present in schema; migration `20260225185746_update_event_model` exists
+- [x] T214 [US4] Run visibility filtering unit tests: `npm run test api/tests/unit/services/event-visibility.test.ts` - 14/14 passing
+- [x] T215 [US4] Run integration tests: `npm run test api/tests/integration/events.test.ts` and fix endpoint failures - 12/12 passing
 - [ ] T216 [US4] Manual test: View calendar as guest, see only public events
 - [ ] T217 [US4] Filter events by date range
 - [ ] T218 [US4] Manual test: Click event to see details
 - [ ] T219 [US4] Manual test: Login as member, verify see own private events
 - [ ] T220 [US4] Manual test: Login as admin, verify see all events
 - [ ] T221 [US4] Verify all 6 acceptance scenarios from spec.md pass
-- [ ] T222 [US4] Run E2E tests: `npm run test:e2e e2e/calendar-discovery.spec.ts`
+- [ ] T222 [US4] Run E2E tests: `npm run e2e -- e2e/calendar-discovery.spec.ts`
 
 **Progress Note**: PR #33 completed - all tests and core services defined. Next: Wire routes, run tests, fix failures, then frontend implementation.
 
@@ -392,40 +392,40 @@
 
 ### Tests for User Story 5 (Write FIRST, ensure they FAIL)
 
-- [ ] T218 [P] [US5] Write integration test for POST /api/events in `api/tests/integration/events.test.ts`
-- [ ] T219 [P] [US5] Write integration test for PUT /api/events/:id in `api/tests/integration/events.test.ts`
-- [ ] T220 [P] [US5] Write integration test for DELETE /api/events/:id in `api/tests/integration/events.test.ts`
+- [x] T218 [P] [US5] Write integration test for POST /api/events in `api/tests/integration/events.test.ts` - Added and passing
+- [x] T219 [P] [US5] Write integration test for PUT /api/events/:id in `api/tests/integration/events.test.ts` - Added and passing
+- [x] T220 [P] [US5] Write integration test for DELETE /api/events/:id in `api/tests/integration/events.test.ts` - Added and passing
 - [ ] T221 [P] [US5] Write unit test for ownership checks in event service
-- [ ] T222 [P] [US5] Write React component test for EventForm in `src/components/calendar/__tests__/EventForm.test.tsx`
+- [x] T222 [P] [US5] Write React component test for EventForm in `src/components/calendar/__tests__/EventForm.test.tsx` - Added and passing
 - [ ] T223 [P] [US5] Write E2E test for event CRUD in `e2e/tests/event-crud.spec.ts`
 
 ### Backend Implementation for User Story 5
 
-- [ ] T224 [US5] Implement POST /api/events endpoint in `api/src/routes/events.ts` for creating events
-- [ ] T225 [US5] Implement PUT /api/events/:id endpoint in `api/src/routes/events.ts` for updating events
-- [ ] T226 [US5] Implement DELETE /api/events/:id endpoint in `api/src/routes/events.ts` for deleting events
-- [ ] T227 [P] [US5] Add authorization middleware to verify user can only edit/delete own events
+- [x] T224 [US5] Implement POST /api/events endpoint in `api/src/routes/events.ts` for creating events - Implemented
+- [x] T225 [US5] Implement PUT /api/events/:id endpoint in `api/src/routes/events.ts` for updating events - Implemented
+- [x] T226 [US5] Implement DELETE /api/events/:id endpoint in `api/src/routes/events.ts` for deleting events - Implemented
+- [x] T227 [P] [US5] Add authorization middleware to verify user can only edit/delete own events - Enforced via authenticated user + creator check in event service
 - [ ] T228 [P] [US5] Add validation for date not in past
 - [ ] T229 [P] [US5] Set visibility to private by default for non-admin users
-- [ ] T230 [P] [US5] Add game association support to event creation
+- [x] T230 [P] [US5] Add game association support to event creation - Implemented (`games` field in schema/service/form)
 
 ### Frontend Implementation for User Story 5
 
-- [ ] T231 [P] [US5] Create EventCreatePage in `src/pages/EventCreatePage.tsx`
-- [ ] T232 [P] [US5] Create EventForm component in `src/components/calendar/EventForm.tsx` with React Hook Form
-- [ ] T233 [US5] Add "Create Event" button to CalendarPage
+- [x] T231 [P] [US5] Create EventCreatePage in `src/pages/EventCreatePage.tsx` - Implemented
+- [x] T232 [P] [US5] Create EventForm component in `src/components/calendar/EventForm.tsx` with React Hook Form - Implemented with submit/cancel/loading/validation behavior
+- [x] T233 [US5] Add "Create Event" button to CalendarPage - Added to `src/pages/EventsPage.tsx` for authenticated users
 - [ ] T234 [P] [US5] Implement event editing for own events (add edit button to EventCard)
 - [ ] T235 [P] [US5] Implement event deletion for own events (add delete button to EventCard)
 - [ ] T236 [P] [US5] Add game association selector to EventForm
 - [ ] T237 [P] [US5] Add date/time picker to EventForm
 - [ ] T238 [P] [US5] Set private visibility as default for non-admin users
-- [ ] T239 [US5] Add route for /events/new in App.tsx
+- [x] T239 [US5] Add route for /events/new in App.tsx - Added in router config
 - [ ] T240 [P] [US5] Add confirmation modal for event deletion
 - [ ] T241 [P] [US5] Add success/error notifications for event operations
 
 ### Validation & Testing
 
-- [ ] T242 [US5] Run all US5 tests - verify they now PASS
+- [x] T242 [US5] Run all US5 tests - verify they now PASS - US5 backend integration (12 tests) + EventForm component tests (7 tests) passing
 - [ ] T243 [US5] Manual test: Create private event, verify stored
 - [ ] T244 [US5] Manual test: Edit own event, verify updated
 - [ ] T245 [US5] Manual test: Delete own event, verify removed
@@ -851,3 +851,4 @@ Continue pattern through remaining user stories.
 **Version**: 1.0.1 (Updated for Discord OAuth)  
 **Generated**: 2026-02-23  
 **Ready for**: Implementation (after spec approval)
+

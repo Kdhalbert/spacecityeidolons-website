@@ -43,6 +43,7 @@ These issues exist in the codebase but are unrelated to this PR's changes. The t
 - **Note but don't block on legacy issues**: Flag pre-existing problems without making them PR blockers
 - **Provide context**: Always note whether an issue is introduced by these changes or pre-existed
 - **Constructive suggestions**: Offer brief fix suggestions for legacy issues to help future work
+- **Enforce story scope**: Confirm the PR completes exactly one user story; flag multi-story PRs as out of scope and request split PRs
 
 ### Examples
 
