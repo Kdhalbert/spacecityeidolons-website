@@ -20,8 +20,26 @@ describe('RoadmapPage', () => {
 
   it('renders only in-progress and planned sections', () => {
     renderPage();
-    expect(screen.getByRole('heading', { name: /^In Progress/ })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /^Planned/ })).toBeInTheDocument();
+
+    const inProgressCount = roadmapStories.filter((s) => s.status === 'in-progress').length;
+    const plannedCount = roadmapStories.filter((s) => s.status === 'planned').length;
+
+    if (inProgressCount > 0) {
+      expect(
+        screen.getByRole('heading', { name: new RegExp(`^In Progress\\(${inProgressCount}\\)$`) }),
+      ).toBeInTheDocument();
+    } else {
+      expect(screen.queryByRole('heading', { name: /^In Progress/ })).toBeNull();
+    }
+
+    if (plannedCount > 0) {
+      expect(
+        screen.getByRole('heading', { name: new RegExp(`^Planned\\(${plannedCount}\\)$`) }),
+      ).toBeInTheDocument();
+    } else {
+      expect(screen.queryByRole('heading', { name: /^Planned/ })).toBeNull();
+    }
+
     expect(screen.queryByRole('heading', { name: /^Completed/ })).toBeNull();
   });
 
@@ -30,8 +48,17 @@ describe('RoadmapPage', () => {
     const inProgress = roadmapStories.filter((s) => s.status === 'in-progress').length;
     const planned = roadmapStories.filter((s) => s.status === 'planned').length;
 
-    expect(screen.getByText(`(${inProgress})`)).toBeInTheDocument();
-    expect(screen.getByText(`(${planned})`)).toBeInTheDocument();
+    if (inProgress > 0) {
+      expect(
+        screen.getByRole('heading', { name: new RegExp(`^In Progress\\(${inProgress}\\)$`) }),
+      ).toBeInTheDocument();
+    }
+
+    if (planned > 0) {
+      expect(
+        screen.getByRole('heading', { name: new RegExp(`^Planned\\(${planned}\\)$`) }),
+      ).toBeInTheDocument();
+    }
   });
 
   it('renders only in-progress and planned story titles', () => {
@@ -51,9 +78,12 @@ describe('RoadmapPage', () => {
 
   it('renders status badges for visible stories only', () => {
     renderPage();
+    const inProgress = roadmapStories.filter((s) => s.status === 'in-progress').length;
+    const planned = roadmapStories.filter((s) => s.status === 'planned').length;
+
     expect(screen.queryByText('Complete')).toBeNull();
-    expect(screen.getAllByText('In Progress').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Planned').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('In Progress', { selector: 'span' })).toHaveLength(inProgress);
+    expect(screen.getAllByText('Planned', { selector: 'span' })).toHaveLength(planned);
   });
 
   it('does not render PR links', () => {
