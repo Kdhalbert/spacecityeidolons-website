@@ -1,7 +1,5 @@
 export type RoadmapStatus = 'completed' | 'in-progress' | 'planned';
 
-export const ROADMAP_REPO_URL = 'https://github.com/Kdhalbert/spacecityeidolons-website';
-
 export interface RoadmapStory {
   id: string;
   title: string;
