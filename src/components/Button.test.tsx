@@ -12,15 +12,15 @@ describe('Button Component', () => {
   it('applies primary variant by default', () => {
     render(<Button>Primary</Button>);
     const button = screen.getByRole('button');
-    expect(button).toHaveClass('bg-blue-600');
+    expect(button).toHaveClass('btn-primary');
   });
 
   it('applies variant classes correctly', () => {
     const { rerender } = render(<Button variant="danger">Danger</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-red-600');
+    expect(screen.getByRole('button')).toHaveClass('btn-danger');
 
     rerender(<Button variant="secondary">Secondary</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-gray-200');
+    expect(screen.getByRole('button')).toHaveClass('btn-secondary');
   });
 
   it('shows loading state', () => {

@@ -42,63 +42,74 @@ export const GameRequestForm: React.FC<GameRequestFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)} noValidate>
+    <form className="game-request-form" onSubmit={handleSubmit(onValid)} noValidate>
       {conflictMessage && (
-        <div role="alert" style={{ color: 'red' }}>
+        <div className="game-request-alert" role="alert">
           {conflictMessage}
         </div>
       )}
 
-      <div>
-        <label htmlFor="game-name">Game Name</label>
+      <div className="input-field-wrapper">
+        <label htmlFor="game-name" className="input-dark-label">
+          Game Name
+        </label>
         <input
           id="game-name"
           type="text"
           {...register('gameName')}
           placeholder="Name of the game"
+          className={`input-dark ${errors.gameName ? 'input-dark-error' : ''}`.trim()}
           disabled={isLoading}
           aria-invalid={!!errors.gameName}
           aria-describedby={errors.gameName ? 'game-name-error' : undefined}
         />
         {errors.gameName && (
-          <span id="game-name-error" role="alert">
+          <span id="game-name-error" role="alert" className="input-error-text">
             {errors.gameName.message}
           </span>
         )}
       </div>
 
-      <div>
-        <label htmlFor="game-description">Description (optional)</label>
+      <div className="input-field-wrapper">
+        <label htmlFor="game-description" className="input-dark-label">
+          Description (optional)
+        </label>
         <textarea
           id="game-description"
           {...register('description')}
           placeholder="Brief description of the game"
+          className="input-dark game-request-textarea"
           disabled={isLoading}
+          rows={4}
         />
       </div>
 
-      <div>
-        <label htmlFor="game-reason">Why should we add this game?</label>
+      <div className="input-field-wrapper">
+        <label htmlFor="game-reason" className="input-dark-label">
+          Why should we add this game?
+        </label>
         <textarea
           id="game-reason"
           {...register('reason')}
           placeholder="Tell us why this game would benefit the community..."
+          className={`input-dark game-request-textarea ${errors.reason ? 'input-dark-error' : ''}`.trim()}
           disabled={isLoading}
+          rows={5}
           aria-invalid={!!errors.reason}
           aria-describedby={errors.reason ? 'game-reason-error' : undefined}
         />
         {errors.reason && (
-          <span id="game-reason-error" role="alert">
+          <span id="game-reason-error" role="alert" className="input-error-text">
             {errors.reason.message}
           </span>
         )}
       </div>
 
-      <div>
-        <button type="button" onClick={onCancel} disabled={isLoading}>
+      <div className="game-request-actions">
+        <button type="button" className="btn btn-secondary btn-md" onClick={onCancel} disabled={isLoading}>
           Cancel
         </button>
-        <button type="submit" disabled={isLoading}>
+        <button type="submit" className="btn btn-primary btn-md" disabled={isLoading}>
           {isLoading ? 'Submitting...' : 'Submit Request'}
         </button>
       </div>

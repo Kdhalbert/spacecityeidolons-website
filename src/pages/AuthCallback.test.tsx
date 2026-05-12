@@ -13,7 +13,7 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }));
 
@@ -25,7 +25,7 @@ vi.mock('../services/auth.service', () => ({
 
 // Get the mocked functions
 const { useNavigate } = await import('react-router-dom');
-const { useAuth } = await import('../context/AuthContext');
+const { useAuth } = await import('../hooks/useAuth');
 const mockNavigate = vi.fn();
 const mockRefreshUser = vi.fn();
 
