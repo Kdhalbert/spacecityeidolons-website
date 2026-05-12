@@ -86,7 +86,8 @@ export const roadmapStories: RoadmapStory[] = [
     description:
       'Admins can view and manage users, assign roles, suspend accounts, and process invite requests.',
     priority: 'P5',
-    status: 'planned',
+    status: 'completed',
+    pr: 51,
     phase: 8,
   },
   {
