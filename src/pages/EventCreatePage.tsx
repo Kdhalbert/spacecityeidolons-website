@@ -13,9 +13,8 @@ const EventCreatePage: React.FC = () => {
   const handleSubmit = async (data: CreateEventInput) => {
     setError(null);
     try {
-      const event = await createEventMutation.mutateAsync(data);
+      await createEventMutation.mutateAsync(data);
       navigate(`/events`);
-      void event;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create event');
     }

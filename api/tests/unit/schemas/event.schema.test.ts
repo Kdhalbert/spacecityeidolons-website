@@ -253,7 +253,7 @@ describe('Event Schemas (US4)', () => {
   });
 
   describe('Edge Cases & Security', () => {
-    it('should sanitize XSS attempts in title', () => {
+    it('should allow HTML-like title content without sanitizing at schema level', () => {
       const payload = {
         title: '<script>alert("xss")</script>',
         date: '2025-02-15',
@@ -279,7 +279,7 @@ describe('Event Schemas (US4)', () => {
       // Should either fail or truncate
     });
 
-    it('should handle null games array', () => {
+    it('should default games to empty array when omitted', () => {
       // games accepts undefined (optional, defaults to []) but not null
       const payload = {
         title: 'Event',

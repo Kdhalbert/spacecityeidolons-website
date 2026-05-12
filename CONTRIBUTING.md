@@ -31,6 +31,8 @@ Required scope for that single story:
 
 Do not combine multiple user stories in one PR, even if they are small. If additional stories are touched during development, split them into separate follow-up PRs.
 
+Exception: repo-maintenance or recovery PRs may span multiple stories only when explicitly labeled as an administrative recovery and approved by a maintainer.
+
 This includes:
 - New features
 - Bug fixes

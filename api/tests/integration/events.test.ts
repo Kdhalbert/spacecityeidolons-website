@@ -2,7 +2,6 @@ import { describe, it, expect, beforeAll, afterAll, afterEach, vi } from 'vitest
 import { buildApp } from '../../src/app.js';
 import * as eventService from '../../src/services/event.service.js';
 import { generateTokens } from '../../src/utils/jwt.js';
-import { Role } from '@prisma/client';
 
 describe('Events API (US4 - Calendar Discovery)', () => {
   let app: Awaited<ReturnType<typeof buildApp>>;
@@ -136,7 +135,7 @@ describe('Events API (US4 - Calendar Discovery)', () => {
 
   describe('GET /api/events/:id', () => {
     it('should return a specific PUBLIC event', async () => {
-      vi.spyOn(eventService, 'getEventById').mockResolvedValue(mockEvent as never);
+      const getEventByIdSpy = vi.spyOn(eventService, 'getEventById').mockResolvedValue(mockEvent as never);
 
       const response = await app.inject({
         method: 'GET',
@@ -147,6 +146,7 @@ describe('Events API (US4 - Calendar Discovery)', () => {
       const data = response.json();
       expect(data.id).toBe('event-1');
       expect(data.title).toBe('Public Gaming Night');
+      expect(getEventByIdSpy).toHaveBeenCalledWith('event-1', null, null);
     });
 
     it('should return 404 for non-existent event', async () => {
@@ -173,7 +173,7 @@ describe('Events API (US4 - Calendar Discovery)', () => {
 
     it('should return PRIVATE events to creator (service returns event)', async () => {
       const privateEvent = { ...mockEvent, id: 'private-event-1', visibility: 'PRIVATE' as const };
-      vi.spyOn(eventService, 'getEventById').mockResolvedValue(privateEvent as never);
+      const getEventByIdSpy = vi.spyOn(eventService, 'getEventById').mockResolvedValue(privateEvent as never);
 
       const response = await app.inject({
         method: 'GET',
@@ -182,6 +182,7 @@ describe('Events API (US4 - Calendar Discovery)', () => {
       });
 
       expect(response.statusCode).toBe(200);
+      expect(getEventByIdSpy).toHaveBeenCalledWith('private-event-1', 'user-1', 'MEMBER');
     });
   });
 
@@ -256,10 +257,6 @@ describe('Events API (US4 - Calendar Discovery)', () => {
       expect(response.statusCode).toBe(200);
     });
   });
-
-  void memberToken;
-  void adminToken;
-  void Role;
 });
 
   describe('Events API (US5 - Private Event Creation)', () => {

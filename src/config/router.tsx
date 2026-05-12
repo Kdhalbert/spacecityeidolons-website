@@ -37,10 +37,10 @@ const createRoutes = (): RouteObject[] => [
         path: 'events',
         element: <PublicRoute element={<EventsPage />} />,
       },
-        {
-          path: 'events/new',
-          element: <ProtectedRoute element={<EventCreatePage />} />,
-        },
+      {
+        path: 'events/new',
+        element: <ProtectedRoute element={<EventCreatePage />} />,
+      },
       {
         path: 'profiles',
         element: <PublicRoute element={<ProfilesPage />} />,

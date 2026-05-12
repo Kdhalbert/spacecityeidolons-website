@@ -96,16 +96,17 @@ describe('Event Visibility Filtering (US4)', () => {
   });
 
   describe('Admin User', () => {
-    it('should see PUBLIC, MEMBERS_ONLY, and ADMIN visibility events', () => {
+    it('should see all event visibilities', () => {
       const visible = filterEventsByVisibility(allEvents, adminUser, false);
       expect(visible.some((e) => e.visibility === EventVisibility.PUBLIC)).toBe(true);
       expect(visible.some((e) => e.visibility === EventVisibility.MEMBERS_ONLY)).toBe(true);
+      expect(visible.some((e) => e.visibility === EventVisibility.PRIVATE)).toBe(true);
       expect(visible.some((e) => e.visibility === EventVisibility.ADMIN)).toBe(true);
     });
 
-    it('should NOT see PRIVATE events unless creator (PRIVATE is creator-only)', () => {
+    it('should see PRIVATE events even when not creator', () => {
       const visible = filterEventsByVisibility([privateEvent], adminUser, false);
-      expect(visible.length).toBe(0);
+      expect(visible.length).toBe(1);
     });
   });
 

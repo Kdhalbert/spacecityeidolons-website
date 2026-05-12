@@ -35,7 +35,7 @@ export function filterEventsByVisibility(events: Event[], user: User | null | un
 
       case EventVisibility.PRIVATE:
         // Only creator and admin can see
-        return false;
+        return user?.role === Role.ADMIN;
 
       case EventVisibility.ADMIN: {
         // Only admin can see
