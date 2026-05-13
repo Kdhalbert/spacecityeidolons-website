@@ -92,13 +92,13 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
   return (
     <PageSection>
       <DarkCard>
-        <div style={{ padding: '32px' }}>
-          <h2 style={{ marginBottom: '24px', fontSize: '1.5rem' }}>Edit Your Profile</h2>
+        <div className="profile-editor-wrap">
+          <h2 className="profile-editor-title">Edit Your Profile</h2>
 
-          <form onSubmit={handleSubmit(handleFormSubmit)}>
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="profile-editor-form">
             {/* Display Name */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontFamily: 'sans-serif', fontWeight: '500' }}>
+            <div className="profile-field">
+              <label className="input-dark-label">
                 Display Name
               </label>
               <Input
@@ -107,50 +107,39 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
                 maxLength={100}
                 error={errors.displayName?.message}
               />
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0', fontFamily: 'sans-serif' }}>
+              <p className="profile-help-text">
                 {displayName?.length || 0}/100
               </p>
             </div>
 
             {/* Bio */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontFamily: 'sans-serif', fontWeight: '500' }}>
+            <div className="profile-field">
+              <label className="input-dark-label">
                 Bio
               </label>
               <textarea
                 {...register('bio')}
                 placeholder="Tell us about yourself..."
                 maxLength={500}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  backgroundColor: 'rgba(88, 101, 242, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  borderRadius: '8px',
-                  color: 'var(--text-primary)',
-                  fontFamily: 'sans-serif',
-                  fontSize: '1rem',
-                  minHeight: '100px',
-                  resize: 'vertical',
-                }}
+                className={`input-dark input-textarea${errors.bio ? ' input-dark-error' : ''}`}
               />
               {errors.bio && (
-                <p style={{ color: 'var(--error-color)', fontSize: '0.85rem', margin: '4px 0 0 0', fontFamily: 'sans-serif' }}>
+                <p className="input-error-text">
                   {errors.bio.message}
                 </p>
               )}
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0', fontFamily: 'sans-serif' }}>
+              <p className="profile-help-text">
                 {bio?.length || 0}/500
               </p>
             </div>
 
             {/* Games */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontFamily: 'sans-serif', fontWeight: '500' }}>
+            <div className="profile-field">
+              <label className="input-dark-label">
                 Games You Play
               </label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-                <div style={{ flex: 1, display: 'flex', gap: '8px' }}>
+              <div className="profile-game-input-row">
+                <div className="profile-game-input-group">
                   <input
                     type="text"
                     value={gameInput}
@@ -162,21 +151,12 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
                       }
                     }}
                     placeholder="Enter game name..."
-                    style={{
-                      flex: 1,
-                      padding: '10px',
-                      backgroundColor: 'rgba(88, 101, 242, 0.1)',
-                      border: '1px solid rgba(139, 92, 246, 0.3)',
-                      borderRadius: '8px',
-                      color: 'var(--text-primary)',
-                      fontFamily: 'sans-serif',
-                    }}
+                    className="input-dark"
                   />
                   <button
                     type="button"
                     onClick={handleAddGame}
-                    className="invite-btn"
-                    style={{ padding: '10px 16px' }}
+                    className="btn btn-secondary btn-md"
                   >
                     Add
                   </button>
@@ -185,35 +165,14 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
 
               {/* Selected Games */}
               {selectedGames.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                <div className="profile-tag-list">
                   {selectedGames.map((game) => (
-                    <span
-                      key={game}
-                      style={{
-                        backgroundColor: 'rgba(88, 101, 242, 0.2)',
-                        color: 'var(--purple-lighter)',
-                        padding: '6px 12px',
-                        borderRadius: '16px',
-                        fontFamily: 'sans-serif',
-                        fontSize: '0.9rem',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                      }}
-                    >
+                    <span key={game} className="profile-tag">
                       {game}
                       <button
                         type="button"
                         onClick={() => handleRemoveGame(game)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: 'var(--purple-lighter)',
-                          cursor: 'pointer',
-                          fontSize: '1.2rem',
-                          lineHeight: '1',
-                          padding: '0',
-                        }}
+                        className="profile-tag-remove"
                       >
                         ×
                       </button>
@@ -221,14 +180,14 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
                   ))}
                 </div>
               )}
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'sans-serif' }}>
+              <p className="profile-help-text">
                 {selectedGames.length}/20 games
               </p>
             </div>
 
             {/* Twitch URL */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontFamily: 'sans-serif', fontWeight: '500' }}>
+            <div className="profile-field">
+              <label className="input-dark-label">
                 Twitch URL
               </label>
               <Input
@@ -237,56 +196,56 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
                 error={errors.twitchUrl?.message}
               />
               {!errors.twitchUrl && twitchUrl && (
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-success)', margin: '4px 0 0 0', fontFamily: 'sans-serif' }}>
+                <p className="profile-valid-text">
                   ✓ Valid Twitch URL
                 </p>
               )}
             </div>
 
             {/* Location */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontFamily: 'sans-serif', fontWeight: '500' }}>
+            <div className="profile-field">
+              <label className="input-dark-label">
                 Location
               </label>
               <Input {...register('location')} placeholder="e.g., Austin, TX" />
             </div>
 
             {/* Timezone */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontFamily: 'sans-serif', fontWeight: '500' }}>
+            <div className="profile-field">
+              <label className="input-dark-label">
                 Timezone
               </label>
               <Input {...register('timezone')} placeholder="e.g., America/Chicago" />
             </div>
 
             {/* Privacy Settings */}
-            <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid rgba(139, 92, 246, 0.2)' }}>
-              <h3 style={{ marginBottom: '16px', fontSize: '1.1rem' }}>Privacy Settings</h3>
+            <div className="profile-privacy">
+              <h3 className="profile-privacy-title">Privacy Settings</h3>
 
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'sans-serif', fontWeight: '500', cursor: 'pointer' }}>
+              <div className="profile-privacy-option">
+                <label className="profile-checkbox-label">
                   <input
                     {...register('privacyProfile')}
                     type="checkbox"
-                    style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                    className="profile-checkbox-input"
                   />
                   Profile Privacy
                 </label>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '8px 0 0 26px' }}>
+                <p className="profile-checkbox-help">
                   When private, only you can see your full profile
                 </p>
               </div>
 
               <div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'sans-serif', fontWeight: '500', cursor: 'pointer' }}>
+                <label className="profile-checkbox-label">
                   <input
                     {...register('privacyEvents')}
                     type="checkbox"
-                    style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                    className="profile-checkbox-input"
                   />
                   Event Privacy
                 </label>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '8px 0 0 26px' }}>
+                <p className="profile-checkbox-help">
                   Hide your event attendance from others
                 </p>
               </div>
@@ -296,14 +255,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="invite-btn"
-              style={{
-                width: '100%',
-                marginTop: '32px',
-                padding: '12px',
-                opacity: isLoading ? 0.6 : 1,
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-              }}
+              className="btn btn-primary btn-md btn-full profile-submit-btn"
             >
               {isLoading ? 'Saving...' : 'Save Profile'}
             </button>

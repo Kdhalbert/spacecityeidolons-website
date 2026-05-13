@@ -57,23 +57,22 @@ const AdminInvitesPage: React.FC = () => {
         subtitle="Review and process community invite requests."
       />
       <PageSection>
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', alignItems: 'center' }}>
-          <Link to="/admin/users" style={{ marginLeft: 'auto' }} className="btn btn-secondary btn-sm">
+        <div className="admin-toolbar">
+          <Link to="/admin/users" className="btn btn-secondary btn-sm admin-toolbar-right">
             User Management
           </Link>
         </div>
 
         <DarkCard>
           {/* Filter */}
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', alignItems: 'center' }}>
-            <label style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', fontSize: '0.9rem' }}>
+          <div className="admin-filters">
+            <label className="input-dark-label">
               Status:
             </label>
             <select
-              className="input-dark"
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value as InviteStatus | ''); setPage(1); }}
-              style={{ minWidth: '130px' }}
+              className="input-dark admin-select"
             >
               <option value="">All</option>
               {Object.values(InviteStatus).map((s) => (
@@ -82,57 +81,48 @@ const AdminInvitesPage: React.FC = () => {
             </select>
           </div>
 
-          {isLoading && <p style={{ color: 'var(--text-muted)' }}>Loading invite requests…</p>}
-          {isError && <p style={{ color: 'var(--error, #ef4444)' }}>Failed to load invite requests.</p>}
+          {isLoading && <p className="admin-loading">Loading invite requests…</p>}
+          {isError && <p className="admin-error">Failed to load invite requests.</p>}
 
           {!isLoading && !isError && (
             <>
               {invites.length === 0 && (
-                <p style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', textAlign: 'center', padding: '24px 0' }}>
+                <p className="admin-empty">
                   No invite requests found.
                 </p>
               )}
 
               {invites.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="admin-list">
                   {invites.map((invite) => (
-                  <div
-                    key={invite.id}
-                    style={{
-                      padding: '16px',
-                      borderRadius: '8px',
-                      border: '1px solid var(--border-color, #333)',
-                      backgroundColor: 'var(--bg-card-inner, rgba(255,255,255,0.03))',
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+                  <div key={invite.id} className="admin-card">
+                    <div className="admin-card-header">
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                          <span style={{ color: 'var(--text-primary)', fontFamily: 'sans-serif', fontWeight: 600 }}>
+                        <div className="admin-card-row">
+                          <span className="admin-name">
                             {invite.name}
                           </span>
-                          <span style={{
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            fontSize: '0.75rem',
-                            fontWeight: 600,
-                            backgroundColor: STATUS_COLORS[invite.status] + '22',
-                            color: STATUS_COLORS[invite.status],
-                            border: `1px solid ${STATUS_COLORS[invite.status]}44`,
-                          }}>
+                          <span
+                            className="status-chip"
+                            style={{
+                              backgroundColor: STATUS_COLORS[invite.status] + '22',
+                              color: STATUS_COLORS[invite.status],
+                              borderColor: STATUS_COLORS[invite.status] + '44',
+                            }}
+                          >
                             {STATUS_LABELS[invite.status]}
                           </span>
-                          <span style={{ color: 'var(--purple-lighter)', fontSize: '0.8rem', fontFamily: 'sans-serif' }}>
+                          <span className="platform-chip">
                             {invite.platform === Platform.DISCORD ? 'Discord' : 'Matrix'}
                           </span>
                         </div>
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontFamily: 'sans-serif' }}>
+                        <div className="admin-meta">
                           {invite.email}
                           {' · '}
                           {new Date(invite.createdAt).toLocaleDateString()}
                         </div>
                         {invite.message && (
-                          <p style={{ color: 'var(--text-secondary)', fontFamily: 'sans-serif', fontSize: '0.9rem', marginTop: '8px', fontStyle: 'italic' }}>
+                          <p className="admin-message">
                             "{invite.message}"
                           </p>
                         )}
@@ -140,8 +130,8 @@ const AdminInvitesPage: React.FC = () => {
                     </div>
 
                     {invite.status === InviteStatus.PENDING && (
-                      <div style={{ marginTop: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                        <div style={{ flexGrow: 1 }}>
+                      <div className="admin-actions">
+                        <div className="admin-actions-grow">
                           <input
                             type="text"
                             className="input-dark"
@@ -153,8 +143,7 @@ const AdminInvitesPage: React.FC = () => {
                           />
                         </div>
                         <button
-                          className="btn btn-sm"
-                          style={{ backgroundColor: 'var(--success, #22c55e)22', color: 'var(--success, #22c55e)', border: '1px solid var(--success, #22c55e)44' }}
+                          className="btn btn-success btn-sm"
                           onClick={() => handleDecision(invite, InviteStatus.APPROVED)}
                           disabled={updateMutation.isPending}
                         >
@@ -171,7 +160,7 @@ const AdminInvitesPage: React.FC = () => {
                     )}
 
                     {invite.adminNote && (
-                      <div style={{ marginTop: '8px', color: 'var(--text-muted)', fontSize: '0.85rem', fontFamily: 'sans-serif' }}>
+                      <div className="admin-note-line">
                         Admin note: {invite.adminNote}
                       </div>
                     )}
@@ -182,7 +171,7 @@ const AdminInvitesPage: React.FC = () => {
 
               {/* Pagination */}
               {meta && meta.totalPages > 1 && (
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '16px', alignItems: 'center' }}>
+                <div className="admin-pagination">
                   <button
                     className="btn btn-secondary btn-sm"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -190,7 +179,7 @@ const AdminInvitesPage: React.FC = () => {
                   >
                     Previous
                   </button>
-                  <span style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', fontSize: '0.9rem' }}>
+                  <span className="admin-pagination-text">
                     Page {page} of {meta.totalPages}
                   </span>
                   <button
