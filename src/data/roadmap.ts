@@ -126,4 +126,13 @@ export const roadmapStories: RoadmapStory[] = [
     status: 'planned',
     phase: 12,
   },
+  {
+    id: 'US12',
+    title: 'Mobile Responsiveness Improvements',
+    description:
+      'The website provides a polished, mobile-friendly experience across core pages, navigation, forms, and admin tools on phones and tablets.',
+    priority: 'P2',
+    status: 'planned',
+    phase: 13,
+  },
 ];

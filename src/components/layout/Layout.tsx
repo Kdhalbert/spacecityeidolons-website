@@ -5,7 +5,7 @@ import { Role } from '../../types';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
-  
+
   const scrollToInvite = () => {
     const inviteSection = document.querySelector('#join-section');
     if (inviteSection) {
@@ -26,11 +26,11 @@ export const Header: React.FC = () => {
 
   return (
     <header className="site-header">
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
-        <Link to="/" className="site-title" style={{ fontSize: '1.3rem' }}>
+      <div className="header-inner">
+        <Link to="/" className="site-title">
           Space City Eidolons
         </Link>
-        <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+        <nav className="header-nav">
           <Link to="/">Home</Link>
           <Link to="/games">Games</Link>
           <Link to="/events">Events</Link>
@@ -73,36 +73,26 @@ export const Header: React.FC = () => {
           {isAuthenticated && user?.role === Role.ADMIN && (
             <Link to="/admin/users" style={{ color: 'var(--purple-lighter)' }}>Admin</Link>
           )}
-          
+
           {!isLoading && (
             <>
               {isAuthenticated ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className="header-auth">
+                  <div className="header-user">
                     {getDiscordAvatarUrl() && (
-                      <img 
-                        src={getDiscordAvatarUrl()!} 
+                      <img
+                        src={getDiscordAvatarUrl()!}
                         alt={user?.discordUsername}
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '50%',
-                          border: '2px solid var(--purple-lighter)',
-                        }}
+                        className="header-avatar"
                       />
                     )}
-                    <span style={{ fontFamily: 'sans-serif', color: 'var(--text-primary)' }}>
+                    <span className="header-username">
                       {user?.discordUsername}
                     </span>
                   </div>
-                  <button 
+                  <button
                     onClick={handleLogout}
-                    className="invite-btn"
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: '1px solid var(--purple-lighter)',
-                      color: 'var(--text-primary)',
-                    }}
+                    className="btn btn-secondary btn-sm"
                   >
                     Logout
                   </button>
@@ -130,34 +120,34 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="site-footer">
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px', marginBottom: '32px' }}>
+      <div className="footer-inner">
+        <div className="footer-grid">
           <div>
             <h3>About</h3>
-            <p style={{ fontFamily: 'sans-serif', lineHeight: '1.6' }}>
+            <p className="footer-copy">
               Space City Eidolons is a gaming community dedicated to bringing
               people together for shared experiences.
             </p>
           </div>
           <div>
             <h3>Community</h3>
-            <ul style={{ listStyle: 'none', padding: 0, fontFamily: 'sans-serif' }}>
-              <li style={{ marginBottom: '8px' }}><a href="#">Discord</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#">Forums</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#">Events</a></li>
-              <li style={{ marginBottom: '8px' }}><Link to="/roadmap">Roadmap</Link></li>
+            <ul className="footer-links">
+              <li><button type="button" className="footer-link-button">Discord</button></li>
+              <li><button type="button" className="footer-link-button">Forums</button></li>
+              <li><button type="button" className="footer-link-button">Events</button></li>
+              <li><Link to="/roadmap">Roadmap</Link></li>
             </ul>
           </div>
           <div>
             <h3>Legal</h3>
-            <ul style={{ listStyle: 'none', padding: 0, fontFamily: 'sans-serif' }}>
-              <li style={{ marginBottom: '8px' }}><a href="#">Privacy Policy</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#">Terms of Service</a></li>
-              <li style={{ marginBottom: '8px' }}><a href="#">Contact</a></li>
+            <ul className="footer-links">
+              <li><button type="button" className="footer-link-button">Privacy Policy</button></li>
+              <li><button type="button" className="footer-link-button">Terms of Service</button></li>
+              <li><button type="button" className="footer-link-button">Contact</button></li>
             </ul>
           </div>
         </div>
-        <div style={{ borderTop: '1px solid var(--purple-lighter)', paddingTop: '24px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+        <div className="footer-bottom">
           <p>&copy; {currentYear} Space City Eidolons. All rights reserved.</p>
         </div>
       </div>

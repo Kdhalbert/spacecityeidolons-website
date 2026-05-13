@@ -50,11 +50,11 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
 
   if (isSubmitted) {
     return (
-      <div style={{ background: 'rgba(50, 29, 60, 0.8)', border: '1px solid var(--gold)', borderRadius: '12px', padding: '24px' }}>
-        <h3 style={{ color: 'var(--gold)', fontFamily: "'Cinzel', serif", marginBottom: '8px', letterSpacing: '1px' }}>
+      <div className="invite-success-card">
+        <h3 className="invite-success-title">
           Success! Request Received
         </h3>
-        <p style={{ color: 'var(--text-light)', fontFamily: 'sans-serif', lineHeight: '1.6', marginBottom: '16px' }}>
+        <p className="invite-success-copy">
           We appreciate your interest in joining our {platformName} community.
           We'll review your submission and send an invite to your email soon.
         </p>
@@ -69,12 +69,12 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }} noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="form-stack" style={{ flex: 1 }} noValidate>
       <div>
-        <h3 style={{ color: 'var(--gold)', fontFamily: "'Cinzel', serif", fontSize: '1.1rem', marginBottom: '6px', letterSpacing: '0.5px' }}>
+        <h3 className="form-intro-title">
           Request {platformName} Invite
         </h3>
-        <p style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', fontSize: '0.9rem', lineHeight: '1.5' }}>
+        <p className="form-intro-copy">
           {platform === 'DISCORD'
             ? 'Chat with community members, find gaming groups, and stay updated on events.'
             : 'A privacy-focused alternative with end-to-end encryption.'}
@@ -82,8 +82,8 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
       </div>
 
       {error && (
-        <div style={{ background: 'rgba(80, 0, 0, 0.4)', border: '1px solid #cc4444', borderRadius: '8px', padding: '12px' }}>
-          <p style={{ color: '#ff9999', fontFamily: 'sans-serif', fontSize: '0.88rem' }}>{error}</p>
+        <div className="form-alert form-alert-error">
+          <p>{error}</p>
         </div>
       )}
 
@@ -114,8 +114,7 @@ export const InviteRequestForm: React.FC<InviteRequestFormProps> = ({ platform }
           id="message"
           rows={3}
           placeholder="Tell us a bit about yourself and why you want to join..."
-          className={`input-dark${errors.message ? ' input-dark-error' : ''}`}
-          style={{ resize: 'vertical' }}
+          className={`input-dark input-textarea${errors.message ? ' input-dark-error' : ''}`}
         />
         {errors.message && (
           <p className="input-error-text">{errors.message.message}</p>

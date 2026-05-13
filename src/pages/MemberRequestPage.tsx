@@ -4,6 +4,8 @@ import { useAuth } from '../hooks/useAuth';
 import { Role } from '../types';
 import { PageHero, PageSection, DarkCard } from '../components/ui';
 import { createMemberRequest } from '../services/invite.service';
+import { Button } from '../components/Button';
+import { Input } from '../components/Input';
 
 const MemberRequestPage: React.FC = () => {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -40,8 +42,8 @@ const MemberRequestPage: React.FC = () => {
         />
         <PageSection>
           <DarkCard>
-            <div style={{ padding: '24px' }}>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '12px' }}>
+            <div className="member-request-wrap">
+              <p className="member-request-copy" style={{ marginBottom: '12px' }}>
                 Only guest accounts need to submit a member request.
               </p>
               <Link to="/" className="btn btn-primary btn-sm">
@@ -89,68 +91,65 @@ const MemberRequestPage: React.FC = () => {
       />
       <PageSection>
         <DarkCard>
-          <div style={{ padding: '24px', maxWidth: '720px', margin: '0 auto' }}>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '16px' }}>
+          <div className="member-request-wrap">
+            <p className="member-request-copy">
               Submit this form to request member status. Once approved, you will gain full access to member-only features and profile visibility.
             </p>
 
             {error && (
-              <div style={{ background: 'rgba(160, 30, 30, 0.2)', border: '1px solid #cc4444', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
-                <p style={{ color: '#ff9999' }}>{error}</p>
+              <div className="form-alert form-alert-error" style={{ marginBottom: '12px' }}>
+                <p>{error}</p>
               </div>
             )}
 
             {success && (
-              <div style={{ background: 'rgba(22, 163, 74, 0.15)', border: '1px solid #22c55e', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
-                <p style={{ color: '#86efac' }}>{success}</p>
+              <div className="form-alert form-alert-success" style={{ marginBottom: '12px' }}>
+                <p>{success}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px' }}>
-              <label style={{ display: 'grid', gap: '4px' }}>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Email</span>
-                <input
-                  className="input-dark"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                />
-              </label>
+            <form onSubmit={handleSubmit} className="form-stack">
+              <Input
+                type="email"
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
 
-              <label style={{ display: 'grid', gap: '4px' }}>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Name</span>
-                <input
-                  className="input-dark"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your display name"
-                  required
-                  minLength={2}
-                />
-              </label>
+              <Input
+                type="text"
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your display name"
+                required
+                minLength={2}
+              />
 
-              <label style={{ display: 'grid', gap: '4px' }}>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Message (optional)</span>
+              <div className="input-field-wrapper">
+                <label htmlFor="member-request-message" className="input-dark-label">
+                  Message (optional)
+                </label>
                 <textarea
-                  className="input-dark"
+                  id="member-request-message"
+                  className="input-dark input-textarea"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={4}
                   maxLength={1000}
                   placeholder="Tell admins why you'd like to be promoted to member."
                 />
-              </label>
+              </div>
 
-              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+              <div className="form-actions-end">
                 <Link to="/" className="btn btn-secondary btn-sm">
                   Cancel
                 </Link>
-                <button type="submit" className="btn btn-primary btn-sm" disabled={isSubmitting || !canSubmit}>
+                <Button type="submit" variant="primary" size="sm" disabled={isSubmitting || !canSubmit}>
                   {isSubmitting ? 'Submitting...' : 'Submit Member Request'}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

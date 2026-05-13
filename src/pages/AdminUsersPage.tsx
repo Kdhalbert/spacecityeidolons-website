@@ -83,32 +83,31 @@ const AdminUsersPage: React.FC = () => {
         subtitle="New users join as Guests by default. Promote to Member when they are approved for full community access."
       />
       <PageSection>
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', alignItems: 'center' }}>
-          <Link to="/admin/invites" style={{ marginLeft: 'auto' }} className="btn btn-secondary btn-sm">
+        <div className="admin-toolbar">
+          <Link to="/admin/invites" className="btn btn-secondary btn-sm admin-toolbar-right">
             Invite Requests
           </Link>
         </div>
 
         <DarkCard>
           {/* Filters */}
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '20px' }}>
-            <form onSubmit={handleSearch} style={{ display: 'flex', gap: '8px', flexGrow: 1 }}>
+          <div className="admin-filters">
+            <form onSubmit={handleSearch} className="admin-search-form">
               <input
                 type="search"
                 className="input-dark"
+                aria-label="Search users by username or email"
                 placeholder="Search by username or email…"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                style={{ flexGrow: 1 }}
               />
               <button type="submit" className="btn btn-primary btn-sm">Search</button>
             </form>
 
             <select
-              className="input-dark"
+              className="input-dark admin-select"
               value={roleFilter}
               onChange={(e) => { setRoleFilter(e.target.value as Role | ''); setPage(1); }}
-              style={{ minWidth: '120px' }}
             >
               <option value="">All Roles</option>
               {Object.values(Role).map((r) => (
@@ -117,10 +116,9 @@ const AdminUsersPage: React.FC = () => {
             </select>
 
             <select
-              className="input-dark"
+              className="input-dark admin-select"
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value as UserStatus | ''); setPage(1); }}
-              style={{ minWidth: '130px' }}
             >
               <option value="">All Statuses</option>
               {Object.values(UserStatus).map((s) => (
@@ -129,32 +127,22 @@ const AdminUsersPage: React.FC = () => {
             </select>
           </div>
 
-          <div
-            style={{
-              marginBottom: '16px',
-              color: 'var(--text-muted)',
-              fontSize: '0.85rem',
-              lineHeight: 1.5,
-            }}
-          >
+          <div className="admin-note">
             Guests have restricted profile visibility and should be promoted to Member only after admin review.
           </div>
 
           {/* Table */}
-          {isLoading && <p style={{ color: 'var(--text-muted)' }}>Loading users…</p>}
-          {isError && <p style={{ color: 'var(--error, #ef4444)' }}>Failed to load users.</p>}
+          {isLoading && <p className="admin-loading">Loading users…</p>}
+          {isError && <p className="admin-error">Failed to load users.</p>}
 
           {!isLoading && !isError && (
             <>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'sans-serif', fontSize: '0.9rem' }}>
+              <div className="admin-table-wrap">
+                <table className="admin-table">
                   <thead>
-                    <tr style={{ borderBottom: '1px solid var(--border-color, #333)' }}>
+                    <tr>
                       {['User', 'Email', 'Status', 'Role', 'Joined', 'Actions'].map((col) => (
-                        <th
-                          key={col}
-                          style={{ padding: '8px 12px', textAlign: 'left', color: 'var(--text-muted)', fontWeight: 600 }}
-                        >
+                        <th key={col}>
                           {col}
                         </th>
                       ))}
@@ -163,43 +151,41 @@ const AdminUsersPage: React.FC = () => {
                   <tbody>
                     {users.length === 0 && (
                       <tr>
-                        <td colSpan={6} style={{ padding: '24px 12px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                        <td colSpan={6} className="admin-empty">
                           No users found.
                         </td>
                       </tr>
                     )}
                     {users.map((user) => (
-                      <tr key={user.id} style={{ borderBottom: '1px solid var(--border-color, #222)' }}>
-                        <td style={{ padding: '10px 12px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <tr key={user.id}>
+                        <td>
+                          <div className="admin-avatar-row">
                             {user.discordAvatar && user.discordId && (
                               <img
                                 src={`https://cdn.discordapp.com/avatars/${user.discordId}/${user.discordAvatar}.png`}
                                 alt={user.discordUsername}
-                                style={{ width: '28px', height: '28px', borderRadius: '50%' }}
+                                className="admin-avatar"
                               />
                             )}
-                            <span style={{ color: 'var(--text-primary)' }}>{user.discordUsername}</span>
+                            <span className="admin-name">{user.discordUsername}</span>
                           </div>
                         </td>
-                        <td style={{ padding: '10px 12px', color: 'var(--text-muted)' }}>
+                        <td className="admin-cell-muted">
                           {user.email ?? '—'}
                         </td>
-                        <td style={{ padding: '10px 12px' }}>
-                          <span style={{
-                            display: 'inline-block',
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            fontSize: '0.8rem',
-                            fontWeight: 600,
-                            backgroundColor: STATUS_COLORS[user.status] + '22',
-                            color: STATUS_COLORS[user.status],
-                            border: `1px solid ${STATUS_COLORS[user.status]}44`,
-                          }}>
+                        <td>
+                          <span
+                            className="status-chip"
+                            style={{
+                              backgroundColor: STATUS_COLORS[user.status] + '22',
+                              color: STATUS_COLORS[user.status],
+                              borderColor: STATUS_COLORS[user.status] + '44',
+                            }}
+                          >
                             {STATUS_LABELS[user.status]}
                           </span>
                         </td>
-                        <td style={{ padding: '10px 12px' }}>
+                        <td>
                           <select
                             className="input-dark"
                             value={user.role}
@@ -212,15 +198,14 @@ const AdminUsersPage: React.FC = () => {
                             ))}
                           </select>
                         </td>
-                        <td style={{ padding: '10px 12px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                        <td className="admin-cell-muted" style={{ whiteSpace: 'nowrap' }}>
                           {new Date(user.createdAt).toLocaleDateString()}
                         </td>
-                        <td style={{ padding: '10px 12px' }}>
-                          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        <td>
+                          <div className="admin-actions-inline">
                             {user.status !== UserStatus.ACTIVE && (
                               <button
-                                className="btn btn-sm"
-                                style={{ backgroundColor: 'var(--success, #22c55e)22', color: 'var(--success, #22c55e)', border: '1px solid var(--success, #22c55e)44' }}
+                                className="btn btn-success btn-sm"
                                 onClick={() => handleStatusChange(user, UserStatus.ACTIVE)}
                                 disabled={statusMutation.isPending}
                               >
@@ -229,8 +214,7 @@ const AdminUsersPage: React.FC = () => {
                             )}
                             {user.status !== UserStatus.SUSPENDED && (
                               <button
-                                className="btn btn-sm"
-                                style={{ backgroundColor: 'var(--orange, #f97316)22', color: 'var(--orange, #f97316)', border: '1px solid var(--orange, #f97316)44' }}
+                                className="btn btn-warning btn-sm"
                                 onClick={() => handleStatusChange(user, UserStatus.SUSPENDED)}
                                 disabled={statusMutation.isPending}
                               >
@@ -256,7 +240,7 @@ const AdminUsersPage: React.FC = () => {
 
               {/* Pagination */}
               {meta && meta.totalPages > 1 && (
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '16px', alignItems: 'center' }}>
+                <div className="admin-pagination">
                   <button
                     className="btn btn-secondary btn-sm"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -264,7 +248,7 @@ const AdminUsersPage: React.FC = () => {
                   >
                     Previous
                   </button>
-                  <span style={{ color: 'var(--text-muted)', fontFamily: 'sans-serif', fontSize: '0.9rem' }}>
+                  <span className="admin-pagination-text">
                     Page {page} of {meta.totalPages}
                   </span>
                   <button

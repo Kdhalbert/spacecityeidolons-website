@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'success' | 'warning';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   fullWidth?: boolean;
@@ -27,17 +27,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <>
-            <span
-              style={{
-                display: 'inline-block',
-                width: '14px',
-                height: '14px',
-                border: '2px solid currentColor',
-                borderRightColor: 'transparent',
-                borderRadius: '50%',
-                animation: 'spin 0.6s linear infinite',
-              }}
-            />
+            <span className="btn-spinner" />
             Loading...
           </>
         ) : (
