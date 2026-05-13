@@ -96,6 +96,7 @@ const AdminUsersPage: React.FC = () => {
               <input
                 type="search"
                 className="input-dark"
+                aria-label="Search users by username or email"
                 placeholder="Search by username or email…"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}

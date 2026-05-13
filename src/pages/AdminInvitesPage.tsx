@@ -66,10 +66,11 @@ const AdminInvitesPage: React.FC = () => {
         <DarkCard>
           {/* Filter */}
           <div className="admin-filters">
-            <label className="input-dark-label">
+            <label htmlFor="invite-status-filter" className="input-dark-label">
               Status:
             </label>
             <select
+              id="invite-status-filter"
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value as InviteStatus | ''); setPage(1); }}
               className="input-dark admin-select"

@@ -132,18 +132,18 @@ export const Footer: React.FC = () => {
           <div>
             <h3>Community</h3>
             <ul className="footer-links">
-              <li><a href="#">Discord</a></li>
-              <li><a href="#">Forums</a></li>
-              <li><a href="#">Events</a></li>
+              <li><button type="button" className="footer-link-button">Discord</button></li>
+              <li><button type="button" className="footer-link-button">Forums</button></li>
+              <li><button type="button" className="footer-link-button">Events</button></li>
               <li><Link to="/roadmap">Roadmap</Link></li>
             </ul>
           </div>
           <div>
             <h3>Legal</h3>
             <ul className="footer-links">
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms of Service</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><button type="button" className="footer-link-button">Privacy Policy</button></li>
+              <li><button type="button" className="footer-link-button">Terms of Service</button></li>
+              <li><button type="button" className="footer-link-button">Contact</button></li>
             </ul>
           </div>
         </div>

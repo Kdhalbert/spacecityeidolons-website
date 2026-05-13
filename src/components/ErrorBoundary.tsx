@@ -38,7 +38,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
       return (
         <div className="form-alert form-alert-error">
-          <h2 className="form-intro-title">
+          <h2 className="form-alert-title">
             Something went wrong
           </h2>
           <p style={{ marginBottom: '12px' }}>{this.state.error.message}</p>
