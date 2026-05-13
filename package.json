@@ -12,7 +12,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "e2e": "playwright test",
-    "e2e:ui": "playwright test --ui"
+    "e2e:ui": "playwright test --ui",
+    "roadmap:sync": "node scripts/sync-roadmap.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
