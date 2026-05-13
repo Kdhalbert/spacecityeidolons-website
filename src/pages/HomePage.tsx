@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
       {/* What to Expect Section */}
       <section className="content-section">
         <h2 className="section-title">What to Expect</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+        <div className="what-to-expect-grid">
           <div className="dark-card">
             <h3>Gaming Sessions</h3>
             <p>
