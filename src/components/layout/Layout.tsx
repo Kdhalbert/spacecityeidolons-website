@@ -92,12 +92,7 @@ export const Header: React.FC = () => {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="invite-btn"
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: '1px solid var(--purple-lighter)',
-                      color: 'var(--text-primary)',
-                    }}
+                    className="btn btn-secondary btn-sm"
                   >
                     Logout
                   </button>
