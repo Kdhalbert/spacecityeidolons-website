@@ -16,6 +16,7 @@ param enabledForTemplateDeployment bool = true
 param enableRbacAuthorization bool = true
 
 @description('Secrets to store in Key Vault')
+@secure()
 param secrets object = {}
 
 @description('Tags for the resource')
@@ -86,8 +87,32 @@ resource postgresPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' =
   }
 }
 
+resource discordClientIdSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = if (contains(secrets, 'discordClientId')) {
+  parent: keyVault
+  name: 'discord-client-id'
+  properties: {
+    value: secrets.discordClientId
+  }
+}
+
+resource discordClientSecretSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = if (contains(secrets, 'discordClientSecret')) {
+  parent: keyVault
+  name: 'discord-client-secret'
+  properties: {
+    value: secrets.discordClientSecret
+  }
+}
+
+resource discordRedirectUriSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = if (contains(secrets, 'discordRedirectUri')) {
+  parent: keyVault
+  name: 'discord-redirect-uri'
+  properties: {
+    value: secrets.discordRedirectUri
+  }
+}
+
 output name string = keyVault.name
 output vaultUri string = keyVault.properties.vaultUri
-output databaseUrlUri string = contains(secrets, 'databaseUrl') ? databaseUrlSecret.properties.secretUri : ''
-output jwtSecretUri string = contains(secrets, 'jwtSecret') ? jwtSecretSecret.properties.secretUri : ''
-output jwtRefreshSecretUri string = contains(secrets, 'jwtRefreshSecret') ? jwtRefreshSecretSecret.properties.secretUri : ''
+output databaseUrlUri string = contains(secrets, 'databaseUrl') ? databaseUrlSecret!.properties.secretUri : ''
+output jwtSecretUri string = contains(secrets, 'jwtSecret') ? jwtSecretSecret!.properties.secretUri : ''
+output jwtRefreshSecretUri string = contains(secrets, 'jwtRefreshSecret') ? jwtRefreshSecretSecret!.properties.secretUri : ''

@@ -21,6 +21,12 @@ param linuxFxVersion string = 'NODE|20-lts'
 @description('App settings')
 param appSettings object = {}
 
+@description('Explicit CORS allowed origins for App Service platform CORS')
+param corsAllowedOrigins array = []
+
+@description('Whether App Service platform CORS should support credentials')
+param corsSupportCredentials bool = false
+
 @description('Tags for resources')
 param tags object = {}
 
@@ -59,10 +65,8 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
         value: item.value
       }]
       cors: {
-        allowedOrigins: [
-          '*' // Configure with specific origins in production
-        ]
-        supportCredentials: false
+        allowedOrigins: corsAllowedOrigins
+        supportCredentials: corsSupportCredentials
       }
     }
   }

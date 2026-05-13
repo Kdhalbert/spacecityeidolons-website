@@ -67,9 +67,15 @@ var staticWebAppName = '${appName}-web-${environment}-${uniqueSuffix}'
 var keyVaultName = '${appName}kv${take(uniqueSuffix, 10)}'
 var appInsightsName = '${appName}-insights-${environment}-${uniqueSuffix}'
 var logAnalyticsName = '${appName}-logs-${environment}-${uniqueSuffix}'
-var corsOriginValue = empty(frontendCustomDomain)
-  ? 'https://${staticWebApp.outputs.defaultHostname}'
-  : 'https://${staticWebApp.outputs.defaultHostname},https://${frontendCustomDomain}'
+var corsAllowedOrigins = empty(frontendCustomDomain)
+  ? [
+      'https://${staticWebApp.outputs.defaultHostname}'
+    ]
+  : [
+      'https://${staticWebApp.outputs.defaultHostname}'
+      'https://${frontendCustomDomain}'
+    ]
+var corsOriginValue = join(corsAllowedOrigins, ',')
 
 // PostgreSQL Flexible Server
 module postgres 'modules/postgresql.bicep' = {
@@ -105,14 +111,16 @@ module appService 'modules/appservice.bicep' = {
       JWT_REFRESH_SECRET: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.jwtRefreshSecretUri})'
       JWT_ACCESS_EXPIRES_IN: '15m'
       JWT_REFRESH_EXPIRES_IN: '7d'
-      DISCORD_CLIENT_ID: discordClientId
-      DISCORD_CLIENT_SECRET: discordClientSecret
-      DISCORD_REDIRECT_URI: discordRedirectUri
+      DISCORD_CLIENT_ID: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.vaultUri}secrets/discord-client-id)'
+      DISCORD_CLIENT_SECRET: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.vaultUri}secrets/discord-client-secret)'
+      DISCORD_REDIRECT_URI: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.vaultUri}secrets/discord-redirect-uri)'
       CORS_ORIGIN: corsOriginValue
       APPLICATIONINSIGHTS_CONNECTION_STRING: monitoring.outputs.connectionString
       PORT: '8080'
       HOST: '0.0.0.0'
     }
+    corsAllowedOrigins: corsAllowedOrigins
+    corsSupportCredentials: true
     tags: tags
   }
 }
@@ -148,8 +156,25 @@ module keyVault 'modules/keyvault.bicep' = {
       jwtRefreshSecret: jwtRefreshSecret
       postgresAdminUsername: postgresAdminUsername
       postgresAdminPassword: postgresAdminPassword
+      discordClientId: discordClientId
+      discordClientSecret: discordClientSecret
+      discordRedirectUri: discordRedirectUri
     }
     tags: tags
+  }
+}
+
+resource deployedKeyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVaultName
+}
+
+resource appServiceKeyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, keyVaultName, appServiceName, 'key-vault-secrets-user')
+  scope: deployedKeyVault
+  properties: {
+    principalId: appService.outputs.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
   }
 }
 

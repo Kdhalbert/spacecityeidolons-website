@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.43.8.12551",
-      "templateHash": "17646382771805564560"
+      "templateHash": "4553331061577206797"
     }
   },
   "parameters": {
@@ -113,6 +113,20 @@
     "logAnalyticsName": "[format('{0}-logs-{1}-{2}', parameters('appName'), parameters('environment'), variables('uniqueSuffix'))]"
   },
   "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+      "name": "[guid(resourceGroup().id, variables('keyVaultName'), variables('appServiceName'), 'key-vault-secrets-user')]",
+      "properties": {
+        "principalId": "[reference(resourceId('Microsoft.Resources/deployments', 'appservice-deployment'), '2025-04-01').outputs.principalId.value]",
+        "principalType": "ServicePrincipal",
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appservice-deployment')]"
+      ]
+    },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2025-04-01",
@@ -342,14 +356,18 @@
               "JWT_REFRESH_SECRET": "[format('@Microsoft.KeyVault(SecretUri={0})', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.jwtRefreshSecretUri.value)]",
               "JWT_ACCESS_EXPIRES_IN": "15m",
               "JWT_REFRESH_EXPIRES_IN": "7d",
-              "DISCORD_CLIENT_ID": "[parameters('discordClientId')]",
-              "DISCORD_CLIENT_SECRET": "[parameters('discordClientSecret')]",
-              "DISCORD_REDIRECT_URI": "[parameters('discordRedirectUri')]",
-              "CORS_ORIGIN": "[if(empty(parameters('frontendCustomDomain')), format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value), format('https://{0},https://{1}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value, parameters('frontendCustomDomain')))]",
+              "DISCORD_CLIENT_ID": "[format('@Microsoft.KeyVault(SecretUri={0}secrets/discord-client-id)', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.vaultUri.value)]",
+              "DISCORD_CLIENT_SECRET": "[format('@Microsoft.KeyVault(SecretUri={0}secrets/discord-client-secret)', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.vaultUri.value)]",
+              "DISCORD_REDIRECT_URI": "[format('@Microsoft.KeyVault(SecretUri={0}secrets/discord-redirect-uri)', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.vaultUri.value)]",
+              "CORS_ORIGIN": "[join(if(empty(parameters('frontendCustomDomain')), createArray(format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value)), createArray(format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value), format('https://{0}', parameters('frontendCustomDomain')))), ',')]",
               "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring-deployment'), '2025-04-01').outputs.connectionString.value]",
               "PORT": "8080",
               "HOST": "0.0.0.0"
             }
+          },
+          "corsAllowedOrigins": "[if(empty(parameters('frontendCustomDomain')), createObject('value', createArray(format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value))), createObject('value', createArray(format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value), format('https://{0}', parameters('frontendCustomDomain')))))]",
+          "corsSupportCredentials": {
+            "value": true
           },
           "tags": {
             "value": "[parameters('tags')]"
@@ -362,7 +380,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.43.8.12551",
-              "templateHash": "11697495562067565432"
+              "templateHash": "11164024201193115863"
             }
           },
           "parameters": {
@@ -410,6 +428,20 @@
               "defaultValue": {},
               "metadata": {
                 "description": "App settings"
+              }
+            },
+            "corsAllowedOrigins": {
+              "type": "array",
+              "defaultValue": [],
+              "metadata": {
+                "description": "Explicit CORS allowed origins for App Service platform CORS"
+              }
+            },
+            "corsSupportCredentials": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "Whether App Service platform CORS should support credentials"
               }
             },
             "tags": {
@@ -465,10 +497,8 @@
                   "minTlsVersion": "1.2",
                   "http20Enabled": true,
                   "cors": {
-                    "allowedOrigins": [
-                      "*"
-                    ],
-                    "supportCredentials": false
+                    "allowedOrigins": "[parameters('corsAllowedOrigins')]",
+                    "supportCredentials": "[parameters('corsSupportCredentials')]"
                   }
                 }
               },
@@ -680,7 +710,10 @@
               "jwtSecret": "[parameters('jwtSecret')]",
               "jwtRefreshSecret": "[parameters('jwtRefreshSecret')]",
               "postgresAdminUsername": "[parameters('postgresAdminUsername')]",
-              "postgresAdminPassword": "[parameters('postgresAdminPassword')]"
+              "postgresAdminPassword": "[parameters('postgresAdminPassword')]",
+              "discordClientId": "[parameters('discordClientId')]",
+              "discordClientSecret": "[parameters('discordClientSecret')]",
+              "discordRedirectUri": "[parameters('discordRedirectUri')]"
             }
           },
           "tags": {
@@ -694,7 +727,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.43.8.12551",
-              "templateHash": "15579254230591165844"
+              "templateHash": "12739502269317016153"
             }
           },
           "parameters": {
@@ -732,7 +765,7 @@
               }
             },
             "secrets": {
-              "type": "object",
+              "type": "secureObject",
               "defaultValue": {},
               "metadata": {
                 "description": "Secrets to store in Key Vault"
@@ -827,6 +860,42 @@
               "name": "[format('{0}/{1}', parameters('name'), 'postgres-admin-password')]",
               "properties": {
                 "value": "[parameters('secrets').postgresAdminPassword]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('name'))]"
+              ]
+            },
+            {
+              "condition": "[contains(parameters('secrets'), 'discordClientId')]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('name'), 'discord-client-id')]",
+              "properties": {
+                "value": "[parameters('secrets').discordClientId]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('name'))]"
+              ]
+            },
+            {
+              "condition": "[contains(parameters('secrets'), 'discordClientSecret')]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('name'), 'discord-client-secret')]",
+              "properties": {
+                "value": "[parameters('secrets').discordClientSecret]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('name'))]"
+              ]
+            },
+            {
+              "condition": "[contains(parameters('secrets'), 'discordRedirectUri')]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('name'), 'discord-redirect-uri')]",
+              "properties": {
+                "value": "[parameters('secrets').discordRedirectUri]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('name'))]"
