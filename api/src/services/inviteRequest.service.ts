@@ -2,9 +2,11 @@ import prisma from '../lib/db.js';
 import { Platform, InviteStatus } from '../types/index.js';
 import {
   CreateInviteRequestInput,
+  CreateMemberRequestInput,
   UpdateInviteRequestInput,
 /* eslint-disable @typescript-eslint/no-explicit-any */
 } from '../schemas/inviteRequest.schema.js';
+import { Role } from '@prisma/client';
 
 export class InviteRequestService {
   /**
@@ -32,6 +34,61 @@ export class InviteRequestService {
         platform: data.platform,
         message: data.message,
         status: InviteStatus.PENDING,
+      },
+    });
+  }
+
+  /**
+   * Create an authenticated member request for a guest user.
+   */
+  async createMemberRequest(userId: string, data: CreateMemberRequestInput) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        role: true,
+        email: true,
+        discordUsername: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (user.role !== Role.GUEST) {
+      throw new Error('Only guest users can submit member requests');
+    }
+
+    const email = data.email?.trim() || user.email || '';
+    if (!email) {
+      throw new Error('An email address is required to submit a member request');
+    }
+
+    const name = data.name?.trim() || user.discordUsername;
+    const message = data.message?.trim()
+      ? `[Member Request] ${data.message.trim()}`
+      : '[Member Request] Guest user requested promotion to MEMBER';
+
+    const existingRequest = await prisma.inviteRequest.findFirst({
+      where: {
+        requesterUserId: user.id,
+        status: InviteStatus.PENDING,
+      },
+    });
+
+    if (existingRequest) {
+      throw new Error('A pending member request already exists for this guest user');
+    }
+
+    return prisma.inviteRequest.create({
+      data: {
+        email,
+        name,
+        platform: Platform.DISCORD,
+        message,
+        status: InviteStatus.PENDING,
+        requesterUserId: user.id,
       },
     });
   }
@@ -97,9 +154,25 @@ export class InviteRequestService {
       throw new Error('Invite request not found');
     }
 
-    return prisma.inviteRequest.update({
-      where: { id },
-      data,
+    return prisma.$transaction(async (tx) => {
+      const updatedInvite = await tx.inviteRequest.update({
+        where: { id },
+        data,
+      });
+
+      if (data.status === InviteStatus.APPROVED && inviteRequest.requesterUserId) {
+        await tx.user.updateMany({
+          where: {
+            id: inviteRequest.requesterUserId,
+            role: Role.GUEST,
+          },
+          data: {
+            role: Role.MEMBER,
+          },
+        });
+      }
+
+      return updatedInvite;
     });
   }
 

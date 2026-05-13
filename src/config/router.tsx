@@ -20,6 +20,7 @@ const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const RoadmapPage = lazy(() => import('../pages/RoadmapPage'));
 const AdminUsersPage = lazy(() => import('../pages/AdminUsersPage'));
 const AdminInvitesPage = lazy(() => import('../pages/AdminInvitesPage'));
+const MemberRequestPage = lazy(() => import('../pages/MemberRequestPage'));
 
 // ============================================================================
 // ROUTER CONFIGURATION
@@ -82,6 +83,10 @@ const createRoutes = (): RouteObject[] => [
       {
         path: 'roadmap',
         element: <PublicRoute element={<RoadmapPage />} />,
+      },
+      {
+        path: 'membership/request',
+        element: <ProtectedRoute element={<MemberRequestPage />} />,
       },
       {
         path: 'admin',

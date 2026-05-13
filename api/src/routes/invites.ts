@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { inviteRequestService } from '../services/inviteRequest.service.js';
 import {
   createInviteRequestSchema,
+  createMemberRequestSchema,
   updateInviteRequestSchema,
 } from '../schemas/inviteRequest.schema.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
@@ -17,6 +18,12 @@ interface CreateInviteRequestBody {
 interface UpdateInviteRequestBody {
   status?: InviteStatus;
   adminNote?: string;
+}
+
+interface CreateMemberRequestBody {
+  email?: string;
+  name?: string;
+  message?: string;
 }
 
 interface InviteRequestParams {
@@ -53,6 +60,61 @@ export async function registerInviteRoutes(fastify: FastifyInstance) {
             message: error.message,
           });
         }
+        throw error;
+      }
+    }
+  );
+
+  /**
+   * POST /api/invites/member-request
+   * Create a member request for authenticated guest users
+   */
+  fastify.post<{ Body: CreateMemberRequestBody }>(
+    '/api/invites/member-request',
+    {
+      preHandler: [authenticate],
+    },
+    async (request: FastifyRequest<{ Body: CreateMemberRequestBody }>, reply: FastifyReply) => {
+      try {
+        const jwtUser = request.user as { userId: string };
+        const validatedData = createMemberRequestSchema.parse(request.body || {});
+        const inviteRequest = await inviteRequestService.createMemberRequest(jwtUser.userId, validatedData);
+        return reply.code(201).send({ data: inviteRequest });
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.message.includes('Only guest users')) {
+            return reply.code(403).send({
+              statusCode: 403,
+              error: 'Forbidden',
+              message: error.message,
+            });
+          }
+
+          if (error.message.includes('required')) {
+            return reply.code(400).send({
+              statusCode: 400,
+              error: 'Bad Request',
+              message: error.message,
+            });
+          }
+
+          if (error.message.includes('already exists')) {
+            return reply.code(409).send({
+              statusCode: 409,
+              error: 'Conflict',
+              message: error.message,
+            });
+          }
+
+          if (error.message.includes('User not found')) {
+            return reply.code(404).send({
+              statusCode: 404,
+              error: 'Not Found',
+              message: error.message,
+            });
+          }
+        }
+
         throw error;
       }
     }

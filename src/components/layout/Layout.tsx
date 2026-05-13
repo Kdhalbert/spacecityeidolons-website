@@ -36,6 +36,40 @@ export const Header: React.FC = () => {
           <Link to="/events">Events</Link>
           <Link to="/profiles">Profiles</Link>
           {isAuthenticated && user && <Link to={`/profile/${user.id}`}>My Profile</Link>}
+          {isAuthenticated && user?.role === Role.GUEST && (
+            <Link
+              to="/membership/request"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: 'var(--gold)',
+                border: '1px solid var(--gold)',
+                borderRadius: '999px',
+                padding: '4px 10px',
+                fontSize: '0.85rem',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-flex',
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  background: 'var(--gold)',
+                  color: '#1b1330',
+                  fontWeight: 700,
+                  lineHeight: 1,
+                }}
+              >
+                !
+              </span>
+              Request Member Access
+            </Link>
+          )}
           {isAuthenticated && user?.role === Role.ADMIN && (
             <Link to="/admin/users" style={{ color: 'var(--purple-lighter)' }}>Admin</Link>
           )}

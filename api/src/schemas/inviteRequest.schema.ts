@@ -15,6 +15,16 @@ export const createInviteRequestSchema = z.object({
 });
 
 /**
+ * Schema for authenticated guest member request submissions
+ * Used by POST /api/invites/member-request
+ */
+export const createMemberRequestSchema = z.object({
+  email: z.string().trim().email('Invalid email format').optional(),
+  name: z.string().trim().min(2, 'Name must be at least 2 characters').optional(),
+  message: z.string().trim().max(1000, 'Message must not exceed 1000 characters').optional(),
+});
+
+/**
  * Schema for updating an invite request
  * Used by admin endpoint PATCH /api/invites/:id
  */
@@ -34,11 +44,13 @@ export const inviteRequestResponseSchema = z.object({
   message: z.string().optional(),
   status: z.nativeEnum(InviteStatus),
   adminNote: z.string().optional(),
+  requesterUserId: z.string().uuid().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 // Export types
 export type CreateInviteRequestInput = z.infer<typeof createInviteRequestSchema>;
+export type CreateMemberRequestInput = z.infer<typeof createMemberRequestSchema>;
 export type UpdateInviteRequestInput = z.infer<typeof updateInviteRequestSchema>;
 export type InviteRequestResponse = z.infer<typeof inviteRequestResponseSchema>;

@@ -25,6 +25,7 @@ model User {
   // Relations
   profile          Profile?
   refreshTokens    RefreshToken[]
+  memberRequests   InviteRequest[]   @relation("InviteRequestRequester")
   createdEvents    Event[]           @relation("EventCreator")
   gamePageRequests GamePageRequest[] @relation("GamePageRequester")
 
@@ -79,11 +80,15 @@ model InviteRequest {
   message   String?
   status    InviteStatus @default(PENDING)
   adminNote String?
+  requesterUserId String?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
+  requester User? @relation("InviteRequestRequester", fields: [requesterUserId], references: [id], onDelete: SetNull)
+
   @@index([status])
   @@index([platform])
+  @@index([requesterUserId])
   @@map("invite_requests")
 }
 
