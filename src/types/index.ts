@@ -93,6 +93,7 @@ export interface InviteRequest {
   message?: string;
   status: InviteStatus;
   adminNote?: string;
+  requesterUserId?: string;
   createdAt: Date;
   updatedAt: Date;
 }

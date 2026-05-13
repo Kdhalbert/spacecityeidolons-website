@@ -44,6 +44,7 @@ export const inviteRequestResponseSchema = z.object({
   message: z.string().optional(),
   status: z.nativeEnum(InviteStatus),
   adminNote: z.string().optional(),
+  requesterUserId: z.string().uuid().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

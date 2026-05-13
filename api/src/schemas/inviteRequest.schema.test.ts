@@ -4,8 +4,8 @@ import {
   createMemberRequestSchema,
   updateInviteRequestSchema,
   inviteRequestResponseSchema,
-} from '../inviteRequest.schema.js';
-import { Platform, InviteStatus } from '../../types';
+} from './inviteRequest.schema.js';
+import { Platform, InviteStatus } from '../types/index.js';
 
 describe('InviteRequest Schema Validation', () => {
   describe('createInviteRequestSchema', () => {
@@ -223,6 +223,7 @@ describe('InviteRequest Schema Validation', () => {
         platform: Platform.DISCORD,
         message: 'I want to join!',
         status: InviteStatus.PENDING,
+        requesterUserId: '123e4567-e89b-12d3-a456-426614174001',
         createdAt: new Date('2024-01-01'),
         updatedAt: new Date('2024-01-01'),
       };

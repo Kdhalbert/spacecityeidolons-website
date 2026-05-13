@@ -70,11 +70,26 @@ export class InviteRequestService {
       ? `[Member Request] ${data.message.trim()}`
       : '[Member Request] Guest user requested promotion to MEMBER';
 
-    return this.create({
-      email,
-      name,
-      platform: Platform.DISCORD,
-      message,
+    const existingRequest = await prisma.inviteRequest.findFirst({
+      where: {
+        requesterUserId: user.id,
+        status: InviteStatus.PENDING,
+      },
+    });
+
+    if (existingRequest) {
+      throw new Error('A pending member request already exists for this guest user');
+    }
+
+    return prisma.inviteRequest.create({
+      data: {
+        email,
+        name,
+        platform: Platform.DISCORD,
+        message,
+        status: InviteStatus.PENDING,
+        requesterUserId: user.id,
+      },
     });
   }
 
@@ -139,9 +154,25 @@ export class InviteRequestService {
       throw new Error('Invite request not found');
     }
 
-    return prisma.inviteRequest.update({
-      where: { id },
-      data,
+    return prisma.$transaction(async (tx) => {
+      const updatedInvite = await tx.inviteRequest.update({
+        where: { id },
+        data,
+      });
+
+      if (data.status === InviteStatus.APPROVED && inviteRequest.requesterUserId) {
+        await tx.user.updateMany({
+          where: {
+            id: inviteRequest.requesterUserId,
+            role: Role.GUEST,
+          },
+          data: {
+            role: Role.MEMBER,
+          },
+        });
+      }
+
+      return updatedInvite;
     });
   }
 

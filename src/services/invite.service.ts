@@ -1,4 +1,4 @@
-import { apiPost } from '../lib/api';
+import api from '../lib/api';
 import type { Platform, InviteRequest } from '../types';
 
 export interface CreateInviteRequestData {
@@ -20,19 +20,7 @@ export interface CreateMemberRequestData {
 export async function createInviteRequest(
   data: CreateInviteRequestData
 ): Promise<InviteRequest> {
-  const response = await apiPost<InviteRequest>(
-    '/invites',
-    data as unknown as Record<string, unknown>
-  );
-  
-  if (response.error) {
-    throw new Error(response.error.message || 'Failed to create invite request');
-  }
-  
-  if (!response.data) {
-    throw new Error('No data returned from API');
-  }
-  
+  const response = await api.post<InviteRequest>('/invites', data);
   return response.data;
 }
 
@@ -42,18 +30,6 @@ export async function createInviteRequest(
 export async function createMemberRequest(
   data: CreateMemberRequestData
 ): Promise<InviteRequest> {
-  const response = await apiPost<InviteRequest>(
-    '/invites/member-request',
-    data as unknown as Record<string, unknown>
-  );
-
-  if (response.error) {
-    throw new Error(response.error.message || 'Failed to submit member request');
-  }
-
-  if (!response.data) {
-    throw new Error('No data returned from API');
-  }
-
-  return response.data;
+  const response = await api.post<{ data: InviteRequest }>('/invites/member-request', data);
+  return response.data.data;
 }

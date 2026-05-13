@@ -79,7 +79,7 @@ export async function registerInviteRoutes(fastify: FastifyInstance) {
         const jwtUser = request.user as { userId: string };
         const validatedData = createMemberRequestSchema.parse(request.body || {});
         const inviteRequest = await inviteRequestService.createMemberRequest(jwtUser.userId, validatedData);
-        return reply.code(201).send(inviteRequest);
+        return reply.code(201).send({ data: inviteRequest });
       } catch (error) {
         if (error instanceof Error) {
           if (error.message.includes('Only guest users')) {
@@ -102,6 +102,14 @@ export async function registerInviteRoutes(fastify: FastifyInstance) {
             return reply.code(409).send({
               statusCode: 409,
               error: 'Conflict',
+              message: error.message,
+            });
+          }
+
+          if (error.message.includes('User not found')) {
+            return reply.code(404).send({
+              statusCode: 404,
+              error: 'Not Found',
               message: error.message,
             });
           }
