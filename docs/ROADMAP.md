@@ -129,3 +129,107 @@ Status values:
 ]
 ```
 <!-- ROADMAP_DATA_END -->
+
+## Planned Story Notes
+
+These notes expand the highest-priority planned stories so they can be broken into implementation tasks later without changing the canonical data block above.
+
+### US8 - Admin Game Page & Event Management
+
+**Outcome**: Admins can manage the public content pipeline without waiting on manual intervention.
+
+**Suggested scope**:
+- Create game pages directly from the admin area.
+- Approve or reject member-submitted game page requests.
+- Create, edit, and delete public events from the admin UI.
+- Support pagination/search/filtering for large admin queues.
+
+**Acceptance ideas**:
+- Admin can create a game page and see it appear in the public games list.
+- Admin can approve or reject a pending member request.
+- Admin can edit and delete events without leaving the admin console.
+
+### US9 - Persistent Login Sessions
+
+**Outcome**: Members stay signed in across browser restarts with minimal friction.
+
+**Suggested scope**:
+- Issue secure HttpOnly refresh tokens on login.
+- Store refresh-token metadata server-side for rotation and revocation.
+- Restore the session on app load if the refresh token is still valid.
+- Provide a safe logout path that clears both access and refresh credentials.
+
+**Acceptance ideas**:
+- Closing and reopening the browser preserves the signed-in session.
+- Expired access tokens are refreshed silently using the refresh token.
+- Manual logout fully invalidates the session.
+
+### US10 - Silent Token Refresh
+
+**Outcome**: Active users are not interrupted by token expiry while navigating the app.
+
+**Suggested scope**:
+- Refresh access tokens in the background before they expire.
+- Retry failed requests once after a refresh if the backend reports an auth expiry.
+- Prevent refresh storms when multiple requests fail at the same time.
+- Surface a clear sign-out flow if refresh cannot recover the session.
+
+**Acceptance ideas**:
+- A user can remain active through a long session without reauth prompts.
+- Background refresh does not spam the API or duplicate requests.
+- If refresh fails, the UI sends the user to login with a clear message.
+
+### US11 - Admin Delegation Safeguards
+
+**Outcome**: Admin role changes are auditable and less likely to lock out the team.
+
+**Suggested scope**:
+- Require confirmation before promoting or demoting an admin.
+- Record who performed the role change and when it happened.
+- Block self-demotion if it would leave the team without an admin.
+- Show a warning when a change affects the last remaining admin.
+
+**Acceptance ideas**:
+- Role changes write an audit trail entry.
+- Attempting to remove the last admin is blocked or requires a higher-friction flow.
+- Admin users see clear confirmation text before taking a risky action.
+
+### US12 - Mobile Responsiveness Improvements
+
+**Outcome**: Core screens remain usable and polished on phones and tablets.
+
+**Suggested scope**:
+- Improve header/nav wrapping and touch targets.
+- Make admin tables stack or scroll cleanly on narrow screens.
+- Ensure forms, buttons, and alerts have consistent spacing on mobile.
+- Review roadmap, profile, invite, and member-request flows on smaller breakpoints.
+
+**Acceptance ideas**:
+- The site is comfortable to use at 375px wide without horizontal overflow.
+- Primary actions remain visible and tappable on mobile.
+- Admin views degrade gracefully from tables to scroll/stack layouts.
+
+## Future Backlog Candidates
+
+These items are not yet part of the live roadmap page, but they are good candidates to promote into the roadmap once the next planning pass starts.
+
+### Authentication and Security
+
+- Email/password authentication with reset flow.
+- Additional OAuth providers such as Google, GitHub, and Twitch.
+- Account linking for multiple login methods.
+- Two-factor authentication and backup codes.
+
+### Profile and Community Experience
+
+- Profile customization with banners, themes, badges, and URL slugs.
+- Rich media uploads for avatars, banners, screenshots, and galleries.
+- In-app notifications for invites, events, mentions, and approvals.
+- Member recovery options for lost authentication methods.
+
+### Platform Polish
+
+- Route-level code splitting and loading skeletons.
+- Expanded accessibility audits and keyboard navigation checks.
+- Security hardening for rate limiting, headers, and CSRF protection.
+- Performance testing and bundle-size optimization.
