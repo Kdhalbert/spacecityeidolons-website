@@ -128,7 +128,7 @@ export class AuthService {
           discordUsername: discordUser.username,
           discordAvatar: discordUser.avatar,
           email: discordUser.email || null,
-          role: Role.MEMBER,
+          role: Role.GUEST,
           profile: {
             create: {
               displayName: discordUser.username,

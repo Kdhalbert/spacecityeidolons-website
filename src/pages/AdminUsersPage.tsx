@@ -80,7 +80,7 @@ const AdminUsersPage: React.FC = () => {
     <>
       <PageHero
         title="User Management"
-        subtitle="View and manage community members, assign roles, and update account status."
+        subtitle="New users join as Guests by default. Promote to Member when they are approved for full community access."
       />
       <PageSection>
         <div style={{ display: 'flex', gap: '16px', marginBottom: '16px', alignItems: 'center' }}>
@@ -127,6 +127,17 @@ const AdminUsersPage: React.FC = () => {
                 <option key={s} value={s}>{STATUS_LABELS[s]}</option>
               ))}
             </select>
+          </div>
+
+          <div
+            style={{
+              marginBottom: '16px',
+              color: 'var(--text-muted)',
+              fontSize: '0.85rem',
+              lineHeight: 1.5,
+            }}
+          >
+            Guests have restricted profile visibility and should be promoted to Member only after admin review.
           </div>
 
           {/* Table */}

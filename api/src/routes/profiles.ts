@@ -132,9 +132,9 @@ export async function registerProfileRoutes(fastify: FastifyInstance) {
         let profiles;
 
         if (game) {
-          profiles = await profileService.getProfilesByGame(game);
+          profiles = await profileService.getProfilesByGame(game, viewerUserId, viewerRole);
         } else if (search) {
-          profiles = await profileService.searchProfiles(search, 50);
+          profiles = await profileService.searchProfiles(search, 50, viewerUserId, viewerRole);
         } else {
           profiles = await profileService.getAllProfiles(viewerUserId, viewerRole);
         }
