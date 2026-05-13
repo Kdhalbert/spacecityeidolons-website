@@ -209,27 +209,66 @@ These notes expand the highest-priority planned stories so they can be broken in
 - Primary actions remain visible and tappable on mobile.
 - Admin views degrade gracefully from tables to scroll/stack layouts.
 
-## Future Backlog Candidates
+## Future Backlog Phases
 
-These items are not yet part of the live roadmap page, but they are good candidates to promote into the roadmap once the next planning pass starts.
+These items are not yet part of the live roadmap page, but they are organized into draft phases so future stories can be promoted into the roadmap with less planning overhead.
 
-### Authentication and Security
+### Phase 13 - Authentication & Security Expansion
 
+**Theme**: Make account access more flexible and resilient.
+
+**Candidate stories**:
 - Email/password authentication with reset flow.
 - Additional OAuth providers such as Google, GitHub, and Twitch.
 - Account linking for multiple login methods.
 - Two-factor authentication and backup codes.
 
-### Profile and Community Experience
+**Planning questions**:
+- Which non-Discord providers should be supported first?
+- Should account linking be self-service or admin-assisted for v1?
+- Is 2FA optional for all users or enforced for admins only?
 
+### Phase 14 - Profile & Community Experience
+
+**Theme**: Make profiles and community interactions richer and more expressive.
+
+**Candidate stories**:
 - Profile customization with banners, themes, badges, and URL slugs.
 - Rich media uploads for avatars, banners, screenshots, and galleries.
 - In-app notifications for invites, events, mentions, and approvals.
 - Member recovery options for lost authentication methods.
 
-### Platform Polish
+**Planning questions**:
+- Which profile customization features provide the most value first?
+- Should media uploads use Azure Blob Storage from the start?
+- What notification types should be real-time versus digest-based?
 
+### Phase 15 - Platform Polish & Accessibility
+
+**Theme**: Improve the quality bar across the whole app before major new features land.
+
+**Candidate stories**:
 - Route-level code splitting and loading skeletons.
 - Expanded accessibility audits and keyboard navigation checks.
-- Security hardening for rate limiting, headers, and CSRF protection.
+- Mobile and tablet UX review across the app.
 - Performance testing and bundle-size optimization.
+
+**Planning questions**:
+- Which routes are large enough to justify code splitting first?
+- What accessibility gaps are the highest risk for public pages?
+- Should performance work happen before or after more feature development?
+
+### Phase 16 - Security Hardening & Operations
+
+**Theme**: Strengthen the platform for production reliability and long-term maintainability.
+
+**Candidate stories**:
+- Security hardening for rate limiting, headers, and CSRF protection.
+- Expanded JWT review and token lifecycle protections.
+- Dependency audit and vulnerability remediation process.
+- Backup, monitoring, and operational runbook improvements.
+
+**Planning questions**:
+- Which security controls are already covered by platform defaults?
+- What operational tasks need explicit runbooks before launch?
+- Which alerts and backups are mandatory versus nice to have?
