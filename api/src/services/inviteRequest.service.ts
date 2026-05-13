@@ -2,9 +2,11 @@ import prisma from '../lib/db.js';
 import { Platform, InviteStatus } from '../types/index.js';
 import {
   CreateInviteRequestInput,
+  CreateMemberRequestInput,
   UpdateInviteRequestInput,
 /* eslint-disable @typescript-eslint/no-explicit-any */
 } from '../schemas/inviteRequest.schema.js';
+import { Role } from '@prisma/client';
 
 export class InviteRequestService {
   /**
@@ -33,6 +35,46 @@ export class InviteRequestService {
         message: data.message,
         status: InviteStatus.PENDING,
       },
+    });
+  }
+
+  /**
+   * Create an authenticated member request for a guest user.
+   */
+  async createMemberRequest(userId: string, data: CreateMemberRequestInput) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        role: true,
+        email: true,
+        discordUsername: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (user.role !== Role.GUEST) {
+      throw new Error('Only guest users can submit member requests');
+    }
+
+    const email = data.email?.trim() || user.email || '';
+    if (!email) {
+      throw new Error('An email address is required to submit a member request');
+    }
+
+    const name = data.name?.trim() || user.discordUsername;
+    const message = data.message?.trim()
+      ? `[Member Request] ${data.message.trim()}`
+      : '[Member Request] Guest user requested promotion to MEMBER';
+
+    return this.create({
+      email,
+      name,
+      platform: Platform.DISCORD,
+      message,
     });
   }
 

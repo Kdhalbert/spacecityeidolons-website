@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   createInviteRequestSchema,
+  createMemberRequestSchema,
   updateInviteRequestSchema,
   inviteRequestResponseSchema,
 } from '../inviteRequest.schema.js';
@@ -182,6 +183,34 @@ describe('InviteRequest Schema Validation', () => {
 
       const result = updateInviteRequestSchema.safeParse(emptyUpdate);
       expect(result.success).toBe(true);
+    });
+  });
+
+  describe('createMemberRequestSchema', () => {
+    it('validates an empty payload for authenticated default data', () => {
+      const result = createMemberRequestSchema.safeParse({});
+      expect(result.success).toBe(true);
+    });
+
+    it('validates explicit email, name, and message', () => {
+      const result = createMemberRequestSchema.safeParse({
+        email: 'guest@example.com',
+        name: 'Guest User',
+        message: 'Please review my request.',
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.email).toBe('guest@example.com');
+      }
+    });
+
+    it('rejects invalid email when provided', () => {
+      const result = createMemberRequestSchema.safeParse({
+        email: 'not-an-email',
+      });
+
+      expect(result.success).toBe(false);
     });
   });
 
