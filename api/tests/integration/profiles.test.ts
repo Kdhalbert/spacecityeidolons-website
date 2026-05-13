@@ -154,7 +154,7 @@ describe('Profile Endpoints', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      expect(profileService.getProfilesByGame).toHaveBeenCalledWith('Valorant');
+      expect(profileService.getProfilesByGame).toHaveBeenCalledWith('Valorant', undefined, undefined);
     });
 
     it('applies search filter when search query is present', async () => {
@@ -166,7 +166,7 @@ describe('Profile Endpoints', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      expect(profileService.searchProfiles).toHaveBeenCalledWith('test', 50);
+      expect(profileService.searchProfiles).toHaveBeenCalledWith('test', 50, undefined, undefined);
     });
   });
 });

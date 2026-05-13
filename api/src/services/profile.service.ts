@@ -158,6 +158,17 @@ export class ProfileService {
     // For guests and members, apply privacy rules
     const filteredProfile: FilteredProfile = { ...profile, _filtered: true };
 
+    const isGuestOrAnonymous = !viewerRole || viewerRole === 'GUEST';
+
+    // Guests and unauthenticated viewers should not see potentially sensitive profile fields.
+    if (isGuestOrAnonymous) {
+      filteredProfile.bio = null;
+      filteredProfile.twitchUrl = null;
+      filteredProfile.location = null;
+      filteredProfile.timezone = null;
+      return filteredProfile;
+    }
+
     // If profile is set to private, hide privacy-controlled fields
     if (profile.privacyProfile) {
       filteredProfile.bio = null;
@@ -178,9 +189,16 @@ export class ProfileService {
    * Search profiles by display name
    * @param query - Search query
    * @param limit - Maximum results
+   * @param viewerUserId - Current viewer user ID (if authenticated)
+   * @param viewerRole - Current viewer role (if authenticated)
    * @returns Array of matching profiles (filtered)
    */
-  async searchProfiles(query: string, limit: number = 10): Promise<FilteredProfile[]> {
+  async searchProfiles(
+    query: string,
+    limit: number = 10,
+    viewerUserId?: string,
+    viewerRole?: Role
+  ): Promise<FilteredProfile[]> {
     const profiles = await prisma.profile.findMany({
       where: {
         displayName: {
@@ -192,16 +210,23 @@ export class ProfileService {
       orderBy: { displayName: 'asc' },
     });
 
-    // Apply default privacy filtering (non-owner, non-admin view)
-    return profiles.map((profile) => this.applyPrivacyFilter(profile, false, 'GUEST' as any));
+    return profiles.map((profile) =>
+      this.applyPrivacyFilter(profile, profile.userId === viewerUserId, viewerRole)
+    );
   }
 
   /**
    * Get profiles by game played
    * @param gameName - Game name to filter by
+   * @param viewerUserId - Current viewer user ID (if authenticated)
+   * @param viewerRole - Current viewer role (if authenticated)
    * @returns Array of profiles that play this game
    */
-  async getProfilesByGame(gameName: string): Promise<FilteredProfile[]> {
+  async getProfilesByGame(
+    gameName: string,
+    viewerUserId?: string,
+    viewerRole?: Role
+  ): Promise<FilteredProfile[]> {
     const profiles = await prisma.profile.findMany({
       where: {
         gamesPlayed: {
@@ -211,7 +236,9 @@ export class ProfileService {
       orderBy: { displayName: 'asc' },
     });
 
-    return profiles.map((profile) => this.applyPrivacyFilter(profile, false, 'GUEST' as any));
+    return profiles.map((profile) =>
+      this.applyPrivacyFilter(profile, profile.userId === viewerUserId, viewerRole)
+    );
   }
 }
 

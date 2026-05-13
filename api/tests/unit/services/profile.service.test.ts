@@ -69,6 +69,25 @@ describe('ProfileService', () => {
     expect(result?._filtered).toBe(true);
   });
 
+  it('hides sensitive fields for guests even when profile is public', async () => {
+    prismaMock.profile.findUnique.mockResolvedValue({
+      ...baseProfile,
+      privacyProfile: false,
+      bio: 'public bio',
+      location: 'Houston',
+      timezone: 'America/Chicago',
+      twitchUrl: 'https://twitch.tv/playerone',
+    });
+
+    const result = await profileService.getProfileByUserId('user-1', undefined, undefined);
+
+    expect(result?.bio).toBeNull();
+    expect(result?.twitchUrl).toBeNull();
+    expect(result?.location).toBeNull();
+    expect(result?.timezone).toBeNull();
+    expect(result?._filtered).toBe(true);
+  });
+
   it('creates profile if missing when user requests own profile', async () => {
     prismaMock.profile.findUnique.mockResolvedValueOnce(null);
     prismaMock.profile.create.mockResolvedValue({
