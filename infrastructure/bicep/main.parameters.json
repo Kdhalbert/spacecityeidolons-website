@@ -36,7 +36,34 @@
       }
     },
     "githubRepo": {
-      "value": "yourusername/spacecityeidolons-website-new"
+      "value": "kdhalbert13/spacecityeidolons-website-new"
+    },
+    "frontendCustomDomain": {
+      "value": "spacecityeidolons.com"
+    },
+    "discordClientId": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/{subscription-id}/resourceGroups/{rg-name}/providers/Microsoft.KeyVault/vaults/{kv-name}"
+        },
+        "secretName": "discord-client-id"
+      }
+    },
+    "discordClientSecret": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/{subscription-id}/resourceGroups/{rg-name}/providers/Microsoft.KeyVault/vaults/{kv-name}"
+        },
+        "secretName": "discord-client-secret"
+      }
+    },
+    "discordRedirectUri": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/{subscription-id}/resourceGroups/{rg-name}/providers/Microsoft.KeyVault/vaults/{kv-name}"
+        },
+        "secretName": "discord-redirect-uri"
+      }
     }
   }
 }
