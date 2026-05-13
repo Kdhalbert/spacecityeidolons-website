@@ -19,10 +19,10 @@ const STATUS_LABELS: Record<UserStatus, string> = {
 };
 
 const STATUS_COLORS: Record<UserStatus, string> = {
-  [UserStatus.ACTIVE]: 'var(--success, #22c55e)',
-  [UserStatus.PENDING]: 'var(--warning, #eab308)',
-  [UserStatus.SUSPENDED]: 'var(--orange, #f97316)',
-  [UserStatus.BANNED]: 'var(--error, #ef4444)',
+  [UserStatus.ACTIVE]: '#22c55e',
+  [UserStatus.PENDING]: '#eab308',
+  [UserStatus.SUSPENDED]: '#f97316',
+  [UserStatus.BANNED]: '#ef4444',
 };
 
 const AdminUsersPage: React.FC = () => {

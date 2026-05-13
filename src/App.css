@@ -197,6 +197,12 @@
   color: var(--gold);
 }
 
+.footer-link-placeholder {
+  color: var(--text-muted);
+  font-family: inherit;
+  cursor: default;
+}
+
 /* Section styles for HomePage */
 .hero-section {
   text-align: center;
