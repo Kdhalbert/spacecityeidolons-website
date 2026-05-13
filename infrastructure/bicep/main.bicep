@@ -36,6 +36,21 @@ param jwtRefreshSecret string
 @description('Your GitHub repository (owner/repo)')
 param githubRepo string
 
+@description('Frontend custom domain without protocol (optional)')
+param frontendCustomDomain string = ''
+
+@description('Discord OAuth Client ID')
+@secure()
+param discordClientId string
+
+@description('Discord OAuth Client Secret')
+@secure()
+param discordClientSecret string
+
+@description('Discord OAuth Redirect URI')
+@secure()
+param discordRedirectUri string
+
 @description('Tags to apply to all resources')
 param tags object = {
   Environment: environment
@@ -52,6 +67,9 @@ var staticWebAppName = '${appName}-web-${environment}-${uniqueSuffix}'
 var keyVaultName = '${appName}kv${take(uniqueSuffix, 10)}'
 var appInsightsName = '${appName}-insights-${environment}-${uniqueSuffix}'
 var logAnalyticsName = '${appName}-logs-${environment}-${uniqueSuffix}'
+var corsOriginValue = empty(frontendCustomDomain)
+  ? 'https://${staticWebApp.outputs.defaultHostname}'
+  : 'https://${staticWebApp.outputs.defaultHostname},https://${frontendCustomDomain}'
 
 // PostgreSQL Flexible Server
 module postgres 'modules/postgresql.bicep' = {
@@ -81,13 +99,16 @@ module appService 'modules/appservice.bicep' = {
     skuTier: environment == 'prod' ? 'PremiumV3' : 'Basic'
     linuxFxVersion: 'NODE|20-lts'
     appSettings: {
-      NODE_ENV: environment
-      DATABASE_URL: 'postgresql://${postgresAdminUsername}:${postgresAdminPassword}@${postgres.outputs.fullyQualifiedDomainName}:5432/spacecity?sslmode=require'
+      NODE_ENV: 'production'
+      DATABASE_URL: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.databaseUrlUri})'
       JWT_SECRET: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.jwtSecretUri})'
       JWT_REFRESH_SECRET: '@Microsoft.KeyVault(SecretUri=${keyVault.outputs.jwtRefreshSecretUri})'
       JWT_ACCESS_EXPIRES_IN: '15m'
       JWT_REFRESH_EXPIRES_IN: '7d'
-      CORS_ORIGIN: 'https://${staticWebApp.outputs.defaultHostname}'
+      DISCORD_CLIENT_ID: discordClientId
+      DISCORD_CLIENT_SECRET: discordClientSecret
+      DISCORD_REDIRECT_URI: discordRedirectUri
+      CORS_ORIGIN: corsOriginValue
       APPLICATIONINSIGHTS_CONNECTION_STRING: monitoring.outputs.connectionString
       PORT: '8080'
       HOST: '0.0.0.0'

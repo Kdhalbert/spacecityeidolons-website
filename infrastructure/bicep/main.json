@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.40.2.10011",
-      "templateHash": "7921391882959662279"
+      "version": "0.43.8.12551",
+      "templateHash": "17646382771805564560"
     }
   },
   "parameters": {
@@ -65,6 +65,31 @@
         "description": "Your GitHub repository (owner/repo)"
       }
     },
+    "frontendCustomDomain": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Frontend custom domain without protocol (optional)"
+      }
+    },
+    "discordClientId": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Discord OAuth Client ID"
+      }
+    },
+    "discordClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Discord OAuth Client Secret"
+      }
+    },
+    "discordRedirectUri": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Discord OAuth Redirect URI"
+      }
+    },
     "tags": {
       "type": "object",
       "defaultValue": {
@@ -83,7 +108,7 @@
     "appServicePlanName": "[format('{0}-plan-{1}-{2}', parameters('appName'), parameters('environment'), variables('uniqueSuffix'))]",
     "appServiceName": "[format('{0}-api-{1}-{2}', parameters('appName'), parameters('environment'), variables('uniqueSuffix'))]",
     "staticWebAppName": "[format('{0}-web-{1}-{2}', parameters('appName'), parameters('environment'), variables('uniqueSuffix'))]",
-    "keyVaultName": "[format('{0}-kv-{1}-{2}', parameters('appName'), parameters('environment'), take(variables('uniqueSuffix'), 8))]",
+    "keyVaultName": "[format('{0}kv{1}', parameters('appName'), take(variables('uniqueSuffix'), 10))]",
     "appInsightsName": "[format('{0}-insights-{1}-{2}', parameters('appName'), parameters('environment'), variables('uniqueSuffix'))]",
     "logAnalyticsName": "[format('{0}-logs-{1}-{2}', parameters('appName'), parameters('environment'), variables('uniqueSuffix'))]"
   },
@@ -129,8 +154,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.40.2.10011",
-              "templateHash": "14864130522686779498"
+              "version": "0.43.8.12551",
+              "templateHash": "916259635771356831"
             }
           },
           "parameters": {
@@ -226,9 +251,6 @@
                 },
                 "highAvailability": {
                   "mode": "Disabled"
-                },
-                "network": {
-                  "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]"
                 }
               }
             },
@@ -314,13 +336,16 @@
           },
           "appSettings": {
             "value": {
-              "NODE_ENV": "[parameters('environment')]",
-              "DATABASE_URL": "[format('postgresql://{0}:{1}@{2}:5432/spacecity?sslmode=require', parameters('postgresAdminUsername'), parameters('postgresAdminPassword'), reference(resourceId('Microsoft.Resources/deployments', 'postgresql-deployment'), '2025-04-01').outputs.fullyQualifiedDomainName.value)]",
+              "NODE_ENV": "production",
+              "DATABASE_URL": "[format('@Microsoft.KeyVault(SecretUri={0})', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.databaseUrlUri.value)]",
               "JWT_SECRET": "[format('@Microsoft.KeyVault(SecretUri={0})', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.jwtSecretUri.value)]",
               "JWT_REFRESH_SECRET": "[format('@Microsoft.KeyVault(SecretUri={0})', reference(resourceId('Microsoft.Resources/deployments', 'keyvault-deployment'), '2025-04-01').outputs.jwtRefreshSecretUri.value)]",
               "JWT_ACCESS_EXPIRES_IN": "15m",
               "JWT_REFRESH_EXPIRES_IN": "7d",
-              "CORS_ORIGIN": "[format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value)]",
+              "DISCORD_CLIENT_ID": "[parameters('discordClientId')]",
+              "DISCORD_CLIENT_SECRET": "[parameters('discordClientSecret')]",
+              "DISCORD_REDIRECT_URI": "[parameters('discordRedirectUri')]",
+              "CORS_ORIGIN": "[if(empty(parameters('frontendCustomDomain')), format('https://{0}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value), format('https://{0},https://{1}', reference(resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment'), '2025-04-01').outputs.defaultHostname.value, parameters('frontendCustomDomain')))]",
               "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring-deployment'), '2025-04-01').outputs.connectionString.value]",
               "PORT": "8080",
               "HOST": "0.0.0.0"
@@ -336,8 +361,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.40.2.10011",
-              "templateHash": "15487750634976050749"
+              "version": "0.43.8.12551",
+              "templateHash": "11697495562067565432"
             }
           },
           "parameters": {
@@ -443,7 +468,7 @@
                     "allowedOrigins": [
                       "*"
                     ],
-                    "supportCredentials": true
+                    "supportCredentials": false
                   }
                 }
               },
@@ -475,7 +500,6 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'keyvault-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'monitoring-deployment')]",
-        "[resourceId('Microsoft.Resources/deployments', 'postgresql-deployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'staticwebapp-deployment')]"
       ]
     },
@@ -519,8 +543,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.40.2.10011",
-              "templateHash": "4581723323720781410"
+              "version": "0.43.8.12551",
+              "templateHash": "9860910784651107"
             }
           },
           "parameters": {
@@ -669,8 +693,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.40.2.10011",
-              "templateHash": "967520169576262653"
+              "version": "0.43.8.12551",
+              "templateHash": "15579254230591165844"
             }
           },
           "parameters": {
@@ -866,8 +890,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.40.2.10011",
-              "templateHash": "2129943566721766527"
+              "version": "0.43.8.12551",
+              "templateHash": "2367966919924835804"
             }
           },
           "parameters": {
