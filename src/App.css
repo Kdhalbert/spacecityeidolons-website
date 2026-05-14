@@ -312,6 +312,21 @@
   gap: 24px;
 }
 
+.home-split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.join-platform-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .join-section {
   background: rgba(27, 38, 59, 0.5);
   padding: 60px 40px;
@@ -543,7 +558,7 @@ h1 {
 
 @media (max-width: 768px) {
   .app {
-    padding-top: 128px;
+    padding-top: var(--mobile-header-offset, 0px);
   }
 
   .site-header {
@@ -619,6 +634,11 @@ h1 {
   }
 
   .what-to-expect-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-split-grid,
+  .join-platform-grid {
     grid-template-columns: 1fr;
   }
 }

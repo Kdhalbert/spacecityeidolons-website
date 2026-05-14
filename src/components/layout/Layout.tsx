@@ -5,6 +5,40 @@ import { Role } from '../../types';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
+  const headerRef = React.useRef<HTMLElement | null>(null);
+
+  React.useEffect(() => {
+    const header = headerRef.current;
+
+    if (!header || typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const root = document.documentElement;
+
+    const updateHeaderOffset = () => {
+      if (window.innerWidth <= 768) {
+        root.style.setProperty('--mobile-header-offset', `${header.offsetHeight}px`);
+      } else {
+        root.style.removeProperty('--mobile-header-offset');
+      }
+    };
+
+    updateHeaderOffset();
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(updateHeaderOffset)
+      : null;
+
+    resizeObserver?.observe(header);
+    window.addEventListener('resize', updateHeaderOffset);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateHeaderOffset);
+      root.style.removeProperty('--mobile-header-offset');
+    };
+  }, [isAuthenticated, isLoading, user?.discordAvatar, user?.discordUsername, user?.id, user?.role]);
 
   const scrollToInvite = () => {
     const inviteSection = document.querySelector('#join-section');
@@ -25,7 +59,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="site-header">
+    <header className="site-header" ref={headerRef}>
       <div className="header-inner">
         <Link to="/" className="site-title">
           Space City Eidolons

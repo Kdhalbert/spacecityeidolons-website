@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
 
       {/* About Section */}
       <section className="content-section">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '48px' }}>
+        <div className="home-split-grid">
           <div className="dark-card">
             <h2>Who We Are</h2>
             <p>
@@ -69,7 +69,7 @@ const HomePage: React.FC = () => {
             or join our Matrix server for a privacy-focused alternative with end-to-end encryption.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', maxWidth: '900px', margin: '0 auto' }}>
+          <div className="join-platform-grid">
             <div className="invite-card-wrapper">
               <InviteRequestForm platform={Platform.DISCORD} />
             </div>

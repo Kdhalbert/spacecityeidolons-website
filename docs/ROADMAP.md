@@ -213,7 +213,7 @@ These notes expand the highest-priority planned stories so they can be broken in
 
 These items are not yet part of the live roadmap page, but they are organized into draft phases so future stories can be promoted into the roadmap with less planning overhead.
 
-### Phase 13 - Authentication & Security Expansion
+### Phase 14 - Authentication & Security Expansion
 
 **Theme**: Make account access more flexible and resilient.
 
@@ -228,7 +228,7 @@ These items are not yet part of the live roadmap page, but they are organized in
 - Should account linking be self-service or admin-assisted for v1?
 - Is 2FA optional for all users or enforced for admins only?
 
-### Phase 14 - Profile & Community Experience
+### Phase 15 - Profile & Community Experience
 
 **Theme**: Make profiles and community interactions richer and more expressive.
 
@@ -243,7 +243,7 @@ These items are not yet part of the live roadmap page, but they are organized in
 - Should media uploads use Azure Blob Storage from the start?
 - What notification types should be real-time versus digest-based?
 
-### Phase 15 - Platform Polish & Accessibility
+### Phase 16 - Platform Polish & Accessibility
 
 **Theme**: Improve the quality bar across the whole app before major new features land.
 
@@ -258,7 +258,7 @@ These items are not yet part of the live roadmap page, but they are organized in
 - What accessibility gaps are the highest risk for public pages?
 - Should performance work happen before or after more feature development?
 
-### Phase 16 - Security Hardening & Operations
+### Phase 17 - Security Hardening & Operations
 
 **Theme**: Strengthen the platform for production reliability and long-term maintainability.
 
@@ -277,25 +277,25 @@ These items are not yet part of the live roadmap page, but they are organized in
 
 When the team is ready to pull from the future backlog, this is a sensible order to keep risk low and unlock the most value early.
 
-1. **Phase 13 - Authentication & Security Expansion**
+1. **Phase 14 - Authentication & Security Expansion**
   - Start with additional auth methods and account linking so access options are flexible before adding more community features.
   - Pull 2FA into this phase only if the login architecture is already stable.
 
-2. **Phase 14 - Profile & Community Experience**
+2. **Phase 15 - Profile & Community Experience**
   - Build richer profile and notification features once authentication foundations are broad enough to support them.
   - Prioritize features that increase community engagement without requiring major infrastructure changes.
 
-3. **Phase 15 - Platform Polish & Accessibility**
+3. **Phase 16 - Platform Polish & Accessibility**
   - Use this phase to reduce technical debt and improve usability once core features are in good shape.
   - Treat this as the main place for code splitting, accessibility passes, and mobile QA.
 
-4. **Phase 16 - Security Hardening & Operations**
+4. **Phase 17 - Security Hardening & Operations**
   - Finish with the operational and defensive work needed before a broader production rollout or higher traffic.
   - Pull security items earlier if any audit or threat model indicates a higher priority.
 
 ### Sequencing Notes
 
-- If auth work uncovers risky edge cases, pause Phase 13 and lock down the login/session model first.
+- If auth work uncovers risky edge cases, pause Phase 14 and lock down the login/session model first.
 - If profile uploads are added, define storage and moderation rules before implementation.
 - If accessibility regressions appear during feature work, fold fixes into the current phase instead of deferring them.
-- If production readiness becomes urgent, move Phase 16 ahead of polish work.
+- If production readiness becomes urgent, move Phase 17 ahead of polish work.
