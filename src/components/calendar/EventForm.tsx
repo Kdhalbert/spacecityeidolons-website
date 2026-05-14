@@ -20,6 +20,7 @@ interface EventFormProps {
   onCancel: () => void;
   initialValues?: EventFormInitialValues;
   isLoading?: boolean;
+  submitLabel?: string;
 }
 
 interface FormErrors {
@@ -33,6 +34,7 @@ export const EventForm: React.FC<EventFormProps> = ({
   onCancel,
   initialValues,
   isLoading = false,
+  submitLabel = 'Create Event',
 }) => {
   const [title, setTitle] = useState(initialValues?.title ?? '');
   const [date, setDate] = useState(initialValues?.date ?? '');
@@ -175,7 +177,7 @@ export const EventForm: React.FC<EventFormProps> = ({
           Cancel
         </button>
         <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Saving...' : 'Create Event'}
+          {isLoading ? 'Saving...' : submitLabel}
         </button>
       </div>
     </form>

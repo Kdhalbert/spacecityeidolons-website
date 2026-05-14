@@ -84,6 +84,9 @@ const AdminUsersPage: React.FC = () => {
       />
       <PageSection>
         <div className="admin-toolbar">
+          <Link to="/admin/events" className="btn btn-secondary btn-sm">
+            Events
+          </Link>
           <Link to="/admin/games" className="btn btn-secondary btn-sm">
             Game Pages
           </Link>

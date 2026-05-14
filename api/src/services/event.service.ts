@@ -159,7 +159,13 @@ export async function getEventById(eventId: string, userId: string | null, userR
 /**
  * Create a new event
  */
-export async function createEvent(input: CreateEventInput, creatorId: string) {
+export async function createEvent(input: CreateEventInput, creatorId: string, userRole?: Role) {
+  const requestedVisibility = input.visibility || EventVisibility.PUBLIC;
+  const isAdmin = userRole === Role.ADMIN;
+  if (!isAdmin && (requestedVisibility === EventVisibility.PUBLIC || requestedVisibility === EventVisibility.ADMIN)) {
+    throw new Error('Forbidden visibility');
+  }
+
   const [date, time] = [new Date(input.date + 'T' + input.time), input.time];
 
   return prisma.event.create({
@@ -170,7 +176,7 @@ export async function createEvent(input: CreateEventInput, creatorId: string) {
       time,
       endTime: input.endTime,
       location: input.location || 'Online',
-      visibility: input.visibility || EventVisibility.PUBLIC,
+      visibility: requestedVisibility,
       maxAttendees: input.maxAttendees,
       games: input.games || [],
       recurring: input.recurring || false,
