@@ -273,6 +273,14 @@ export interface AdminUserListItem extends User {
   profile: Profile | null;
 }
 
+export interface AdminGamePageRequest extends GamePageRequest {
+  requester: {
+    id: string;
+    discordUsername: string;
+    email: string | null;
+  };
+}
+
 export interface UpdateUserRoleInput {
   role: Role;
 }

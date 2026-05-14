@@ -1,11 +1,14 @@
 import api from '../lib/api';
 import type {
   AdminUserListItem,
+  AdminGamePageRequest,
   AdminPaginatedResponse,
+  Game,
   InviteRequest,
   Role,
   UserStatus,
   InviteStatus,
+  GameRequestStatus,
 } from '../types';
 
 export const adminService = {
@@ -77,5 +80,71 @@ export const adminService = {
   ): Promise<InviteRequest> {
     const response = await api.patch<InviteRequest>(`/invites/${id}`, data);
     return response.data;
+  },
+
+  // ============================================================================
+  // GAME PAGE REQUEST MANAGEMENT
+  // ============================================================================
+
+  async listGameRequests(params: {
+    page?: number;
+    limit?: number;
+    status?: GameRequestStatus;
+    search?: string;
+  } = {}): Promise<AdminPaginatedResponse<AdminGamePageRequest>> {
+    const query = new URLSearchParams();
+    if (params.page) query.set('page', String(params.page));
+    if (params.limit) query.set('limit', String(params.limit));
+    if (params.status) query.set('status', params.status);
+    if (params.search) query.set('search', params.search);
+
+    const qs = query.toString();
+    const response = await api.get<AdminPaginatedResponse<AdminGamePageRequest>>(
+      `/admin/game-requests${qs ? `?${qs}` : ''}`
+    );
+    return response.data;
+  },
+
+  async reviewGameRequest(
+    id: string,
+    data: { status: GameRequestStatus.APPROVED | GameRequestStatus.REJECTED; adminNote?: string }
+  ): Promise<AdminGamePageRequest> {
+    const response = await api.patch<AdminGamePageRequest>(`/admin/game-requests/${id}`, data);
+    return response.data;
+  },
+
+  // ============================================================================
+  // GAME PAGE MANAGEMENT
+  // ============================================================================
+
+  async createGame(data: {
+    name: string;
+    description?: string;
+    content?: string;
+    imageUrl?: string;
+    category?: string;
+    tags?: string[];
+  }): Promise<Game> {
+    const response = await api.post<Game>('/admin/games', data);
+    return response.data;
+  },
+
+  async updateGame(
+    id: string,
+    data: {
+      name?: string;
+      description?: string;
+      content?: string;
+      imageUrl?: string;
+      category?: string;
+      tags?: string[];
+    }
+  ): Promise<Game> {
+    const response = await api.patch<Game>(`/admin/games/${id}`, data);
+    return response.data;
+  },
+
+  async deleteGame(id: string): Promise<void> {
+    await api.delete(`/admin/games/${id}`);
   },
 };

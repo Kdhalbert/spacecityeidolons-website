@@ -93,11 +93,18 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
       try {
         const input = createEventSchema.parse(request.body);
         const userId = (request.user as any).userId;
+        const userRole = (request.user as any).role;
 
-        const event = await eventService.createEvent(input, userId);
+        const event = await eventService.createEvent(input, userId, userRole);
 
         return reply.code(201).send(event);
       } catch (error: any) {
+        if (error.message === 'Forbidden visibility') {
+          return reply.code(403).send({
+            error: 'You do not have permission to create events with this visibility level',
+          });
+        }
+
         if (error.name === 'ZodError') {
           return reply.code(400).send({
             error: 'Invalid event data',
@@ -128,8 +135,9 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
         const { id } = request.params as { id: string };
         const input = updateEventSchema.parse(request.body);
         const userId = (request.user as any).userId;
+        const userRole = (request.user as any).role;
 
-        const event = await eventService.updateEvent(id, input, userId);
+        const event = await eventService.updateEvent(id, input, userId, userRole);
 
         return reply.code(200).send(event);
       } catch (error: any) {
@@ -174,8 +182,9 @@ export async function registerEventRoutes(fastify: FastifyInstance) {
       try {
         const { id } = request.params as { id: string };
         const userId = (request.user as any).userId;
+        const userRole = (request.user as any).role;
 
-        await eventService.deleteEvent(id, userId);
+        await eventService.deleteEvent(id, userId, userRole);
 
         return reply.code(204).send();
       } catch (error: any) {

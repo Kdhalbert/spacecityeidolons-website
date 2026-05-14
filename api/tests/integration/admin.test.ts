@@ -3,6 +3,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { buildApp } from '../../src/app.js';
 import { FastifyInstance } from 'fastify';
 import { Role, UserStatus } from '../../../src/types/index.js';
+import { GameRequestStatus } from '@prisma/client';
 import prisma from '../../src/lib/db.js';
 
 describe('Admin User Management API', () => {
@@ -64,6 +65,8 @@ describe('Admin User Management API', () => {
 
   afterAll(async () => {
     // Clean up database
+    await prisma.gamePageRequest.deleteMany({});
+    await prisma.game.deleteMany({});
     await prisma.user.deleteMany({});
     await app.close();
   });
@@ -311,6 +314,175 @@ describe('Admin User Management API', () => {
         url: `/api/admin/users/${adminUserId}/status`,
         headers: { authorization: `Bearer ${memberToken}` },
         payload: { status: UserStatus.BANNED },
+      });
+
+      expect(response.statusCode).toBe(403);
+    });
+  });
+
+  describe('GET /api/admin/game-requests', () => {
+    it('lists game requests with pagination (admin only)', async () => {
+      await prisma.gamePageRequest.create({
+        data: {
+          requesterId: memberUserId,
+          gameName: 'Test Game Request A',
+          reason: 'Our community has active players for this title.',
+          status: GameRequestStatus.PENDING,
+        },
+      });
+
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/admin/game-requests?page=1&limit=10',
+        headers: { authorization: `Bearer ${adminToken}` },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const body = JSON.parse(response.body);
+      expect(Array.isArray(body.data)).toBe(true);
+      expect(body.meta).toBeDefined();
+      expect(body.meta.page).toBe(1);
+      expect(body.meta.limit).toBe(10);
+      expect(body.data.some((request: any) => request.gameName === 'Test Game Request A')).toBe(true);
+    });
+
+    it('denies non-admin users', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/admin/game-requests',
+        headers: { authorization: `Bearer ${memberToken}` },
+      });
+
+      expect(response.statusCode).toBe(403);
+    });
+  });
+
+  describe('PATCH /api/admin/game-requests/:id', () => {
+    it('approves a pending request and auto-creates a game page', async () => {
+      const request = await prisma.gamePageRequest.create({
+        data: {
+          requesterId: memberUserId,
+          gameName: 'Approval Flow Game',
+          description: 'Auto-generated through admin moderation',
+          reason: 'Approval should create a game page automatically.',
+          status: GameRequestStatus.PENDING,
+        },
+      });
+
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/game-requests/${request.id}`,
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { status: GameRequestStatus.APPROVED, adminNote: 'Looks good' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const body = JSON.parse(response.body);
+      expect(body.status).toBe(GameRequestStatus.APPROVED);
+      expect(body.adminNote).toBe('Looks good');
+
+      const createdGame = await prisma.game.findFirst({
+        where: {
+          name: {
+            equals: 'Approval Flow Game',
+            mode: 'insensitive',
+          },
+        },
+      });
+      expect(createdGame).toBeTruthy();
+    });
+
+    it('rejects a pending request', async () => {
+      const request = await prisma.gamePageRequest.create({
+        data: {
+          requesterId: memberUserId,
+          gameName: 'Rejection Flow Game',
+          reason: 'This should be rejected for moderation test.',
+          status: GameRequestStatus.PENDING,
+        },
+      });
+
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/game-requests/${request.id}`,
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { status: GameRequestStatus.REJECTED, adminNote: 'Insufficient detail' },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const body = JSON.parse(response.body);
+      expect(body.status).toBe(GameRequestStatus.REJECTED);
+      expect(body.adminNote).toBe('Insufficient detail');
+    });
+
+    it('returns 409 when reviewing a non-pending request', async () => {
+      const request = await prisma.gamePageRequest.create({
+        data: {
+          requesterId: memberUserId,
+          gameName: 'Already Approved Game',
+          reason: 'Used to validate pending status guard.',
+          status: GameRequestStatus.APPROVED,
+        },
+      });
+
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/game-requests/${request.id}`,
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { status: GameRequestStatus.REJECTED },
+      });
+
+      expect(response.statusCode).toBe(409);
+      const body = JSON.parse(response.body);
+      expect(body.message).toContain('no longer pending');
+    });
+
+    it('returns 404 for a missing request', async () => {
+      const response = await app.inject({
+        method: 'PATCH',
+        url: '/api/admin/game-requests/11111111-1111-1111-1111-111111111111',
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { status: GameRequestStatus.APPROVED },
+      });
+
+      expect(response.statusCode).toBe(404);
+    });
+
+    it('returns 400 for invalid moderation payload', async () => {
+      const request = await prisma.gamePageRequest.create({
+        data: {
+          requesterId: memberUserId,
+          gameName: 'Invalid Payload Game',
+          reason: 'Validate payload enforcement.',
+          status: GameRequestStatus.PENDING,
+        },
+      });
+
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/game-requests/${request.id}`,
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { status: 'IN_PROGRESS' },
+      });
+
+      expect(response.statusCode).toBe(400);
+    });
+
+    it('denies non-admin users', async () => {
+      const request = await prisma.gamePageRequest.create({
+        data: {
+          requesterId: memberUserId,
+          gameName: 'Non Admin Attempt Game',
+          reason: 'Should be blocked for non-admins.',
+          status: GameRequestStatus.PENDING,
+        },
+      });
+
+      const response = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/game-requests/${request.id}`,
+        headers: { authorization: `Bearer ${memberToken}` },
+        payload: { status: GameRequestStatus.APPROVED },
       });
 
       expect(response.statusCode).toBe(403);
