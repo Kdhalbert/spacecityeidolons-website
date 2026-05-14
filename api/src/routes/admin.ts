@@ -26,6 +26,24 @@ const reviewGameRequestSchema = z.object({
   adminNote: z.string().max(1000).optional(),
 });
 
+const createAdminGameSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  description: z.string().trim().max(500).optional(),
+  content: z.string().trim().max(10000).optional(),
+  imageUrl: z.string().trim().url().optional(),
+  category: z.string().trim().max(120).optional(),
+  tags: z.array(z.string().trim().min(1).max(60)).max(20).optional(),
+});
+
+const updateAdminGameSchema = z.object({
+  name: z.string().trim().min(2).max(120).optional(),
+  description: z.string().trim().max(500).optional(),
+  content: z.string().trim().max(10000).optional(),
+  imageUrl: z.string().trim().url().optional(),
+  category: z.string().trim().max(120).optional(),
+  tags: z.array(z.string().trim().min(1).max(60)).max(20).optional(),
+});
+
 interface UserParams {
   id: string;
 }
@@ -241,6 +259,103 @@ export async function registerAdminRoutes(fastify: FastifyInstance) {
         return reply.code(200).send(updated);
       } catch (error) {
         if (error instanceof Error && error.message === 'Game request not found') {
+          return reply.code(404).send({
+            statusCode: 404,
+            error: 'Not Found',
+            message: error.message,
+          });
+        }
+        throw error;
+      }
+    }
+  );
+
+  /**
+   * POST /api/admin/games
+   * Create a game page directly (admin only)
+   */
+  fastify.post<{ Body: z.infer<typeof createAdminGameSchema> }>(
+    '/api/admin/games',
+    { preHandler: adminPreHandler },
+    async (request: FastifyRequest<{ Body: z.infer<typeof createAdminGameSchema> }>, reply: FastifyReply) => {
+      const parsed = createAdminGameSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.code(400).send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: parsed.error.errors[0]?.message ?? 'Invalid game payload',
+        });
+      }
+
+      try {
+        const game = await gamesService.createGameAsAdmin(parsed.data);
+        return reply.code(201).send(game);
+      } catch (error) {
+        if (error instanceof Error && error.message === 'Game already exists') {
+          return reply.code(409).send({
+            statusCode: 409,
+            error: 'Conflict',
+            message: error.message,
+          });
+        }
+        throw error;
+      }
+    }
+  );
+
+  /**
+   * PATCH /api/admin/games/:id
+   * Edit an existing game page (admin only)
+   */
+  fastify.patch<{ Params: UserParams; Body: z.infer<typeof updateAdminGameSchema> }>(
+    '/api/admin/games/:id',
+    { preHandler: adminPreHandler },
+    async (request: FastifyRequest<{ Params: UserParams; Body: z.infer<typeof updateAdminGameSchema> }>, reply: FastifyReply) => {
+      const parsed = updateAdminGameSchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.code(400).send({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: parsed.error.errors[0]?.message ?? 'Invalid game payload',
+        });
+      }
+
+      try {
+        const game = await gamesService.updateGameAsAdmin(request.params.id, parsed.data);
+        return reply.code(200).send(game);
+      } catch (error) {
+        if (error instanceof Error && error.message === 'Game not found') {
+          return reply.code(404).send({
+            statusCode: 404,
+            error: 'Not Found',
+            message: error.message,
+          });
+        }
+        if (error instanceof Error && error.message === 'Game already exists') {
+          return reply.code(409).send({
+            statusCode: 409,
+            error: 'Conflict',
+            message: error.message,
+          });
+        }
+        throw error;
+      }
+    }
+  );
+
+  /**
+   * DELETE /api/admin/games/:id
+   * Delete an existing game page (admin only)
+   */
+  fastify.delete<{ Params: UserParams }>(
+    '/api/admin/games/:id',
+    { preHandler: adminPreHandler },
+    async (request: FastifyRequest<{ Params: UserParams }>, reply: FastifyReply) => {
+      try {
+        await gamesService.deleteGameAsAdmin(request.params.id);
+        return reply.code(204).send();
+      } catch (error) {
+        if (error instanceof Error && error.message === 'Game not found') {
           return reply.code(404).send({
             statusCode: 404,
             error: 'Not Found',

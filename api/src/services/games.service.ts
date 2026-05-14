@@ -15,6 +15,24 @@ interface ReviewGameRequestInput {
   adminNote?: string;
 }
 
+interface AdminGameInput {
+  name: string;
+  description?: string;
+  content?: string;
+  imageUrl?: string;
+  category?: string;
+  tags?: string[];
+}
+
+interface AdminUpdateGameInput {
+  name?: string;
+  description?: string;
+  content?: string;
+  imageUrl?: string;
+  category?: string;
+  tags?: string[];
+}
+
 /**
  * Games service - handles game-related business logic
  * T159: Implements GET /api/games endpoint with filtering
@@ -391,6 +409,110 @@ class GamesService {
     });
 
     return games;
+  }
+
+  async createGameAsAdmin(input: AdminGameInput): Promise<Game> {
+    const normalizedName = input.name.trim();
+    const duplicate = await prisma.game.findFirst({
+      where: {
+        name: {
+          equals: normalizedName,
+          mode: 'insensitive',
+        },
+      },
+      select: { id: true },
+    });
+
+    if (duplicate) {
+      throw new Error('Game already exists');
+    }
+
+    const slug = await this.createUniqueSlug(normalizedName);
+    const created = await prisma.game.create({
+      data: {
+        name: normalizedName,
+        slug,
+        description: input.description?.trim() || null,
+        content: input.content?.trim() || null,
+        imageUrl: input.imageUrl?.trim() || null,
+        category: input.category?.trim() || null,
+        tags: input.tags || [],
+      },
+    });
+
+    return created as Game;
+  }
+
+  async updateGameAsAdmin(gameId: string, input: AdminUpdateGameInput): Promise<Game> {
+    const existing = await prisma.game.findUnique({
+      where: { id: gameId },
+      select: { id: true, name: true },
+    });
+
+    if (!existing) {
+      throw new Error('Game not found');
+    }
+
+    const updateData: {
+      name?: string;
+      slug?: string;
+      description?: string | null;
+      content?: string | null;
+      imageUrl?: string | null;
+      category?: string | null;
+      tags?: string[];
+    } = {};
+
+    if (input.name !== undefined) {
+      const normalizedName = input.name.trim();
+      if (!normalizedName) {
+        throw new Error('Game name is required');
+      }
+
+      const duplicateByName = await prisma.game.findFirst({
+        where: {
+          id: { not: gameId },
+          name: {
+            equals: normalizedName,
+            mode: 'insensitive',
+          },
+        },
+        select: { id: true },
+      });
+
+      if (duplicateByName) {
+        throw new Error('Game already exists');
+      }
+
+      updateData.name = normalizedName;
+      updateData.slug = await this.createUniqueSlug(normalizedName);
+    }
+
+    if (input.description !== undefined) updateData.description = input.description.trim() || null;
+    if (input.content !== undefined) updateData.content = input.content.trim() || null;
+    if (input.imageUrl !== undefined) updateData.imageUrl = input.imageUrl.trim() || null;
+    if (input.category !== undefined) updateData.category = input.category.trim() || null;
+    if (input.tags !== undefined) updateData.tags = input.tags;
+
+    const updated = await prisma.game.update({
+      where: { id: gameId },
+      data: updateData,
+    });
+
+    return updated as Game;
+  }
+
+  async deleteGameAsAdmin(gameId: string): Promise<void> {
+    const existing = await prisma.game.findUnique({
+      where: { id: gameId },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      throw new Error('Game not found');
+    }
+
+    await prisma.game.delete({ where: { id: gameId } });
   }
 }
 

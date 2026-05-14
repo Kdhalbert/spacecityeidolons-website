@@ -21,6 +21,7 @@ const RoadmapPage = lazy(() => import('../pages/RoadmapPage'));
 const AdminUsersPage = lazy(() => import('../pages/AdminUsersPage'));
 const AdminInvitesPage = lazy(() => import('../pages/AdminInvitesPage'));
 const AdminGameRequestsPage = lazy(() => import('../pages/AdminGameRequestsPage'));
+const AdminGamesPage = lazy(() => import('../pages/AdminGamesPage'));
 const MemberRequestPage = lazy(() => import('../pages/MemberRequestPage'));
 
 // ============================================================================
@@ -103,6 +104,10 @@ const createRoutes = (): RouteObject[] => [
           {
             path: 'game-requests',
             element: <AdminRoute element={<AdminGameRequestsPage />} />,
+          },
+          {
+            path: 'games',
+            element: <AdminRoute element={<AdminGamesPage />} />,
           },
         ],
       },

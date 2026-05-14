@@ -3,6 +3,7 @@ import type {
   AdminUserListItem,
   AdminGamePageRequest,
   AdminPaginatedResponse,
+  Game,
   InviteRequest,
   Role,
   UserStatus,
@@ -110,5 +111,40 @@ export const adminService = {
   ): Promise<AdminGamePageRequest> {
     const response = await api.patch<AdminGamePageRequest>(`/admin/game-requests/${id}`, data);
     return response.data;
+  },
+
+  // ============================================================================
+  // GAME PAGE MANAGEMENT
+  // ============================================================================
+
+  async createGame(data: {
+    name: string;
+    description?: string;
+    content?: string;
+    imageUrl?: string;
+    category?: string;
+    tags?: string[];
+  }): Promise<Game> {
+    const response = await api.post<Game>('/admin/games', data);
+    return response.data;
+  },
+
+  async updateGame(
+    id: string,
+    data: {
+      name?: string;
+      description?: string;
+      content?: string;
+      imageUrl?: string;
+      category?: string;
+      tags?: string[];
+    }
+  ): Promise<Game> {
+    const response = await api.patch<Game>(`/admin/games/${id}`, data);
+    return response.data;
+  },
+
+  async deleteGame(id: string): Promise<void> {
+    await api.delete(`/admin/games/${id}`);
   },
 };

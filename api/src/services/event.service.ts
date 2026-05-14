@@ -193,14 +193,15 @@ export async function createEvent(input: CreateEventInput, creatorId: string) {
 /**
  * Update an existing event
  */
-export async function updateEvent(eventId: string, input: UpdateEventInput, userId: string) {
-  // Verify user is the creator
+export async function updateEvent(eventId: string, input: UpdateEventInput, userId: string, userRole?: Role) {
+  // Verify user is the creator or an admin
   const event = await prisma.event.findUnique({
     where: { id: eventId },
   });
 
   if (!event) throw new Error('Event not found');
-  if (event.creatorId !== userId) throw new Error('Unauthorized');
+  const isAdmin = userRole === Role.ADMIN;
+  if (!isAdmin && event.creatorId !== userId) throw new Error('Unauthorized');
 
   const updateData: Partial<Event> = {};
 
@@ -238,13 +239,14 @@ export async function updateEvent(eventId: string, input: UpdateEventInput, user
 /**
  * Delete an event
  */
-export async function deleteEvent(eventId: string, userId: string) {
+export async function deleteEvent(eventId: string, userId: string, userRole?: Role) {
   const event = await prisma.event.findUnique({
     where: { id: eventId },
   });
 
   if (!event) throw new Error('Event not found');
-  if (event.creatorId !== userId) throw new Error('Unauthorized');
+  const isAdmin = userRole === Role.ADMIN;
+  if (!isAdmin && event.creatorId !== userId) throw new Error('Unauthorized');
 
   return prisma.event.delete({
     where: { id: eventId },
