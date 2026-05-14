@@ -3,9 +3,12 @@ name: Frontend CI Tests
 on:
   pull_request:
     branches:
+      - master
       - main
       - develop
     paths:
+      - 'docs/**'
+      - 'scripts/**'
       - 'src/**'
       - 'public/**'
       - 'index.html'
@@ -14,10 +17,18 @@ on:
       - '.github/workflows/test-frontend.yml'
   push:
     branches:
+      - master
       - main
       - develop
     paths:
+      - 'docs/**'
+      - 'scripts/**'
       - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'vite.config.ts'
+      - '.github/workflows/test-frontend.yml'
 
 env:
   NODE_VERSION: '20.x'
@@ -41,10 +52,13 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint
+        run: npx eslint src
 
       - name: Type check
         run: npx tsc --noEmit
+
+      - name: Verify roadmap sync
+        run: npm run roadmap:check
 
       - name: Run tests
         run: npm test

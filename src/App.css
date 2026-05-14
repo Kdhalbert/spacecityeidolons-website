@@ -196,7 +196,11 @@
 .footer-link-button:hover {
   color: var(--gold);
 }
-
+.footer-link-placeholder {
+  color: var(--text-muted);
+  font-family: inherit;
+  cursor: default;
+}
 /* Section styles for HomePage */
 .hero-section {
   text-align: center;
@@ -300,6 +304,27 @@
   margin-right: auto;
   line-height: 1.6;
   font-weight: 400;
+}
+
+.what-to-expect-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.home-split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.join-platform-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .join-section {
@@ -532,11 +557,25 @@ h1 {
 }
 
 @media (max-width: 768px) {
+  .app {
+    padding-top: var(--mobile-header-offset, 0px);
+  }
+
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
   .header-inner {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
-    padding: 12px 16px;
+    padding: 10px 16px 12px;
+    min-height: 0;
   }
 
   .site-title {
@@ -547,7 +586,8 @@ h1 {
 
   .header-nav {
     justify-content: center;
-    gap: 10px 14px;
+    gap: 10px 12px;
+    row-gap: 8px;
   }
 
   .header-auth {
@@ -591,6 +631,15 @@ h1 {
   .logo {
     width: 150px;
     height: 150px;
+  }
+
+  .what-to-expect-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-split-grid,
+  .join-platform-grid {
+    grid-template-columns: 1fr;
   }
 }
 

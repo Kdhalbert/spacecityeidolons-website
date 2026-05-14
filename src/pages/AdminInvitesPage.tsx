@@ -12,9 +12,9 @@ const STATUS_LABELS: Record<InviteStatus, string> = {
 };
 
 const STATUS_COLORS: Record<InviteStatus, string> = {
-  [InviteStatus.PENDING]: 'var(--warning, #eab308)',
-  [InviteStatus.APPROVED]: 'var(--success, #22c55e)',
-  [InviteStatus.REJECTED]: 'var(--error, #ef4444)',
+  [InviteStatus.PENDING]: '#eab308',
+  [InviteStatus.APPROVED]: '#22c55e',
+  [InviteStatus.REJECTED]: '#ef4444',
 };
 
 const AdminInvitesPage: React.FC = () => {

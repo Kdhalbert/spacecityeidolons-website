@@ -5,6 +5,40 @@ import { Role } from '../../types';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
+  const headerRef = React.useRef<HTMLElement | null>(null);
+
+  React.useEffect(() => {
+    const header = headerRef.current;
+
+    if (!header || typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const root = document.documentElement;
+
+    const updateHeaderOffset = () => {
+      if (window.innerWidth <= 768) {
+        root.style.setProperty('--mobile-header-offset', `${header.offsetHeight}px`);
+      } else {
+        root.style.removeProperty('--mobile-header-offset');
+      }
+    };
+
+    updateHeaderOffset();
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(updateHeaderOffset)
+      : null;
+
+    resizeObserver?.observe(header);
+    window.addEventListener('resize', updateHeaderOffset);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateHeaderOffset);
+      root.style.removeProperty('--mobile-header-offset');
+    };
+  }, [isAuthenticated, isLoading, user?.discordAvatar, user?.discordUsername, user?.id, user?.role]);
 
   const scrollToInvite = () => {
     const inviteSection = document.querySelector('#join-section');
@@ -25,7 +59,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="site-header">
+    <header className="site-header" ref={headerRef}>
       <div className="header-inner">
         <Link to="/" className="site-title">
           Space City Eidolons
@@ -132,18 +166,18 @@ export const Footer: React.FC = () => {
           <div>
             <h3>Community</h3>
             <ul className="footer-links">
-              <li><button type="button" className="footer-link-button">Discord</button></li>
-              <li><button type="button" className="footer-link-button">Forums</button></li>
-              <li><button type="button" className="footer-link-button">Events</button></li>
+              <li><span className="footer-link-placeholder">Discord</span></li>
+              <li><span className="footer-link-placeholder">Forums</span></li>
+              <li><span className="footer-link-placeholder">Events</span></li>
               <li><Link to="/roadmap">Roadmap</Link></li>
             </ul>
           </div>
           <div>
             <h3>Legal</h3>
             <ul className="footer-links">
-              <li><button type="button" className="footer-link-button">Privacy Policy</button></li>
-              <li><button type="button" className="footer-link-button">Terms of Service</button></li>
-              <li><button type="button" className="footer-link-button">Contact</button></li>
+              <li><span className="footer-link-placeholder">Privacy Policy</span></li>
+              <li><span className="footer-link-placeholder">Terms of Service</span></li>
+              <li><span className="footer-link-placeholder">Contact</span></li>
             </ul>
           </div>
         </div>
