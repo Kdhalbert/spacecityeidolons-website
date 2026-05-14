@@ -58,6 +58,9 @@ const AdminInvitesPage: React.FC = () => {
       />
       <PageSection>
         <div className="admin-toolbar">
+          <Link to="/admin/game-requests" className="btn btn-secondary btn-sm">
+            Game Requests
+          </Link>
           <Link to="/admin/users" className="btn btn-secondary btn-sm admin-toolbar-right">
             User Management
           </Link>

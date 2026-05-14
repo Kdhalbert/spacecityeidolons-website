@@ -3,12 +3,52 @@ import prisma from '../lib/db.js';
 import type { Game } from '../schemas/games.schema.js';
 import type { CreateGamePageRequestInput, GamePageRequest } from '../schemas/game-request.schema.js';
 
+interface ListGameRequestsForAdminOptions {
+  page: number;
+  limit: number;
+  status?: GameRequestStatus;
+  search?: string;
+}
+
+interface ReviewGameRequestInput {
+  status: 'APPROVED' | 'REJECTED';
+  adminNote?: string;
+}
+
 /**
  * Games service - handles game-related business logic
  * T159: Implements GET /api/games endpoint with filtering
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class GamesService {
+  private toSlug(name: string): string {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .replace(/-{2,}/g, '-');
+  }
+
+  private async createUniqueSlug(name: string): Promise<string> {
+    const base = this.toSlug(name) || 'game';
+    let candidate = base;
+    let attempt = 1;
+
+    while (true) {
+      const existing = await prisma.game.findUnique({
+        where: { slug: candidate },
+        select: { id: true },
+      });
+
+      if (!existing) {
+        return candidate;
+      }
+
+      attempt += 1;
+      candidate = `${base}-${attempt}`;
+    }
+  }
+
   /**
    * Get all games with optional filtering
    */
@@ -208,6 +248,131 @@ class GamesService {
     });
 
     return requests as GamePageRequest[];
+  }
+
+  async listGameRequestsForAdmin(options: ListGameRequestsForAdminOptions) {
+    const { page, limit, status, search } = options;
+    const skip = (page - 1) * limit;
+
+    const where = {
+      ...(status ? { status } : {}),
+      ...(search
+        ? {
+            OR: [
+              { gameName: { contains: search, mode: 'insensitive' as const } },
+              { reason: { contains: search, mode: 'insensitive' as const } },
+              { requester: { discordUsername: { contains: search, mode: 'insensitive' as const } } },
+              { requester: { email: { contains: search, mode: 'insensitive' as const } } },
+            ],
+          }
+        : {}),
+    };
+
+    const [total, data] = await Promise.all([
+      prisma.gamePageRequest.count({ where }),
+      prisma.gamePageRequest.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          requester: {
+            select: {
+              id: true,
+              discordUsername: true,
+              email: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.max(1, Math.ceil(total / limit)),
+      },
+    };
+  }
+
+  async reviewGameRequest(requestId: string, input: ReviewGameRequestInput) {
+    const request = await prisma.gamePageRequest.findUnique({
+      where: { id: requestId },
+    });
+
+    if (!request) {
+      throw new Error('Game request not found');
+    }
+
+    if (input.status === GameRequestStatus.REJECTED) {
+      return prisma.gamePageRequest.update({
+        where: { id: requestId },
+        data: {
+          status: GameRequestStatus.REJECTED,
+          adminNote: input.adminNote?.trim() || null,
+        },
+        include: {
+          requester: {
+            select: {
+              id: true,
+              discordUsername: true,
+              email: true,
+            },
+          },
+        },
+      });
+    }
+
+    const existingGame = await prisma.game.findFirst({
+      where: {
+        name: {
+          equals: request.gameName,
+          mode: 'insensitive',
+        },
+      },
+      select: { id: true },
+    });
+
+    if (!existingGame) {
+      const slug = await this.createUniqueSlug(request.gameName);
+      await prisma.game.create({
+        data: {
+          name: request.gameName,
+          slug,
+          description: request.description || `Community-requested page for ${request.gameName}.`,
+          content: [
+            `# ${request.gameName}`,
+            '',
+            '## Overview',
+            request.description || 'This page was generated from an approved community request.',
+            '',
+            '## Community Notes',
+            request.reason,
+          ].join('\n'),
+          tags: [],
+        },
+      });
+    }
+
+    return prisma.gamePageRequest.update({
+      where: { id: requestId },
+      data: {
+        status: GameRequestStatus.APPROVED,
+        adminNote: input.adminNote?.trim() || null,
+      },
+      include: {
+        requester: {
+          select: {
+            id: true,
+            discordUsername: true,
+            email: true,
+          },
+        },
+      },
+    });
   }
 
   /**

@@ -90,7 +90,7 @@ export const roadmapStories: RoadmapStory[] = [
     title: "Admin Game Page & Event Management",
     description: "Admins can create game pages directly, approve or reject member requests, and manage public events.",
     priority: "P5",
-    status: "planned",
+    status: "in-progress",
     phase: 9,
   },
   {
