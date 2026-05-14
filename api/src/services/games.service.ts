@@ -325,6 +325,10 @@ class GamesService {
       throw new Error('Game request not found');
     }
 
+    if (request.status !== GameRequestStatus.PENDING) {
+      throw new Error('Game request is no longer pending');
+    }
+
     if (input.status === GameRequestStatus.REJECTED) {
       return prisma.gamePageRequest.update({
         where: { id: requestId },

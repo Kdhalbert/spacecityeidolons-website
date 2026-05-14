@@ -265,6 +265,13 @@ export async function registerAdminRoutes(fastify: FastifyInstance) {
             message: error.message,
           });
         }
+        if (error instanceof Error && error.message === 'Game request is no longer pending') {
+          return reply.code(409).send({
+            statusCode: 409,
+            error: 'Conflict',
+            message: error.message,
+          });
+        }
         throw error;
       }
     }
