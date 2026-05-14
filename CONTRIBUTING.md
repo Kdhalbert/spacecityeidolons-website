@@ -33,6 +33,19 @@ Do not combine multiple user stories in one PR, even if they are small. If addit
 
 Exception: repo-maintenance or recovery PRs may span multiple stories only when explicitly labeled as an administrative recovery and approved by a maintainer.
 
+## ⚠️ Critical Rule: Mobile Responsiveness Is Required
+
+All new features and UI-affecting changes must include mobile responsiveness as part of the definition of done.
+
+Required for every feature PR:
+- Implement responsive behavior for phone widths (minimum target: 375px wide) and tablet widths.
+- Ensure no horizontal overflow on core feature flows.
+- Keep primary actions visible, reachable, and comfortably tappable on mobile.
+- Add or update responsive styles/components in the same PR as the feature (do not defer to a follow-up unless explicitly approved).
+- Include mobile validation notes in the PR testing section.
+
+If a change is backend-only and has no UI impact, state "No UI/mobile impact" in the PR.
+
 This includes:
 - New features
 - Bug fixes
@@ -140,6 +153,7 @@ npm run build         # Verify TypeScript compilation
 - Integration tests
 - Build verification
 - Linting checks
+- Mobile responsiveness verification for any UI-affecting changes (at least 375px width and tablet width)
 
 ## Code Style
 
@@ -176,6 +190,7 @@ Brief description of the changes
 - [ ] All tests passing
 - [ ] Manual testing completed
 - [ ] Build successful
+- [ ] Mobile responsiveness verified (375px + tablet) or "No UI/mobile impact"
 
 ## Tasks Completed
 Reference task IDs from tasks.md (e.g., T081-T093)
